@@ -22,6 +22,11 @@
   "homepage": "https://github.com/LoveCouple/serein#readme",
   "dependencies": {
     "chalk": "^5.2.0",
-    "commander": "^10.0.0"
+    "commander": "^10.0.0",
+    "del": "^7.0.0",
+    "gulp": "^4.0.2",
+    "gulp-esbuild": "^0.11.0",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "gulp-zip": "^5.1.0"
   }
 }

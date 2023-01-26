@@ -1,0 +1,10 @@
+{
+    "type": "js",
+    "res" : true,
+    "name" : "hello",
+    "mc_preview" : false,
+    "bds": false,
+    "bds_path" : "~/bds/",
+    "output" : "build",
+    "mc_dir" : null
+}
