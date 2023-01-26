@@ -1,0 +1,27 @@
+{
+  "name": "serein",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A Minecraft Bedrock creation manage tool.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "serein": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LoveCouple/serein.git"
+  },
+  "author": "Lampese,CAIMEO",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LoveCouple/serein/issues"
+  },
+  "homepage": "https://github.com/LoveCouple/serein#readme",
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "commander": "^10.0.0"
+  }
+}
