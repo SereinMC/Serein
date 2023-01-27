@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const version = "1.0.9";
+const version = "1.1.0";
 
 const readlineSync = require("readline-sync");
 const program = require("commander");
@@ -90,16 +90,12 @@ program
       const versions = JSON.parse(versionsStr);
 
       process.stdout.write("Downloading the gulpfile...  ");
-      const gulpfile = await req(
-        "https://serein.shannon.science/gulpfile.js"
-      );
+      const gulpfile = await req("https://serein.shannon.science/gulpfile.js");
       console.log(done);
 
       const resuuid = uuid();
       process.stdout.write("Generating project icon... ");
-      const icon = await req(
-        "https://serein.shannon.science/pack_icon.png"
-      );
+      const icon = await req("https://serein.shannon.science/pack_icon.png");
       console.log(done);
 
       console.log("Creating project directory and files... ");
@@ -276,9 +272,7 @@ program
   .action(async () => {
     try {
       console.log("Synchronizing to the latest version...");
-      const versions = await req(
-        "https://serein.shannon.science/version.json"
-      );
+      const versions = await req("https://serein.shannon.science/version.json");
       const versionJSON = JSON.parse(versions);
       let manifest = JSON.parse(
         fs.readFileSync("behavior_packs/manifest.json")
@@ -318,8 +312,10 @@ function mkdir(dirs) {
   return new Promise((resolve, reject) => {
     try {
       for (let x of dirs) {
-        fs.mkdirSync(x);
-        console.log(x, done);
+        if (!fs.existsSync(x)) {
+          fs.mkdirSync(x);
+          console.log(x, done);
+        }
       }
     } catch (e) {
       reject(e);
