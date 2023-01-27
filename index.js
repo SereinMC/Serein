@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const version = "1.0.3";
+const version = "1.0.4";
 
 const readlineSync = require("readline-sync");
 const program = require("commander");
@@ -14,9 +14,6 @@ const error = chalk.bold.magenta;
 const warning = chalk.hex("#FFA500");
 const accept = chalk.bold.green;
 const done = accept("[done]");
-const log = console.log;
-const out = process.stdout.write;
-
 program
   .name("serein")
   .description("A Minecraft Bedrock creation manage tool.")
@@ -28,8 +25,10 @@ program
   .description("init a project")
   .action(async () => {
     try {
-      log(warning("This utility will walk you through creating a project."));
-      log("Press ^C at any time to quit.");
+      console.log(
+        warning("This utility will walk you through creating a project.")
+      );
+      console.log("Press ^C at any time to quit.");
       const name =
         readlineSync.question(
           `project name: (${path.basename(process.cwd())}) `
@@ -39,19 +38,21 @@ program
       const description = readlineSync.question("description: ") || "";
       const server_ui =
         readlineSync.question(
-          `need ${error("@minecraft/server-ui")}? yes/no (${accept("no")}) `
+          `Require ${error("@minecraft/server-ui")}? yes/no (${accept("no")}) `
         ) === "yes"
           ? true
           : false;
       const server_admin =
         readlineSync.question(
-          `need ${error("@minecraft/server-admin")}? yes/no (${accept("no")}) `
+          `Require ${error("@minecraft/server-admin")}? yes/no (${accept(
+            "no"
+          )}) `
         ) === "yes"
           ? true
           : false;
       const server_gametest =
         readlineSync.question(
-          `need ${error("@minecraft/server-gamtest")}? yes/no (${accept(
+          `Require ${error("@minecraft/server-gamtest")}? yes/no (${accept(
             "no"
           )}) `
         ) === "yes"
@@ -59,13 +60,13 @@ program
           : false;
       const server_net =
         readlineSync.question(
-          `need ${error("@minecraft/server-net")}? yes/no (${accept("no")}) `
+          `Require ${error("@minecraft/server-net")}? yes/no (${accept("no")}) `
         ) === "yes"
           ? true
           : false;
       const res =
         readlineSync.question(
-          `need ${error("resource_packs")}? yes/no (${warning("yes")}))`
+          `Require ${error("resource_packs")}? yes/no (${warning("yes")}))`
         ) === "no"
           ? false
           : true;
@@ -79,32 +80,32 @@ program
           : false;
       const language =
         readlineSync.question(
-          `which language you want to use in this project? js/ts (${accept(
+          `Which language you want to use in this project? js/ts (${accept(
             "ts"
           )})`
         ) === "js" || "ts";
 
-      out("downloading the lastest dependence version...  ");
+      process.stdout.write("Dwnloading the lastest dependence version...  ");
       const versionsStr = await req(
         "https://raw.githubusercontent.com/LoveCouple/serein/main/version.json"
       );
-      log(done);
+      console.log(done);
       const versions = JSON.parse(versionsStr);
 
-      out("downloading the gulpfile...  ");
+      process.stdout.write("downloading the gulpfile...  ");
       const gulpfile = await req(
         "https://raw.githubusercontent.com/LoveCouple/serein/main/gulpfile.js"
       );
-      log(done);
+      console.log(done);
 
       const resuuid = uuid();
-      out("Generating project icon... ");
+      process.stdout.write("Generating project icon... ");
       const icon = await req(
         "https://github.com/LoveCouple/serein/raw/main/pack_icon.png"
       );
-      log(done);
+      console.log(done);
 
-      log("Creating project directory and files... ");
+      console.log("Creating project directory and files... ");
       await mkdir(["behavior_packs", "behavior_packs/script", "scripts"]);
       if (res) await mkdir(["resource_packs"]);
       fs.writeFileSync("behavior_packs/pack_icon.png", icon);
@@ -249,7 +250,7 @@ program
       writeText("gulpfile.js", gulpfile);
       exec("npm install");
     } catch (e) {
-      log(e);
+      console.log(e);
     }
   });
 
@@ -277,7 +278,7 @@ program
   .description("update project to follow lastest Minecraft")
   .action(async () => {
     try {
-      log("Synchronizing to the latest version...");
+      console.log("Synchronizing to the latest version...");
       const versions = await req(
         "https://raw.githubusercontent.com/LoveCouple/serein/main/version.json"
       );
@@ -294,7 +295,7 @@ program
         }
       }
     } catch (e) {
-      log(e);
+      console.log(e);
     }
   });
 
@@ -321,7 +322,7 @@ function mkdir(dirs) {
     try {
       for (let x of dirs) {
         fs.mkdirSync(x);
-        log(x, done);
+        console.log(x, done);
       }
     } catch (e) {
       reject(e);
@@ -332,12 +333,12 @@ function mkdir(dirs) {
 
 function writeText(filename, text) {
   fs.writeFileSync(filename, text);
-  log(filename, done);
+  console.log(filename, done);
 }
 
 function writeJSON(filename, obj) {
   fs.writeFileSync(filename, JSON.stringify(obj, null, "\t"));
-  log(filename, done);
+  console.log(filename, done);
 }
 
 function exec(command) {
