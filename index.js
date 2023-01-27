@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const version = "1.0.7";
+const version = "1.0.8";
 
 const readlineSync = require("readline-sync");
 const program = require("commander");
@@ -66,13 +66,13 @@ program
           : false;
       const res =
         readlineSync.question(
-          `Require ${error("resource_packs")}? yes/no (${warning("yes")}))`
+          `Create ${error("resource_packs")}? yes/no (${warning("yes")})`
         ) === "no"
           ? false
           : true;
       const allow_eval =
         readlineSync.question(
-          `allow ${error("eval")} and ${error(
+          `Allow ${error("eval")} and ${error(
             "new Function"
           )}? yes/no (${accept("no")}) `
         ) === "yes"
