@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const version = "1.0.8";
+const version = "1.0.9";
 
 const readlineSync = require("readline-sync");
 const program = require("commander");
@@ -38,13 +38,13 @@ program
       const versionArray = version.split(".").map((x) => parseInt(x));
       const description = readlineSync.question("description: ") || "";
       const server_ui =
-        readlineSync.question(
+        ask(
           `Require ${error("@minecraft/server-ui")}? yes/no (${accept("no")}) `
         ) === "yes"
           ? true
           : false;
       const server_admin =
-        readlineSync.question(
+        ask(
           `Require ${error("@minecraft/server-admin")}? yes/no (${accept(
             "no"
           )}) `
@@ -52,7 +52,7 @@ program
           ? true
           : false;
       const server_gametest =
-        readlineSync.question(
+        ask(
           `Require ${error("@minecraft/server-gamtest")}? yes/no (${accept(
             "no"
           )}) `
@@ -60,19 +60,18 @@ program
           ? true
           : false;
       const server_net =
-        readlineSync.question(
+        ask(
           `Require ${error("@minecraft/server-net")}? yes/no (${accept("no")}) `
         ) === "yes"
           ? true
           : false;
       const res =
-        readlineSync.question(
-          `Create ${error("resource_packs")}? yes/no (${warning("yes")})`
-        ) === "no"
-          ? false
-          : true;
+        ask(`Create ${error("resource_packs")}? yes/no (${warning("yes")})`) ===
+        "no"
+          ? true
+          : false;
       const allow_eval =
-        readlineSync.question(
+        ask(
           `Allow ${error("eval")} and ${error(
             "new Function"
           )}? yes/no (${accept("no")}) `
@@ -85,21 +84,21 @@ program
 
       process.stdout.write("Downloading the lastest dependence version...  ");
       const versionsStr = await req(
-        "https://raw.githubusercontent.com/LoveCouple/serein/main/version.json"
+        "https://serein.shannon.science/version.json"
       );
       console.log(done);
       const versions = JSON.parse(versionsStr);
 
       process.stdout.write("Downloading the gulpfile...  ");
       const gulpfile = await req(
-        "https://raw.githubusercontent.com/LoveCouple/serein/main/gulpfile.js"
+        "https://serein.shannon.science/gulpfile.js"
       );
       console.log(done);
 
       const resuuid = uuid();
       process.stdout.write("Generating project icon... ");
       const icon = await req(
-        "https://github.com/LoveCouple/serein/raw/main/pack_icon.png"
+        "https://serein.shannon.science/pack_icon.png"
       );
       console.log(done);
 
@@ -278,7 +277,7 @@ program
     try {
       console.log("Synchronizing to the latest version...");
       const versions = await req(
-        "https://raw.githubusercontent.com/LoveCouple/serein/main/version.json"
+        "https://serein.shannon.science/version.json"
       );
       const versionJSON = JSON.parse(versions);
       let manifest = JSON.parse(
