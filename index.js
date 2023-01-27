@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const version = "1.0.4";
+const version = "1.0.5";
 
 const readlineSync = require("readline-sync");
 const program = require("commander");
@@ -80,19 +80,19 @@ program
           : false;
       const language =
         readlineSync.question(
-          `Which language you want to use in this project? js/ts (${accept(
+          `Language: js/ts (${accept(
             "ts"
           )})`
         ) === "js" || "ts";
 
-      process.stdout.write("Dwnloading the lastest dependence version...  ");
+      process.stdout.write("Downloading the lastest dependence version...  ");
       const versionsStr = await req(
         "https://raw.githubusercontent.com/LoveCouple/serein/main/version.json"
       );
       console.log(done);
       const versions = JSON.parse(versionsStr);
 
-      process.stdout.write("downloading the gulpfile...  ");
+      process.stdout.write("Downloading the gulpfile...  ");
       const gulpfile = await req(
         "https://raw.githubusercontent.com/LoveCouple/serein/main/gulpfile.js"
       );
