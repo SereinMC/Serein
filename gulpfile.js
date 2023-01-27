@@ -14,10 +14,9 @@ import os from "os";
 import gulpEsbuild from "gulp-esbuild";
 
 const get_Mojang_dir = () => {
+  if (config.mc_dir!=null) return config.mc_dir;
   const homeDir = os.homedir();
   switch (process.platform) {
-    default:
-      return config.mc_dir;
     case "win32":
       return homeDir + useMinecraftPreview
         ? "/AppData/Local/Packages/Microsoft.MinecraftWindowsBeta_8wekyb3d8bbwe/LocalState/games/com.mojang/"
