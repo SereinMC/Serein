@@ -12,9 +12,10 @@ import ts from "gulp-typescript";
 import { deleteAsync } from "del";
 import os from "os";
 import gulpEsbuild from "gulp-esbuild";
+import { join } from "path";
 
 const get_Mojang_dir = () => {
-  if (config.mc_dir!=null) return config.mc_dir;
+  if (config.mc_dir !== null) return config.mc_dir;
   const homeDir = os.homedir();
   switch (process.platform) {
     case "win32":
@@ -120,21 +121,21 @@ function clean_local(fn) {
     return;
   }
   del_gen([
-    mc_dir + "development_behavior_packs/" + pack_name,
-    mc_dir + "development_resource_packs/" + pack_name,
+    join(mc_dir, "development_behavior_packs/", pack_name),
+    join(mc_dir, "development_resource_packs/", pack_name),
   ])(fn);
 }
 
 function deploy_local_mc_behavior_packs() {
   return gulp
     .src(["build/behavior_packs/**/*"])
-    .pipe(gulp.dest(mc_dir + "development_behavior_packs/" + pack_name));
+    .pipe(gulp.dest(join(mc_dir, "development_behavior_packs/", pack_name)));
 }
 
 function deploy_local_mc_resource_packs() {
   return gulp
     .src(["build/resource_packs/**/*"])
-    .pipe(gulp.dest(mc_dir + "development_resource_packs/" + pack_name));
+    .pipe(gulp.dest(join(mc_dir, "development_resource_packs/", pack_name)));
 }
 
 const deploy = gulp.series(
