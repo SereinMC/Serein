@@ -16,5 +16,5 @@ Serein 是一个服务于我的世界基岩版 Script-API 开发的脚手架项�
 ```bash
 npm i @pureeval/serein gulp gulp-cli -g
 
-serein // get help
+serein # get help
 ```
