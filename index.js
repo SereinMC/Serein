@@ -14,6 +14,7 @@ const error = chalk.bold.magenta;
 const warning = chalk.hex("#FFA500");
 const accept = chalk.bold.green;
 const done = accept("[done]");
+
 program
   .name("serein")
   .description("A Minecraft Bedrock creation manage tool.")
@@ -79,11 +80,8 @@ program
           ? true
           : false;
       const language =
-        readlineSync.question(
-          `Language: js/ts (${accept(
-            "ts"
-          )})`
-        ) === "js" || "ts";
+        readlineSync.question(`Language: js/ts (${accept("ts")})`) === "js" ||
+        "ts";
 
       process.stdout.write("Downloading the lastest dependence version...  ");
       const versionsStr = await req(
@@ -343,4 +341,9 @@ function writeJSON(filename, obj) {
 
 function exec(command) {
   cp.execSync(command, { stdio: [0, 1, 2] });
+}
+
+function ask(str) {
+  const answer = readlineSync.question(str);
+  return answer === "y" || answer === "yes" ? "yes" : "no";
 }
