@@ -1,6 +1,6 @@
 // === CONFIGURABLE VARIABLES
 import config from "./.serein.json" assert { type: "json" };
-import manifest from "./behavior_packs/manifest.json" assert { type: "json"}
+import manifest from "./behavior_packs/manifest.json" assert { type: "json" };
 const pack_name = config.name;
 const useMinecraftPreview = config.mc_preview; // Whether to target the "Minecraft Preview" version of Minecraft vs. the main store version of Minecraft
 const script_entry = manifest.modules[0].entry;
@@ -33,8 +33,8 @@ const get_Mojang_dir = () => {
 };
 const mc_dir = get_Mojang_dir();
 
-function clean_build(fn) {
-  deleteAsync(["build"]).then(
+const del_gen = (files) => (fn) => {
+  deleteAsync(files).then(
     () => {
       fn();
     },
@@ -42,7 +42,9 @@ function clean_build(fn) {
       fn();
     }
   );
-}
+};
+
+const clean_build = del_gen(["build"]);
 
 function copy_behavior_packs() {
   return gulp
@@ -56,18 +58,45 @@ function copy_resource_packs() {
     .pipe(gulp.dest("build/resource_packs"));
 }
 
+const copy_content = gulp.parallel(copy_behavior_packs, copy_resource_packs);
+
+function compile_scripts() {
+  return gulp
+    .src("scripts/**/*.ts")
+    .pipe(
+      ts({
+        module: "es2020",
+        moduleResolution: "node",
+        lib: ["es2020", "dom"],
+        strict: true,
+        target: "es2020",
+      })
+    )
+    .pipe(gulp.dest("build/scripts"));
+}
+
 function esbuild_system() {
   return gulp
-    .src("build/behavior_packs/" + script_entry)
+    .src("build/" + script_entry)
     .pipe(
       gulpEsbuild({
         outfile: script_entry,
         bundle: true,
-        external: ["@minecraft/server-ui", "@minecraft/server"],
+        external: [
+          "@minecraft/server-ui",
+          "@minecraft/server",
+          "@minecraft/server-net",
+          "@minecraft/server-gametest",
+          "@minecraft/server-admin",
+        ],
         format: "esm",
       })
     )
     .pipe(gulp.dest("build/behavior_packs/"));
+}
+
+function copy_scripts() {
+  return gulp.src("scripts/**/*").pipe(gulp.dest("build/"));
 }
 
 function pack_zip() {
@@ -77,53 +106,24 @@ function pack_zip() {
     .pipe(gulp.dest(config.output || "."));
 }
 
-const copy_content = gulp.parallel(copy_behavior_packs, copy_resource_packs);
-
-function compile_scripts() {
-  return gulp
-    .src("behavior_packs/"+script_entry.replace('.js','.ts'))
-    .pipe(
-      ts({
-        module: "es2020",
-        moduleResolution: "node",
-        lib: ["es2020", "dom"],
-        strict: true,
-        target: "es2020",
-        noImplicitAny: true,
-      })
-    )
-    .pipe(gulp.dest("build/behavior_packs/scripts"));
-}
+const del_build_scripts = del_gen(["build/scripts"]);
 const clean_and_copy = gulp.series(clean_build, copy_content);
 const build =
   config.type === "ts"
     ? gulp.series(clean_and_copy, compile_scripts, esbuild_system)
-    : gulp.series(clean_and_copy, esbuild_system);
-const bundle = gulp.series(build, pack_zip);
+    : gulp.series(clean_and_copy, copy_scripts, esbuild_system);
+const bundle = gulp.series(build, del_build_scripts, pack_zip);
 
-function clean_local(callbackFunction) {
+function clean_local(fn) {
   if (!pack_name || !pack_name.length || pack_name.length < 2) {
     console.log("No pack folder specified.");
-    callbackFunction();
+    fn();
     return;
   }
-
-  deleteAsync(
-    [
-      mc_dir + "development_behavior_packs/" + pack_name,
-      mc_dir + "development_resource_packs/" + pack_name,
-    ],
-    {
-      force: true,
-    }
-  ).then(
-    (value) => {
-      callbackFunction(); // Success
-    },
-    (reason) => {
-      callbackFunction(); // Error
-    }
-  );
+  del_gen([
+    mc_dir + "development_behavior_packs/" + pack_name,
+    mc_dir + "development_resource_packs/" + pack_name,
+  ])(fn);
 }
 
 function deploy_local_mc_behavior_packs() {
@@ -150,6 +150,14 @@ function watch() {
   );
 }
 
-const default_action = gulp.series(build, deploy)
+const default_action = gulp.series(build, deploy);
 
-export { build, bundle, clean_and_copy as cc, deploy, default_action as default, watch };
+export {
+  build,
+  bundle,
+  clean_and_copy as cc,
+  deploy,
+  default_action as default,
+  watch,
+  compile_scripts as cs,
+};

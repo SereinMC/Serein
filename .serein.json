@@ -1,5 +1,5 @@
 {
-    "type": "js",
+    "type": "ts",
     "res" : true,
     "name" : "hello",
     "mc_preview" : false,
