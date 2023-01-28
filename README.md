@@ -6,7 +6,7 @@ Serein 是一个服务于我的世界基岩版 Script-API 开发的脚手架项�
 - [x] 支持 JavaScript/TypeScript 双技术栈
 - [x] 自动将依赖包滚更新至最新版本
 - [x] 自动打包资源包到 .mcpack
-- [x] 三平台(Windows/Linux/Android)的自动部署
+- [x] 三平台(Windows/Linux/Android)资源包自动部署
 - [x] 使用 esbuild 处理代码，支持使用 npm 依赖
 - [ ] 支持嵌入到已存在的项目
 - [ ] 自动引入 eslint
