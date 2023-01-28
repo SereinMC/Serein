@@ -339,6 +339,6 @@ function exec(command) {
 }
 
 function ask(str) {
-  const answer = readlineSync.question(str);
+  const answer = readlineSync.question(str).toLowerCase();
   return answer === "y" || answer === "yes" ? "yes" : "no";
 }
