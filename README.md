@@ -12,6 +12,8 @@ Serein 是一个服务于我的世界基岩版 Script-API 开发的脚手架项�
 - [ ] 自动引入 eslint
 - [ ] 生成随机 pack_icon
 
+[![asciicast](https://asciinema.org/a/PmpUdP5ZfM8s7swWSRVE8edqv.svg)](https://asciinema.org/a/PmpUdP5ZfM8s7swWSRVE8edqv)
+
 ### 快速开始
 
 请确保您有 Nodejs Stable 及以上的版本。
