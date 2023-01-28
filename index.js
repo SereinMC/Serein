@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const version = "1.1.2";
+const version = "1.1.3";
 
 const readlineSync = require("readline-sync");
 const program = require("commander");
