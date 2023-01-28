@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const cli_version = '1.1.3';
+const cli_version = '1.1.4';
 
 const readlineSync = require('readline-sync');
 const program = require('commander');
@@ -163,7 +163,9 @@ function askVersion(packageName) {
 				packageName
 			)} : ${gary('L')}atest/${gary(
 				'V'
-			)}ersion/${gary('M')}anual (${warning(
+			)}ersion(${error(
+				'accomplished'
+			)})/${gary('M')}anual (${warning(
 				'latest'
 			)}): `
 		)
@@ -245,6 +247,11 @@ function getInformation() {
 			`Now I will aquire you the dependencies of your project, including the version. Please follow the guide to choose a specific game version or we will download the ${magenta(
 				'latest'
 			)} version.`
+		);
+		console.log(
+			warning(
+				'You should ensure the dependencies well arranged. If you wish to use dependencies (latest version) besides @mc/server.'
+			)
 		);
 		const server_version = askVersion(
 			'@minecraft/server'
@@ -407,39 +414,28 @@ function dealDependencies(informations) {
 	};
 
 	const resuuid = uuid(),
-		dependencies = [
-			toDependencies('@minecraft/server')
-		];
+		dependencies = [],
+		npmVersionsFiltered = {};
 
 	if (informations.res)
 		dependencies.push({
 			uuid: resuuid,
 			version: informations.versionArray
 		});
-	if (informations.server_admin)
-		dependencies.push(
-			toDependencies(
-				'@minecraft/server-admin'
-			)
-		);
-	if (informations.server_gametest)
-		dependencies.push(
-			toDependencies(
-				'@minecraft/server-gametest'
-			)
-		);
-	if (informations.erver_net)
-		dependencies.push(
-			toDependencies(
-				'@minecraft/server-net'
-			)
-		);
-	if (informations.server_ui)
-		dependencies.push(
-			toDependencies('@minecraft/server-ui')
-		);
+
+	for (const x in informations.packageVersions) {
+		const current =
+			informations.packageVersions[x];
+		if (current.need) {
+			dependencies.push(toDependencies(x));
+			npmVersionsFiltered[x] =
+				informations.npmVersions[x];
+		}
+	}
+
 	return {
 		...informations,
+		npmVersionsFiltered: npmVersionsFiltered,
 		dependencies: dependencies,
 		resuuid: resuuid
 	};
@@ -539,7 +535,7 @@ async function creatFiles(informations) {
 		type: 'module',
 		description: informations.description,
 		dependencies: {
-			...informations.npmVersion,
+			...informations.npmVersionsFiltered,
 			del: '7.0.0',
 			gulp: '^4.0.2',
 			'gulp-cli': '^2.3.0',
