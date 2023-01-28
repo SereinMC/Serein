@@ -1,12 +1,15 @@
 # <center>Serein</center>
 
-Serein 是一个服务于我的世界基岩版 Script-API 开发的脚手架项目，帮助开发者创建和管理项目。
+Serein 是一个为 [Minecraft: Bedrock Edition Script API](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/) 开发的脚手架项目，帮助开发者创建和管理项目。
+
+> 但请注意，该产品不是 Minecraft 官方产品、不是来自 Minecraft 或者未经 Minecraft 认可。  
+> “Minecraft”是 Mojang Synergies AB 的商标。
 
 - [x] 快速创建和初始化项目
-- [x] 支持 JavaScript/TypeScript 双技术栈
+- [x] 支持 JavaScript/TypeScript
 - [x] 自动将依赖包滚更新至最新版本
 - [x] 自动打包资源包到 .mcpack
-- [x] 三平台(Windows/Linux/Android)资源包自动部署
+- [x] 多平台(Windows/Linux/Android) 自动部署
 - [x] 使用 esbuild 处理代码，支持使用 npm 依赖
 - [ ] 支持嵌入到已存在的项目
 - [ ] 自动引入 eslint
@@ -30,7 +33,7 @@ serein 提供了语义相同的长参数 `init` 与短参数 `i` 以创建项目
 
 请注意：如果您的平台是 android，当最后一步安装模块时出现 `link` 相关的错误是可以忽略的。
 
-#### 构架项目
+#### 搭建项目
 
 serein 提供了语义相同的长参数 `build` 与短参数 `i` 对项目进行构架。
 
