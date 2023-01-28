@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const version = '1.1.3';
+const cli_version = '1.1.3';
 
 const readlineSync = require('readline-sync');
 const program = require('commander');
@@ -10,7 +10,9 @@ const chalk = require('chalk');
 const fs = require('fs');
 const cp = require('node:child_process');
 
-const error = chalk.bold.magenta;
+const error = chalk.bold.red;
+const gary = chalk.bold.whiteBright;
+const magenta = chalk.bold.magenta;
 const warning = chalk.hex('#FFA500');
 const accept = chalk.bold.green;
 const done = accept('[done]');
@@ -20,7 +22,7 @@ program
 	.description(
 		'A Minecraft Bedrock creation manage tool.'
 	)
-	.version(version, '-v, --version');
+	.version(cli_version, '-v, --version');
 
 program
 	.command('init')
@@ -154,12 +156,69 @@ function ask(str) {
 		: 'no';
 }
 
+function askVersion(packageName) {
+	const answer = readlineSync
+		.question(
+			`Choose requirement mode for ${magenta(
+				packageName
+			)} : ${gary('L')}atest/${gary(
+				'V'
+			)}ersion/${gary('M')}anual (${warning(
+				'latest'
+			)}): `
+		)
+		.toLowerCase();
+	if (answer === 'version' || answer === 'v') {
+		const version = readlineSync.question(
+			'Game version : '
+		);
+		return {
+			mode: 'version',
+			raw: version
+		};
+	} else if (
+		answer === 'manual' ||
+		answer === 'm'
+	) {
+		const manifestVersion =
+			readlineSync.question(
+				`${magenta(
+					packageName
+				)} version in manifest: `
+			);
+		const npmVersion = readlineSync.question(
+			`${magenta(
+				packageName
+			)} version in npm: `
+		);
+		return {
+			mode: 'manual',
+			manifestVersion: manifestVersion,
+			npmVersion: npmVersion
+		};
+	} else return { mode: 'latest' };
+}
+
+function askRequire(packagename) {
+	const need =
+		ask(
+			`Require ${magenta(
+				packagename
+			)}? ${gary('Y')}es/${gary(
+				'N'
+			)}o (${warning('no')}) `
+		) === 'yes'
+			? true
+			: false;
+	let version = { mode: 'latest' };
+	if (need) version = askVersion(packagename);
+	return [need, version];
+}
+
 function getInformation() {
 	return new Promise((resolve) => {
 		console.log(
-			warning(
-				'This utility will walk you through creating a project.'
-			)
+			'This utility will walk you through creating a project.'
 		);
 		console.log(
 			'Press ^C at any time to quit.'
@@ -181,62 +240,63 @@ function getInformation() {
 			readlineSync.question(
 				'description: '
 			) || '';
-		const server_ui =
-			ask(
-				`Require ${error(
-					'@minecraft/server-ui'
-				)}? yes/no (${accept('no')}) `
-			) === 'yes'
-				? true
-				: false;
-		const server_admin =
-			ask(
-				`Require ${error(
-					'@minecraft/server-admin'
-				)}? yes/no (${accept('no')}) `
-			) === 'yes'
-				? true
-				: false;
-		const server_gametest =
-			ask(
-				`Require ${error(
-					'@minecraft/server-gamtest'
-				)}? yes/no (${accept('no')}) `
-			) === 'yes'
-				? true
-				: false;
-		const server_net =
-			ask(
-				`Require ${error(
-					'@minecraft/server-net'
-				)}? yes/no (${accept('no')}) `
-			) === 'yes'
-				? true
-				: false;
+
+		console.log(
+			`Now I will aquire you the dependencies of your project, including the version. Please follow the guide to choose a specific game version or we will download the ${magenta(
+				'latest'
+			)} version.`
+		);
+		const server_version = askVersion(
+			'@minecraft/server'
+		);
+		const [server_ui, server_ui_version] =
+			askRequire('@minecraft/server-ui');
+		const [
+			server_admin,
+			server_admin_version
+		] = askRequire('@minecraft/server-admin');
+		const [
+			server_gametest,
+			server_gametest_version
+		] = askRequire(
+			'@minecraft/server-gametest'
+		);
+		const [server_net, server_net_version] =
+			askRequire('@minecraft/server-net');
 		const res =
 			ask(
-				`Create ${error(
+				`Create ${magenta(
 					'resource_packs'
-				)}? yes/no (${warning('yes')})`
+				)}? ${gary('Y')}es/${gary(
+					'N'
+				)}o (${warning('yes')})`
 			) === 'no'
 				? true
 				: false;
 		const allow_eval =
 			ask(
-				`Allow ${error(
+				`Allow ${magenta(
 					'eval'
-				)} and ${error(
+				)} and ${magenta(
 					'new Function'
-				)}? yes/no (${accept('no')}) `
+				)}? ${gary('Y')}es/${gary(
+					'N'
+				)}o (${warning('no')}) `
 			) === 'yes'
 				? true
 				: false;
+		const languageTemp = readlineSync
+			.question(
+				`Language: ${gary('J')}s/${gary(
+					'T'
+				)}s (${warning('ts')})`
+			)
+			.toLowerCase();
 		const language =
-			readlineSync.question(
-				`Language: js/ts (${accept(
-					'ts'
-				)})`
-			) === 'js' || 'ts';
+			languageTemp === 'js' ||
+			languageTemp === 'j'
+				? 'js'
+				: 'ts';
 
 		resolve({
 			name: name,
@@ -249,7 +309,30 @@ function getInformation() {
 			server_net: server_net,
 			res: res,
 			allow_eval: allow_eval,
-			language: language
+			language: language,
+			packageVersions: {
+				'@minecraft/server': {
+					need: true,
+					version: server_version
+				},
+				'@minecraft/server_ui': {
+					need: server_ui,
+					version: server_ui_version
+				},
+				'@minecraft/server-gametest': {
+					need: server_gametest,
+					version:
+						server_gametest_version
+				},
+				'@minecraft/server-net': {
+					need: server_net,
+					version: server_net_version
+				},
+				'@minecraft/server-admin': {
+					need: server_admin,
+					version: server_admin_version
+				}
+			}
 		});
 	});
 }
@@ -261,7 +344,11 @@ async function downloadFiles(informations) {
 	const versionsStr = await req(
 		'https://serein.shannon.science/version.json'
 	);
+	const npmVersionStr = await req(
+		'https://serein.shannon.science/npm_version.json'
+	);
 	console.log(done);
+	const npmVersions = JSON.parse(npmVersionStr);
 	const versions = JSON.parse(versionsStr);
 
 	process.stdout.write(
@@ -283,12 +370,35 @@ async function downloadFiles(informations) {
 	return {
 		...informations,
 		versions: versions,
+		npmVersions: npmVersions,
 		gulpfile: gulpfile,
 		icon: icon
 	};
 }
 
 function dealDependencies(informations) {
+	for (const x in informations.packageVersions) {
+		const current =
+			informations.packageVersions[x];
+		if (current.need === false) continue;
+		else if (
+			current.version.mode === 'version'
+		) {
+			console.log(
+				error(
+					'This function currently has an unfixed problem, and is being switched to the latest...'
+				)
+			);
+		} else if (
+			current.version.mode === 'manual'
+		) {
+			informations.npmVersions[x] =
+				current.version.npmVersion;
+			informations.versions[x] =
+				current.version.manifestVersion;
+		}
+	}
+
 	const toDependencies = (name) => {
 		return {
 			module_name: name,
@@ -370,7 +480,7 @@ async function creatFiles(informations) {
 			description: informations.description,
 			uuid: uuid(),
 			version: informations.versionArray,
-			min_engine_version: [1, 19, 20]
+			min_engine_version: [1, 19, 70]
 		},
 		modules: [
 			{
@@ -406,7 +516,7 @@ async function creatFiles(informations) {
 					version:
 						informations.versionArray,
 					min_engine_version: [
-						1, 19, 20
+						1, 19, 70
 					]
 				},
 				modules: [
@@ -423,21 +533,13 @@ async function creatFiles(informations) {
 		);
 	}
 
-	writeJSON('package.json', {
+	const npmPackage = {
 		name: informations.name,
 		version: informations.version,
 		type: 'module',
 		description: informations.description,
 		dependencies: {
-			'@minecraft/server': '^1.0.0',
-			'@minecraft/server-admin':
-				'^1.0.0-beta.11940b24',
-			'@minecraft/server-gametest':
-				'^1.0.0-beta.11940b24',
-			'@minecraft/server-net':
-				'^1.0.0-beta.11940b24',
-			'@minecraft/server-ui':
-				'^1.0.0-beta.11940b24',
+			...informations.npmVersion,
 			del: '7.0.0',
 			gulp: '^4.0.2',
 			'gulp-cli': '^2.3.0',
@@ -445,7 +547,9 @@ async function creatFiles(informations) {
 			'gulp-typescript': '^6.0.0-alpha.1',
 			'gulp-zip': '^5.1.0'
 		}
-	});
+	};
+
+	writeJSON('package.json', npmPackage);
 
 	if (informations.language === 'ts') {
 		writeJSON('tsconfig.json', {
