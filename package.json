@@ -27,5 +27,8 @@
     "readline-sync": "^1.4.10",
     "request": "^2.88.2",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.32.0"
   }
 }
