@@ -7,7 +7,7 @@ Serein 是一个为 [Minecraft: Bedrock Edition Script API](https://learn.micros
 
 - [x] 快速创建和初始化项目
 - [x] 支持 JavaScript/TypeScript
-- [x] 自动将依赖包滚更新至最新版本
+- [x] 支持切换依赖库版本
 - [x] 自动打包资源包到 .mcpack
 - [x] 多平台(Windows/Linux/Android) 自动部署
 - [x] 使用 esbuild 处理代码，支持使用 npm 依赖
@@ -55,11 +55,13 @@ Serein 提供了语义相同的长参数 `deploy` 与短参数 `d` 以搭建和�
 
 - 对于其他平台，您可以早项目初始化后修改 `.serein.json` 中的 `mc_dir` 为您的游戏目录。
 
-#### ⚠️ 滚更新依赖
+#### 更改依赖版本
 
 目前的 Script API 迭代速度非常快，而且文档紧跟版本更新，过时版本的开发者资源和游戏可能会因此出现破坏性问题。
 
-Serein 提供了长参数 `update` 与 `u` 以直接更新您项目中的所有 npm 模块依赖到最新版本。
+Serein 提供了长参数 `switch` 与 `s` 以更改您项目中的 manifest 依赖与 npm 依赖版本。
+
+在根目录执行该命令可以开启版本切换引导，您可以通过引导重新指定依赖版本并安装依赖项。
 
 ### 贡献
 
