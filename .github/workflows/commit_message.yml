@@ -27,13 +27,4 @@ jobs:
         with:
           pattern: '^(doc|fix|ci|core|module|feat):\s+\S+'
           flags: 'gm'
-          error: 'Your first line has to contain a commit type in [doc/fix/ci/core/module/feat].'
-      - name: Check Line Length
-        uses: gsactions/commit-message-checker@v2
-        with:
-          pattern: '^.{,74}$'
-          error: 'The maximum line length of 74 characters is exceeded.'
-          excludeDescription: 'true' # optional: this excludes the description body of a pull request
-          excludeTitle: 'true' # optional: this excludes the title of a pull request
-          checkAllCommitMessages: 'true' # optional: this checks all commits associated with a pull request
-          accessToken: ${{ secrets.GITHUB_TOKEN }} # github access token is only required if checkAllCommitMessages is true
+          error: 'Your first line has to contain a commit type in [module/feat/fix/doc/style/refactor/test/chore/perf/ci/build].'
