@@ -9,8 +9,8 @@ Serein is a scaffolding project developed for the [Minecraft: Bedrock Edition Sc
 
 - 🚀 Create and manage projects efficiently
 - 🛠️ Support JavaScript / TypeScript
-- 📦 Automatic packing `mcpack`
-- 🎛️ Automated cross-platform (Windows/Linux/Android) deployment
+- 📦 Automatically packing `mcpack`
+- 🎛️ Automatically cross-platform (Windows/Linux/Android) deployment
 - 💡 Build with `esbuild` and support for npm modules
 - 🔌 Support for embedding into existing projects (under development)
 
