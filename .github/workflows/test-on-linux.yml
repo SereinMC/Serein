@@ -29,5 +29,5 @@ jobs:
     - run: npm link
     - run: mkdir test
     - run: cd test
-    - run: serein i -yes
-    - run: serein p -yes
+    - run: serein i --yes
+    - run: serein p --yes
