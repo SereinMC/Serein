@@ -19,6 +19,6 @@ jobs:
       - name: Check Commit Type
         uses: gsactions/commit-message-checker@v2
         with:
-          pattern: '^(doc|fix|ci|core|module|feat):\s+\S+'
+          pattern: '^(meow|docs|fix|ci|core|module|feat|style|refactor|test|ci|build|chore|perf):\s+\S+'
           flags: 'gm'
-          error: 'Your first line has to contain a commit type in [module/feat/fix/doc/style/refactor/test/chore/perf/ci/build].'
+          error: 'Your first line has to contain a commit type in [module/feat/fix/docs/style/refactor/test/chore/perf/ci/build].'
