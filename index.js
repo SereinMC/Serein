@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable no-async-promise-executor */
 const cli_version = '1.1.5';
 
 const readlineSync = require('readline-sync');
@@ -108,7 +107,7 @@ function exec(command) {
 }
 
 function ask(str) {
-	const answer = readlineSync.question(str).toLowerCase();
+	const answer = readlineSync.question(str + ' ').toLowerCase();
 	return answer === 'y' || answer === 'yes' ? 'yes' : 'no';
 }
 
@@ -231,10 +230,6 @@ function getInformation() {
 			version: version,
 			versionArray: versionArray,
 			description: description,
-			server_ui: server_ui,
-			server_admin: server_admin,
-			server_gametest: server_gametest,
-			server_net: server_net,
 			res: res,
 			allow_eval: allow_eval,
 			language: language,
