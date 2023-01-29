@@ -18,11 +18,20 @@ on:
       - 'releases/*'
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Install modules
-      run: yarn
-    - name: Run ESLint
-      run: eslint . --ext .js,.jsx,.ts,.tsx
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: Install deps
+        run: pnpm install
+
+      - name: Run ESLint
+        run: ./node_modules/.bin/eslint . --ext .js,.jsx,.ts,.tsx
