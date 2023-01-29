@@ -7,7 +7,7 @@ Serein 是一个为 [Minecraft: Bedrock Edition Script API](https://learn.micros
 
 - [x] 快速创建和初始化项目
 - [x] 支持 JavaScript/TypeScript
-- [x] 自动将依赖包滚更新至最新版本
+- [x] 支持切换依赖库版本
 - [x] 自动打包资源包到 .mcpack
 - [x] 多平台(Windows/Linux/Android) 自动部署
 - [x] 使用 esbuild 处理代码，支持使用 npm 依赖

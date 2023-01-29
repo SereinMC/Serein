@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* eslint-disable no-async-promise-executor */
-const cli_version = '1.1.4';
+const cli_version = '1.1.5';
 
 const readlineSync = require('readline-sync');
 const program = require('commander');
