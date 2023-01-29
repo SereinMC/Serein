@@ -29,8 +29,6 @@ jobs:
     - run: npm link
     - run: mkdir test
     - name: [serein] init
-      working-directory: ./test
       run: serein i --yes
     - name: [serein] package
-      working-directory: ./test
       run: serein p --yes
