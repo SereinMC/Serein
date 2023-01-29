@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-async-promise-executor */
 const cli_version = '1.1.4';
 
 const readlineSync = require('readline-sync');
@@ -9,6 +10,7 @@ const request = require('request');
 const chalk = require('chalk');
 const fs = require('fs');
 const cp = require('node:child_process');
+const del = require('delete');
 
 const error = chalk.bold.red;
 const gary = chalk.bold.whiteBright;
@@ -19,9 +21,7 @@ const done = accept('[done]');
 
 program
 	.name('serein')
-	.description(
-		'A Minecraft Bedrock creation manage tool.'
-	)
+	.description('A Minecraft Bedrock creation manage tool.')
 	.version(cli_version, '-v, --version');
 
 program
@@ -33,6 +33,16 @@ program
 			.then(downloadFiles)
 			.then(dealDependencies)
 			.then(creatFiles)
+	);
+
+program
+	.command('switch')
+	.alias('s')
+	.description('switch requirements version')
+	.action(() =>
+		getVersionInformations()
+			.then(chooseVersions)
+			.then(switchVersions)
 	);
 
 program
@@ -52,53 +62,6 @@ program
 	.alias('p')
 	.description('build .mcpack form project')
 	.action(() => exec('gulp bundle'));
-
-program
-	.command('update')
-	.alias('u')
-	.description(
-		'update project to follow lastest Minecraft'
-	)
-	.action(async () => {
-		try {
-			console.log(
-				'Synchronizing to the latest version...'
-			);
-			const versions = await req(
-				'https://serein.shannon.science/version.json'
-			);
-			const versionJSON =
-				JSON.parse(versions);
-			let manifest = JSON.parse(
-				fs.readFileSync(
-					'behavior_packs/manifest.json'
-				)
-			);
-			for (const idx in manifest[
-				'dependencies'
-			]) {
-				const x =
-					manifest['dependencies'][idx][
-						'module_name'
-					];
-				if (x in versionJSON) {
-					if (
-						versionJSON[x] !=
-						manifest['dependencies'][
-							idx
-						]['version']
-					) {
-						manifest['dependencies'][
-							idx
-						]['version'] =
-							versionJSON[x];
-					}
-				}
-			}
-		} catch (e) {
-			console.log(e);
-		}
-	});
 
 program.parse(process.argv);
 
@@ -136,10 +99,7 @@ function writeText(filename, text) {
 }
 
 function writeJSON(filename, obj) {
-	fs.writeFileSync(
-		filename,
-		JSON.stringify(obj, null, '\t')
-	);
+	fs.writeFileSync(filename, JSON.stringify(obj, null, '\t'));
 	console.log(filename, done);
 }
 
@@ -148,12 +108,8 @@ function exec(command) {
 }
 
 function ask(str) {
-	const answer = readlineSync
-		.question(str)
-		.toLowerCase();
-	return answer === 'y' || answer === 'yes'
-		? 'yes'
-		: 'no';
+	const answer = readlineSync.question(str).toLowerCase();
+	return answer === 'y' || answer === 'yes' ? 'yes' : 'no';
 }
 
 function askVersion(packageName) {
@@ -161,37 +117,23 @@ function askVersion(packageName) {
 		.question(
 			`Choose requirement mode for ${magenta(
 				packageName
-			)} : ${gary('L')}atest/${gary(
-				'V'
-			)}ersion(${error(
+			)} : ${gary('L')}atest/${gary('V')}ersion(${error(
 				'accomplished'
-			)})/${gary('M')}anual (${warning(
-				'latest'
-			)}): `
+			)})/${gary('M')}anual (${warning('latest')}): `
 		)
 		.toLowerCase();
 	if (answer === 'version' || answer === 'v') {
-		const version = readlineSync.question(
-			'Game version : '
-		);
+		const version = readlineSync.question('Game version : ');
 		return {
 			mode: 'version',
 			raw: version
 		};
-	} else if (
-		answer === 'manual' ||
-		answer === 'm'
-	) {
-		const manifestVersion =
-			readlineSync.question(
-				`${magenta(
-					packageName
-				)} version in manifest: `
-			);
+	} else if (answer === 'manual' || answer === 'm') {
+		const manifestVersion = readlineSync.question(
+			`${magenta(packageName)} version in manifest: `
+		);
 		const npmVersion = readlineSync.question(
-			`${magenta(
-				packageName
-			)} version in npm: `
+			`${magenta(packageName)} version in npm: `
 		);
 		return {
 			mode: 'manual',
@@ -204,9 +146,7 @@ function askVersion(packageName) {
 function askRequire(packagename) {
 	const need =
 		ask(
-			`Require ${magenta(
-				packagename
-			)}? ${gary('Y')}es/${gary(
+			`Require ${magenta(packagename)}? ${gary('Y')}es/${gary(
 				'N'
 			)}o (${warning('no')}) `
 		) === 'yes'
@@ -222,26 +162,18 @@ function getInformation() {
 		console.log(
 			'This utility will walk you through creating a project.'
 		);
-		console.log(
-			'Press ^C at any time to quit.'
-		);
+		console.log('Press ^C at any time to quit.');
 		const name =
 			readlineSync.question(
-				`project name: (${path.basename(
-					process.cwd()
-				)}) `
+				`project name: (${path.basename(process.cwd())}) `
 			) || path.basename(process.cwd());
 		const version =
-			readlineSync.question(
-				'version: (1.0.0) '
-			) || '1.0.0';
+			readlineSync.question('version: (1.0.0) ') || '1.0.0';
 		const versionArray = version
 			.split('.')
 			.map((x) => parseInt(x));
 		const description =
-			readlineSync.question(
-				'description: '
-			) || '';
+			readlineSync.question('description: ') || '';
 
 		console.log(
 			`Now I will aquire you the dependencies of your project, including the version. Please follow the guide to choose a specific game version or we will download the ${magenta(
@@ -253,55 +185,44 @@ function getInformation() {
 				'You should ensure the dependencies well arranged. If you wish to use dependencies (latest version) besides @mc/server.'
 			)
 		);
-		const server_version = askVersion(
-			'@minecraft/server'
+		const server_version = askVersion('@minecraft/server');
+		const [server_ui, server_ui_version] = askRequire(
+			'@minecraft/server-ui'
 		);
-		const [server_ui, server_ui_version] =
-			askRequire('@minecraft/server-ui');
-		const [
-			server_admin,
-			server_admin_version
-		] = askRequire('@minecraft/server-admin');
-		const [
-			server_gametest,
-			server_gametest_version
-		] = askRequire(
+		const [server_admin, server_admin_version] = askRequire(
+			'@minecraft/server-admin'
+		);
+		const [server_gametest, server_gametest_version] = askRequire(
 			'@minecraft/server-gametest'
 		);
-		const [server_net, server_net_version] =
-			askRequire('@minecraft/server-net');
+		const [server_net, server_net_version] = askRequire(
+			'@minecraft/server-net'
+		);
 		const res =
 			ask(
-				`Create ${magenta(
-					'resource_packs'
-				)}? ${gary('Y')}es/${gary(
-					'N'
-				)}o (${warning('yes')})`
+				`Create ${magenta('resource_packs')}? ${gary(
+					'Y'
+				)}es/${gary('N')}o (${warning('yes')})`
 			) === 'no'
 				? true
 				: false;
 		const allow_eval =
 			ask(
-				`Allow ${magenta(
-					'eval'
-				)} and ${magenta(
+				`Allow ${magenta('eval')} and ${magenta(
 					'new Function'
-				)}? ${gary('Y')}es/${gary(
-					'N'
-				)}o (${warning('no')}) `
+				)}? ${gary('Y')}es/${gary('N')}o (${warning('no')}) `
 			) === 'yes'
 				? true
 				: false;
 		const languageTemp = readlineSync
 			.question(
-				`Language: ${gary('J')}s/${gary(
-					'T'
-				)}s (${warning('ts')})`
+				`Language: ${gary('J')}s/${gary('T')}s (${warning(
+					'ts'
+				)})`
 			)
 			.toLowerCase();
 		const language =
-			languageTemp === 'js' ||
-			languageTemp === 'j'
+			languageTemp === 'js' || languageTemp === 'j'
 				? 'js'
 				: 'ts';
 
@@ -328,8 +249,7 @@ function getInformation() {
 				},
 				'@minecraft/server-gametest': {
 					need: server_gametest,
-					version:
-						server_gametest_version
+					version: server_gametest_version
 				},
 				'@minecraft/server-net': {
 					need: server_net,
@@ -344,7 +264,7 @@ function getInformation() {
 	});
 }
 
-async function downloadFiles(informations) {
+async function downloadVersions() {
 	process.stdout.write(
 		'Downloading the lastest dependence version...  '
 	);
@@ -355,20 +275,21 @@ async function downloadFiles(informations) {
 		'https://serein.shannon.science/npm_version.json'
 	);
 	console.log(done);
+	return [versionsStr, npmVersionStr];
+}
+
+async function downloadFiles(informations) {
+	const [versionsStr, npmVersionStr] = await downloadVersions();
 	const npmVersions = JSON.parse(npmVersionStr);
 	const versions = JSON.parse(versionsStr);
 
-	process.stdout.write(
-		'Downloading the gulpfile...  '
-	);
+	process.stdout.write('Downloading the gulpfile...  ');
 	const gulpfile = await req(
 		'https://serein.shannon.science/gulpfile.js'
 	);
 	console.log(done);
 
-	process.stdout.write(
-		'Generating project icon... '
-	);
+	process.stdout.write('Generating project icon... ');
 	const icon = await req(
 		'https://serein.shannon.science/pack_icon.png'
 	);
@@ -385,22 +306,16 @@ async function downloadFiles(informations) {
 
 function dealDependencies(informations) {
 	for (const x in informations.packageVersions) {
-		const current =
-			informations.packageVersions[x];
+		const current = informations.packageVersions[x];
 		if (current.need === false) continue;
-		else if (
-			current.version.mode === 'version'
-		) {
+		else if (current.version.mode === 'version') {
 			console.log(
 				error(
 					'This function currently has an unfixed problem, and is being switched to the latest...'
 				)
 			);
-		} else if (
-			current.version.mode === 'manual'
-		) {
-			informations.npmVersions[x] =
-				current.version.npmVersion;
+		} else if (current.version.mode === 'manual') {
+			informations.npmVersions[x] = current.version.npmVersion;
 			informations.versions[x] =
 				current.version.manifestVersion;
 		}
@@ -424,12 +339,10 @@ function dealDependencies(informations) {
 		});
 
 	for (const x in informations.packageVersions) {
-		const current =
-			informations.packageVersions[x];
+		const current = informations.packageVersions[x];
 		if (current.need) {
 			dependencies.push(toDependencies(x));
-			npmVersionsFiltered[x] =
-				informations.npmVersions[x];
+			npmVersionsFiltered[x] = informations.npmVersions[x];
 		}
 	}
 
@@ -442,21 +355,15 @@ function dealDependencies(informations) {
 }
 
 async function creatFiles(informations) {
-	console.log(
-		'Creating project directory and files... '
-	);
+	console.log('Creating project directory and files... ');
 	await mkdir([
 		'behavior_packs',
 		'behavior_packs/script',
 		'scripts'
 	]);
-	if (informations.res)
-		await mkdir(['resource_packs']);
+	if (informations.res) await mkdir(['resource_packs']);
 
-	writeText(
-		'behavior_packs/pack_icon.png',
-		informations.icon
-	);
+	writeText('behavior_packs/pack_icon.png', informations.icon);
 
 	writeJSON('.serein.json', {
 		type: informations.language,
@@ -476,7 +383,7 @@ async function creatFiles(informations) {
 			description: informations.description,
 			uuid: uuid(),
 			version: informations.versionArray,
-			min_engine_version: [1, 19, 70]
+			min_engine_version: [1, 19, 20]
 		},
 		modules: [
 			{
@@ -489,44 +396,30 @@ async function creatFiles(informations) {
 			}
 		],
 		dependencies: informations.dependencies,
-		capabilities: informations.allow_eval
-			? ['script_eval']
-			: []
+		capabilities: informations.allow_eval ? ['script_eval'] : []
 	});
 
 	if (informations.res) {
-		writeText(
-			'resource_packs/pack_icon.png',
-			informations.icon
-		);
+		writeText('resource_packs/pack_icon.png', informations.icon);
 
-		writeJSON(
-			'resource_packs/manifest.json',
-			{
-				format_version: 2,
-				header: {
-					description:
-						informations.description,
-					name: informations.name,
-					uuid: informations.resuuid,
-					version:
-						informations.versionArray,
-					min_engine_version: [
-						1, 19, 70
-					]
-				},
-				modules: [
-					{
-						description:
-							informations.description,
-						type: 'resources',
-						uuid: uuid(),
-						version:
-							informations.versionArray
-					}
-				]
-			}
-		);
+		writeJSON('resource_packs/manifest.json', {
+			format_version: 2,
+			header: {
+				description: informations.description,
+				name: informations.name,
+				uuid: informations.resuuid,
+				version: informations.versionArray,
+				min_engine_version: [1, 19, 20]
+			},
+			modules: [
+				{
+					description: informations.description,
+					type: 'resources',
+					uuid: uuid(),
+					version: informations.versionArray
+				}
+			]
+		});
 	}
 
 	const npmPackage = {
@@ -591,10 +484,91 @@ async function creatFiles(informations) {
 		'diagnostic.disable.minecraft.manifest.module.missing=true'
 	);
 
-	writeText(
-		'gulpfile.js',
-		informations.gulpfile
-	);
+	writeText('gulpfile.js', informations.gulpfile);
 
 	exec('npm install');
+}
+
+async function getVersionInformations() {
+	const manifest = JSON.parse(
+		fs.readFileSync('./behavior_packs/manifest.json', 'utf-8')
+	);
+	const packages = JSON.parse(
+		fs.readFileSync('package.json', 'utf-8')
+	);
+	const [versions, npmVersions] = await downloadVersions();
+
+	return {
+		manifest: manifest,
+		packages: packages,
+		versions: versions,
+		npmVersions: npmVersions
+	};
+}
+
+function chooseVersions(informations) {
+	for (const x in informations.manifest['dependencies']) {
+		const current =
+			informations.manifest['dependencies'][x]['module_name'] ||
+			'';
+		if (current.search(/@minecraft/) !== -1) {
+			const switchYes =
+				ask(
+					`Do you want to switch versions dependent on ${magenta(
+						current
+					)}? ${gary('Y')}es/${gary('N')}o (${warning(
+						'no'
+					)})`
+				) === 'yes'
+					? true
+					: false;
+			if (switchYes) {
+				const version = askVersion(current);
+				if (version.mode === 'latest') {
+					informations.manifest['dependencies'][x][
+						'version'
+					] = informations.versions[current];
+					informations.packages['dependencies'][current] =
+						informations.npmVersions[current];
+				} else if (version.mode === 'version') {
+					console.log(
+						error(
+							'This function currently has an unfixed problem, and is being switched to the manual...'
+						)
+					);
+				} else {
+					informations.manifest['dependencies'][x][
+						'version'
+					] = version.manifestVersion;
+					informations.packages['dependencies'][current] =
+						version.npmVersion;
+				}
+				console.log(
+					`Requirement ${magenta(
+						current
+					)} switched to ${accept(
+						informations.manifest['dependencies'][x][
+							'version'
+						]
+					)}`
+				);
+			}
+		}
+	}
+
+	return informations;
+}
+
+function switchVersions(informations) {
+	writeJSON(
+		'./behavior_packs/manifest.json',
+		informations.manifest
+	);
+
+	writeJSON('package.json', informations.packages);
+
+	del.sync('node_modules');
+	del.sync('package-lock.json');
+
+	exec('npm i');
 }
