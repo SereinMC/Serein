@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const cli_version = '1.1.5';
+const cli_version = '1.1.6';
 
 const readlineSync = require('readline-sync');
 const program = require('commander');
@@ -27,8 +27,9 @@ program
 	.command('init')
 	.alias('i')
 	.description('init a project')
-	.action(() =>
-		getInformation()
+	.option('-y --yes', 'use default config')
+	.action((_str, option) =>
+		getInformation(option.yes)
 			.then(downloadFiles)
 			.then(dealDependencies)
 			.then(creatFiles)
@@ -61,6 +62,12 @@ program
 	.alias('p')
 	.description('build .mcpack form project')
 	.action(() => exec('gulp bundle'));
+
+program
+	.command('watch')
+	.alias('w')
+	.description('listen for changes and deploy automatically')
+	.action(() => exec('gulp watch'));
 
 program.parse(process.argv);
 
@@ -156,106 +163,141 @@ function askRequire(packagename) {
 	return [need, version];
 }
 
-function getInformation() {
+function getInformation(isDefault) {
 	return new Promise((resolve) => {
-		console.log(
-			'This utility will walk you through creating a project.'
-		);
-		console.log('Press ^C at any time to quit.');
-		const name =
-			readlineSync.question(
-				`project name: (${path.basename(process.cwd())}) `
-			) || path.basename(process.cwd());
-		const version =
-			readlineSync.question('version: (1.0.0) ') || '1.0.0';
-		const versionArray = version
-			.split('.')
-			.map((x) => parseInt(x));
-		const description =
-			readlineSync.question('description: ') || '';
+		if (isDefault) {
+			console.log(
+				'This utility will walk you through creating a project.'
+			);
+			console.log('Press ^C at any time to quit.');
+			const name =
+				readlineSync.question(
+					`project name: (${warning(
+						path.basename(process.cwd())
+					)}) `
+				) || path.basename(process.cwd());
+			const version =
+				readlineSync.question(
+					`version: ${warning('(1.0.0)')} `
+				) || '1.0.0';
+			const versionArray = version
+				.split('.')
+				.map((x) => parseInt(x));
+			const description =
+				readlineSync.question('description: ') || '';
 
-		console.log(
-			`Now I will aquire you the dependencies of your project, including the version. Please follow the guide to choose a specific game version or we will download the ${magenta(
-				'latest'
-			)} version.`
-		);
-		console.log(
-			warning(
-				'You should ensure the dependencies well arranged. If you wish to use dependencies (latest version) besides @mc/server.'
-			)
-		);
-		const server_version = askVersion('@minecraft/server');
-		const [server_ui, server_ui_version] = askRequire(
-			'@minecraft/server-ui'
-		);
-		const [server_admin, server_admin_version] = askRequire(
-			'@minecraft/server-admin'
-		);
-		const [server_gametest, server_gametest_version] = askRequire(
-			'@minecraft/server-gametest'
-		);
-		const [server_net, server_net_version] = askRequire(
-			'@minecraft/server-net'
-		);
-		const res =
-			ask(
-				`Create ${magenta('resource_packs')}? ${gary(
-					'Y'
-				)}es/${gary('N')}o (${warning('yes')})`
-			) === 'no'
-				? true
-				: false;
-		const allow_eval =
-			ask(
-				`Allow ${magenta('eval')} and ${magenta(
-					'new Function'
-				)}? ${gary('Y')}es/${gary('N')}o (${warning('no')}) `
-			) === 'yes'
-				? true
-				: false;
-		const languageTemp = readlineSync
-			.question(
-				`Language: ${gary('J')}s/${gary('T')}s (${warning(
-					'ts'
-				)})`
-			)
-			.toLowerCase();
-		const language =
-			languageTemp === 'js' || languageTemp === 'j'
-				? 'js'
-				: 'ts';
+			console.log(
+				`Now I will aquire you the dependencies of your project, including the version. Please follow the guide to choose a specific game version or we will download the ${magenta(
+					'latest'
+				)} version.`
+			);
+			console.log(
+				warning(
+					'You should ensure the dependencies well arranged. If you wish to use dependencies (latest version) besides @mc/server.'
+				)
+			);
+			const server_version = askVersion('@minecraft/server');
+			const [server_ui, server_ui_version] = askRequire(
+				'@minecraft/server-ui'
+			);
+			const [server_admin, server_admin_version] = askRequire(
+				'@minecraft/server-admin'
+			);
+			const [server_gametest, server_gametest_version] =
+				askRequire('@minecraft/server-gametest');
+			const [server_net, server_net_version] = askRequire(
+				'@minecraft/server-net'
+			);
+			const res =
+				ask(
+					`Create ${magenta('resource_packs')}? ${gary(
+						'Y'
+					)}es/${gary('N')}o (${warning('yes')})`
+				) === 'no'
+					? true
+					: false;
+			const allow_eval =
+				ask(
+					`Allow ${magenta('eval')} and ${magenta(
+						'new Function'
+					)}? ${gary('Y')}es/${gary('N')}o (${warning(
+						'no'
+					)}) `
+				) === 'yes'
+					? true
+					: false;
+			const languageTemp = readlineSync
+				.question(
+					`Language: ${gary('J')}s/${gary('T')}s (${warning(
+						'ts'
+					)})`
+				)
+				.toLowerCase();
+			const language =
+				languageTemp === 'js' || languageTemp === 'j'
+					? 'js'
+					: 'ts';
 
-		resolve({
-			name: name,
-			version: version,
-			versionArray: versionArray,
-			description: description,
-			res: res,
-			allow_eval: allow_eval,
-			language: language,
-			packageVersions: {
-				'@minecraft/server': {
-					need: true,
-					version: server_version
-				},
-				'@minecraft/server_ui': {
-					need: server_ui,
-					version: server_ui_version
-				},
-				'@minecraft/server-gametest': {
-					need: server_gametest,
-					version: server_gametest_version
-				},
-				'@minecraft/server-net': {
-					need: server_net,
-					version: server_net_version
-				},
-				'@minecraft/server-admin': {
-					need: server_admin,
-					version: server_admin_version
+			resolve({
+				name: name,
+				version: version,
+				versionArray: versionArray,
+				description: description,
+				res: res,
+				allow_eval: allow_eval,
+				language: language,
+				packageVersions: {
+					'@minecraft/server': {
+						need: true,
+						version: server_version
+					},
+					'@minecraft/server_ui': {
+						need: server_ui,
+						version: server_ui_version
+					},
+					'@minecraft/server-gametest': {
+						need: server_gametest,
+						version: server_gametest_version
+					},
+					'@minecraft/server-net': {
+						need: server_net,
+						version: server_net_version
+					},
+					'@minecraft/server-admin': {
+						need: server_admin,
+						version: server_admin_version
+					}
 				}
-			}
-		});
+			});
+		} else {
+			resolve({
+				name: path.basename(process.cwd()),
+				version: '1.0.0',
+				versionArray: [1, 0, 0],
+				description: '',
+				res: true,
+				allow_eval: false,
+				language: 'ts',
+				packageVersions: {
+					'@minecraft/server': {
+						need: true,
+						version: { mode: 'latest' }
+					},
+					'@minecraft/server_ui': {
+						need: false
+					},
+					'@minecraft/server-gametest': {
+						need: false
+					},
+					'@minecraft/server-net': {
+						need: false
+					},
+					'@minecraft/server-admin': {
+						need: false
+					}
+				}
+			});
+		}
 	});
 }
 
