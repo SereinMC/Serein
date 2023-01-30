@@ -58,6 +58,14 @@ Use `serein -d` or `serein --deploy` to deploy the current project to the Minecr
 
 - On other platforms, please change the `mc_dir` in `.serein.json` to your Minecraft: Bedrock Edition directory.
 
+### Contributing to Serein
+
+Serein still has many issues and features yet to be implemented, and the two main maintainers (@Lampese, @CAIMEOX) are still both high school students with very limited time.
+
+If you have questions or suggestions for improvements, feel free to create an issue or send an email to me@lampese.com.
+
+If you wish to contribute to the project, we welcome Pull Requests, even if it may be initially wrong.
+
 ### Special Thanks
 
 - Thanks to Silvigarabis, @MeowShe, 云梦 for his contribution to the testing of this project.  
