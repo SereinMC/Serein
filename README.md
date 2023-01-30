@@ -46,7 +46,7 @@ Use `serein -p` or `serein --pack` to build and package the current project.
 
 Executing pack in the project directory will automatically build the Minecraft Resource Package structure in the `build` directory and package it to `.mcpack`.
 
-### Deployment Project
+### Deploying Project
 
 Use `serein -d` or `serein --deploy` to deploy the current project to the Minecraft: Bedrock Edition resource directory.
 
