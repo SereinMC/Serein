@@ -46,7 +46,7 @@ Executing build in the project directory will automatically build the Minecraft 
 
 Use `serein -p` or `serein --pack` to build and package the current project.
 
-Executing pack in the project directory will automatically build the template Minecraft Resource Package structure in the `build` directory and package it to `.mcpack`.
+Executing pack in the project directory will automatically build the Minecraft Resource Package structure in the `build` directory and package it to `.mcpack`.
 
 ### Deployment Project
 
