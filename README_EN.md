@@ -12,7 +12,7 @@ View this document in [简体中文](README_zh-CN.md) | English
 - 🚀 Create and manage projects efficiently
 - 🛠️ Support JavaScript / TypeScript
 - 📦 Automatically packaging `mcpack`
-- 🎛️ Automatically cross-platform (Windows/Linux/Android) deployment
+- 🎛️ Automatically cross-platform (Windows/Linux/Android) deployment with Hot Reload
 - 💡 Build with `esbuild` and support for npm modules
 - 🔌 Support for embedding into existing projects (under development)
 
@@ -60,9 +60,15 @@ Use `serein -d` or `serein --deploy` to deploy the current project to the Minecr
 
 ### Hot Reload
 
-Use `serein -w` or `serein -watch` to deploy a project and enable hot reloading for it.
+Use `serein -w` or `serein --watch` to deploy a project and enable hot reloading for it.
 
 Serein will watch the `behavior_packs` and `resource_packs` directories and if any of the files in them change, the project will be rebuilt and automatically deployed to Minecraft: Bedrock Edition.
+
+### Change of Dependency Version
+
+The current Script API iterates very quickly and out-of-date versions of developer resources and games can be disruptive as a result.
+
+Use `serein -s` or `serein --switch` to change the project manifest dependencies and npm module versions interactively.
 
 ### Contributing to Serein
 
