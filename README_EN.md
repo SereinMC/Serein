@@ -34,10 +34,16 @@ Use `serein -i` or `serein --init` in an empty directory to create a template pr
 
 Use `-y` or `-yes` flag to create the project without asking any questions.
 
-> On the Android platform, `npm link` may not work properly, so ignore the errors it throws.
+> On the Android platform, `npm` may not work properly, so ignore the errors it throws.
 
-### Build the project
+### Build Project
 
 Use `serein -b` or `serein --build` to build the current project.
 
 Executing build in the project directory will automatically build the template Minecraft Resource Package structure in the `build` directory (but not package it to `.mcpack`).
+
+### Package Project
+
+Use `serein -p` or `serein -pack` to build and package the current project.
+
+Executing pack in the project directory will automatically build the template Minecraft Resource Package structure in the `build` directory and package it to `.mcpack`.
