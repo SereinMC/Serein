@@ -28,7 +28,7 @@ program
 	.alias('i')
 	.description('init a project')
 	.option('-y --yes', 'use default config')
-	.action((_str, option) =>
+	.action((option) =>
 		getInformation(option.yes)
 			.then(downloadFiles)
 			.then(dealDependencies)
@@ -39,8 +39,9 @@ program
 	.command('switch')
 	.alias('s')
 	.description('switch requirements version')
-	.action(() =>
-		getVersionInformations()
+	.option('-y --yes', 'switch to latest version')
+	.action((option) =>
+		getVersionInformations(option.yes)
 			.then(chooseVersions)
 			.then(switchVersions)
 	);
@@ -165,7 +166,7 @@ function askRequire(packagename) {
 
 function getInformation(isDefault) {
 	return new Promise((resolve) => {
-		if (isDefault) {
+		if (!isDefault) {
 			console.log(
 				'This utility will walk you through creating a project.'
 			);
@@ -526,7 +527,7 @@ async function creatFiles(informations) {
 	exec('npm install');
 }
 
-async function getVersionInformations() {
+async function getVersionInformations(isDefault) {
 	const manifest = JSON.parse(
 		fs.readFileSync('./behavior_packs/manifest.json', 'utf-8')
 	);
@@ -536,6 +537,7 @@ async function getVersionInformations() {
 	const [versions, npmVersions] = await downloadVersions();
 
 	return {
+		isDefault: isDefault,
 		manifest: manifest,
 		packages: packages,
 		versions: versions,
@@ -560,7 +562,9 @@ function chooseVersions(informations) {
 					? true
 					: false;
 			if (switchYes) {
-				const version = askVersion(current);
+				let version = { mode: 'latest' };
+				if (!informations.isDefault)
+					version = askVersion(current);
 				if (version.mode === 'latest') {
 					informations.manifest['dependencies'][x][
 						'version'
