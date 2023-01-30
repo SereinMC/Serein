@@ -57,3 +57,9 @@ Use `serein -d` or `serein --deploy` to deploy the current project to the Minecr
 - On Linux platforms, automatic deployment using the `mcpelauncher` launcher is supported, if you use another launcher, use another platform deployment solution instead.
 
 - On other platforms, please change the `mc_dir` in `.serein.json` to your Minecraft: Bedrock Edition directory.
+
+### Special Thanks
+
+- Thanks to Silvigarabis, @MeowShe, 云梦 for his contribution to the testing of this project.  
+- Thanks to @MeowShe for providing the CDN service.  
+- Thanks to cowsay for contributing a cow to this project.
