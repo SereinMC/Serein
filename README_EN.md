@@ -27,3 +27,11 @@ npm i @pureeval/serein gulp gulp-cli -g
 
 serein # get help
 ```
+
+### Create a template project
+
+Use `serein -i` or `serein -init` in an empty directory to create a template project interactively.
+
+Use `-y` or `-yes` flag to create the project without asking any questions.
+
+> On the Android platform, `npm link` may not work properly, so ignore the errors it throws.
