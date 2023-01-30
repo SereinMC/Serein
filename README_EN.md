@@ -36,13 +36,13 @@ Use `-y` or `-yes` flag to create the project without asking any questions.
 
 > On the Android platform, `npm` may not work properly, so ignore the errors it throws.
 
-### Build Project
+### Building Project
 
 Use `serein -b` or `serein --build` to build the current project.
 
 Executing build in the project directory will automatically build the template Minecraft Resource Package structure in the `build` directory (but not package it to `.mcpack`).
 
-### Package Project
+### Packaging Project
 
 Use `serein -p` or `serein --pack` to build and package the current project.
 
