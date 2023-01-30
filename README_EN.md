@@ -58,6 +58,12 @@ Use `serein -d` or `serein --deploy` to deploy the current project to the Minecr
 
 - On other platforms, please change the `mc_dir` in `.serein.json` to your Minecraft: Bedrock Edition directory.
 
+### Hot Reload
+
+Use `serein -w` or `serein -watch` to deploy a project and enable hot reloading for it.
+
+Serein will watch the `behavior_packs` and `resource_packs` directories and if any of the files in them change, the project will be rebuilt and automatically deployed to Minecraft: Bedrock Edition.
+
 ### Contributing to Serein
 
 Serein still has many issues and features yet to be implemented, and the two main maintainers ([@Lampese](https://github.com/Lampese), [@CAIMEOX](https://github.com/CAIMEOX)) are still both high school students with very limited time.
