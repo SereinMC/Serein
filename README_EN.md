@@ -60,7 +60,7 @@ Use `serein -d` or `serein --deploy` to deploy the current project to the Minecr
 
 ### Contributing to Serein
 
-Serein still has many issues and features yet to be implemented, and the two main maintainers (@Lampese, @CAIMEOX) are still both high school students with very limited time.
+Serein still has many issues and features yet to be implemented, and the two main maintainers ([@Lampese](https://github.com/Lampese), [@CAIMEOX](https://github.com/CAIMEOX)) are still both high school students with very limited time.
 
 If you have questions or suggestions for improvements, feel free to create an issue or send an email to me@lampese.com.
 
@@ -68,6 +68,6 @@ If you wish to contribute to the project, we welcome Pull Requests, even if it m
 
 ### Special Thanks
 
-- Thanks to Silvigarabis, @MeowShe, 云梦 for his contribution to the testing of this project.  
-- Thanks to @MeowShe for providing the CDN service.  
+- Thanks to Silvigarabis, [@MeowShe](https://github.com/MeowShe), 云梦 for his contribution to the testing of this project.  
+- Thanks to [@MeowShe](https://github.com/MeowShe) for providing the CDN service.  
 - Thanks to cowsay for contributing a cow to this project.
