@@ -11,7 +11,7 @@ View this document in [简体中文](README_zh-CN.md) | English
 
 - 🚀 Create and manage projects efficiently
 - 🛠️ Support JavaScript / TypeScript
-- 📦 Automatically packing `mcpack`
+- 📦 Automatically packaging `mcpack`
 - 🎛️ Automatically cross-platform (Windows/Linux/Android) deployment
 - 💡 Build with `esbuild` and support for npm modules
 - 🔌 Support for embedding into existing projects (under development)
