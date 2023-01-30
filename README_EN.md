@@ -4,7 +4,7 @@
 
 Serein is a scaffolding project developed for the [Minecraft: Bedrock Edition Script API](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/) to help developers create and manage projects efficiently and elegantly.
 
-View this document in [简体中文](README_zh-CN.MD)|English
+View this document in [简体中文](README_zh-CN.md) | English
 
 > Serein is unofficial and not from Minecraft or approved by Minecraft.  
 > "Minecraft" is a trademark of Mojang Synergies AB
