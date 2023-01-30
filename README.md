@@ -1,25 +1,24 @@
 # <center>Serein</center>
 
-Serein 是一个为 [Minecraft: Bedrock Edition Script API](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/) 开发的脚手架项目，帮助开发者创建和管理项目。
+Serein is a scaffolding project developed for the [Minecraft: Bedrock Edition Script API](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/) to help developers create and manage projects efficiently and elegantly.
 
-> 但请注意，该产品不是 Minecraft 官方产品、不是来自 Minecraft 或者未经 Minecraft 认可。  
-> “Minecraft”是 Mojang Synergies AB 的商标。
+View this document in [简体中文](README_zh-CN.md) | English
 
-- [x] 快速创建和初始化项目
-- [x] 支持 JavaScript/TypeScript
-- [x] 支持切换依赖库版本
-- [x] 自动打包资源包到 .mcpack
-- [x] 多平台(Windows/Linux/Android) 自动部署
-- [x] 使用 esbuild 处理代码，支持使用 npm 依赖
-- [ ] 支持嵌入到已有项目
-- [ ] 自动引入 eslint 实现代码规范管理
-- [ ] 生成随机 pack_icon
+> Serein is unofficial and not from Minecraft or approved by Minecraft.  
+> "Minecraft" is a trademark of Mojang Synergies AB
+
+- 🚀 Create and manage projects efficiently
+- 🛠️ Support JavaScript / TypeScript
+- 📦 Automatically packaging `mcpack`
+- 🎛️ Automatically cross-platform (Windows/Linux/Android) deployment with Hot Reload
+- 💡 Build with `esbuild` and support for npm modules
+- 🔌 Support for embedding into existing projects (under development)
 
 [![asciicast](https://asciinema.org/a/555409.svg)](https://asciinema.org/a/555409)
 
-### 快速开始
+### Getting Started
 
-请确保您有 Nodejs Stable 及以上的版本。
+Make sure you have Node.js Stable version or newer.
 
 ```bash
 npm i @pureeval/serein gulp gulp-cli -g
@@ -27,60 +26,58 @@ npm i @pureeval/serein gulp gulp-cli -g
 serein # get help
 ```
 
-#### 创建项目
+### Create A Template Project
 
-Serein 提供了语义相同的长参数 `init` 与短参数 `i` 以创建项目，在你的项目文件夹中执行该命令即可开启引导。接下来通过回答引导的问题，工具就可以帮你构建一个量身定做的模板项目。
+Use `serein -i` or `serein --init` in an empty directory to create a template project interactively.
 
-添加 `-y/--yes` 参数可以跳过引导直接采用默认配置初始化项目。
+Use `-y` or `-yes` flag to create the project without asking any questions.
 
-请注意：如果您的平台是 android，当最后一步安装模块时出现 `link` 相关的错误是可以忽略的。
+> On the Android platform, `npm` may not work properly, so ignore the errors it throws.
 
-#### 构建项目
+### Building Project
 
-Serein 提供了语义相同的长参数 `build` 与短参数 `b` 构建项目。
+Use `serein -b` or `serein --build` to build the current project.
 
-在项目根目录执行该命令可以自动创建模板资源包（不打包）并放在 `build` 目录下。
+Executing build in the project directory will automatically build the Minecraft Resource Package structure in the `build` directory (but not package it to `.mcpack`).
 
-#### 打包项目
+### Packaging Project
 
-Serein 提供了语义相同的长参数 `pack` 与短参数 `p` 以构建和打包项目。
+Use `serein -p` or `serein --pack` to build and package the current project.
 
-在项目根目录执行该命令可以自动创建模板资源包并且打包为 `.mcpack` 并输出在 `build` 目录下。
+Executing pack in the project directory will automatically build the Minecraft Resource Package structure in the `build` directory and package it to `.mcpack`.
 
-#### 部署项目
+### Deployment Project
 
-Serein 提供了语义相同的长参数 `deploy` 与短参数 `d` 以构建和部署项目。
+Use `serein -d` or `serein --deploy` to deploy the current project to the Minecraft: Bedrock Edition resource directory.
 
-- 对于 Windows 平台，在项目根目录执行该命令可以自动创建资源包并且直接部署至游戏目录。
+- On Windows platforms, the Minecraft Bedrock Edition directory is automatically found and the current project is deployed.
 
-- 对于 Linux 平台，我们支持对使用 `mcpelauncher` 启动的游戏的自动部署，如果您使用其他启动器或者有其他游戏目录，请看其他平台的配置方案。
+- On Linux platforms, automatic deployment using the `mcpelauncher` launcher is supported, if you use another launcher, use another platform deployment solution instead.
 
-- 对于其他平台，您可以在项目初始化后修改 `.serein.json` 中的 `mc_dir` 为您的游戏目录。
+- On other platforms, please change the `mc_dir` in `.serein.json` to your Minecraft: Bedrock Edition directory.
 
-#### 实时部署
+### Hot Reload
 
-Serein 提供了语义相同的长参数 `watch` 与短参数 `w` 以实时部署项目。
+Use `serein -w` or `serein --watch` to deploy a project and enable hot reloading for it.
 
-在项目根目录执行该命令后，Serein 将会监视 `behavior_packs` 与 `resource_packs` 两个目录，一旦其中的文件发生改变，就会重新构建项目并部署到游戏。
+Serein will watch the `behavior_packs` and `resource_packs` directories and if any of the files in them change, the project will be rebuilt and automatically deployed to Minecraft: Bedrock Edition.
 
-#### 更改依赖版本
+### Change of Dependency Version
 
-目前的 Script API 迭代速度非常快，而且文档紧跟版本更新，过时版本的开发者资源和游戏可能会因此出现破坏性问题。
+The current Script API iterates very quickly and out-of-date versions of developer resources and games can be disruptive as a result.
 
-Serein 提供了长参数 `switch` 与 `s` 以更改您项目中的 manifest 依赖与 npm 依赖版本。
+Use `serein -s` or `serein --switch` to change the project manifest dependencies and npm module versions interactively.
 
-在根目录执行该命令可以开启版本切换引导，您可以通过引导重新指定依赖版本并安装依赖项。
+### Contributing to Serein
 
-### 贡献
+Serein still has many issues and features yet to be implemented, and the two main maintainers ([@Lampese](https://github.com/Lampese), [@CAIMEOX](https://github.com/CAIMEOX)) are still both high school students with very limited time.
 
-Serein 刚刚诞生，仍有诸多的问题和功能还未实现，两位主要作者目前都还是高中学生，时间非常有限。
+If you have questions or suggestions for improvements, feel free to create an issue or send an email to me@lampese.com.
 
-如果您对项目有疑问、改进的建议，欢迎提出 issue 或发邮件到 me@lampese.com。
+If you wish to contribute to the project, we welcome Pull Requests, even if it may be initially wrong.
 
-如果您希望对项目作出贡献，我们欢迎 Pull Request，即使它可能最初是错误的。
+### Special Thanks
 
-### 特别鸣谢
-
-- 感谢 Silvigarabis, 不舍, 云梦 对该工具测试作出的贡献。
-- 感谢 不舍 提供的 CDN 服务。
-- 感谢 cowsay 工具贡献的一头牛。
+- Thanks to Silvigarabis, [@MeowShe](https://github.com/MeowShe), 云梦 for his contribution to the testing of this project.  
+- Thanks to [@MeowShe](https://github.com/MeowShe) for providing the CDN service.  
+- Thanks to cowsay for contributing a cow to this project.
