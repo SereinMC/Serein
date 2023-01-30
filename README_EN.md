@@ -40,7 +40,7 @@ Use `-y` or `-yes` flag to create the project without asking any questions.
 
 Use `serein -b` or `serein --build` to build the current project.
 
-Executing build in the project directory will automatically build the template Minecraft Resource Package structure in the `build` directory (but not package it to `.mcpack`).
+Executing build in the project directory will automatically build the Minecraft Resource Package structure in the `build` directory (but not package it to `.mcpack`).
 
 ### Packaging Project
 
