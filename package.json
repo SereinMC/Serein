@@ -24,7 +24,8 @@
     "chalk": "4.0.0",
     "commander": "^10.0.0",
     "delete": "^1.1.0",
-    "init-package-json": "^4.0.1",
+    "fractal-icon-cjs": "^3.0.0",
+    "pngjs": "^6.0.0",
     "readline-sync": "^1.4.10",
     "request": "^2.88.2",
     "uuid": "^9.0.0"
