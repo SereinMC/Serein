@@ -12,6 +12,7 @@ View this document in [简体中文](README_zh-CN.md) | English
 - 📦 Automatically packaging `mcpack`
 - 🎛️ Automatically cross-platform (Windows/Linux/Android) deployment with Hot Reload
 - 💡 Build with `esbuild` and support for npm modules
+- 🪐 Random `pack_icon` generator
 - 🔌 Support for embedding into existing projects (under development)
 
 [![asciicast](https://asciinema.org/a/555409.svg)](https://asciinema.org/a/555409)
@@ -68,7 +69,7 @@ The current Script API iterates very quickly and out-of-date versions of develop
 
 Use `serein -s` or `serein --switch` to change the project manifest dependencies and npm module versions interactively.
 
-Use the -y or --yes flag to update all dependencies directly to the latest version.
+Use the `-y` or `--yes` flag to update all dependencies directly to the latest version.
 
 ### Contributing to Serein
 
