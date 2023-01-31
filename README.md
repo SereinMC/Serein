@@ -30,7 +30,7 @@ serein # get help
 
 Use `serein -i` or `serein --init` in an empty directory to create a template project interactively.
 
-Use `-y` or `-yes` flag to create the project without asking any questions.
+Use `-y` or `--yes` flag to create the project without asking any questions.
 
 > On the Android platform, `npm` may not work properly, so ignore the errors it throws.
 
@@ -67,6 +67,8 @@ Serein will watch the `behavior_packs` and `resource_packs` directories and if a
 The current Script API iterates very quickly and out-of-date versions of developer resources and games can be disruptive as a result.
 
 Use `serein -s` or `serein --switch` to change the project manifest dependencies and npm module versions interactively.
+
+Use the -y or --yes flag to update all dependencies directly to the latest version.
 
 ### Contributing to Serein
 
