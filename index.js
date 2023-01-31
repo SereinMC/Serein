@@ -10,6 +10,8 @@ const chalk = require('chalk');
 const fs = require('fs');
 const cp = require('node:child_process');
 const del = require('delete');
+const PNG = require('pngjs').PNG;
+const icon_gen = require('fractal-icon-cjs');
 
 const error = chalk.bold.red;
 const gary = chalk.bold.whiteBright;
@@ -328,9 +330,7 @@ async function downloadFiles(informations) {
 	console.log(done);
 
 	process.stdout.write('Generating project icon... ');
-	const icon = await req(
-		'https://serein.shannon.science/pack_icon.png'
-	);
+	const icon = PNG.sync.write(icon_gen.gen_icon(informations.name));
 	console.log(done);
 
 	return {
