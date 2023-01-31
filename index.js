@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const cli_version = '1.1.7';
+const cli_version = '1.1.8';
 
 const readlineSync = require('readline-sync');
 const program = require('commander');
@@ -116,19 +116,24 @@ function exec(command) {
 	cp.execSync(command, { stdio: [0, 1, 2] });
 }
 
-function ask(str) {
-	const answer = readlineSync.question(str + ' ').toLowerCase();
+function askBase(str, defualtOption, options) {
+	options = options.map((x) => gary(x.charAt(0).toUpperCase()) + x.substr(1));
+	return readlineSync
+		.question(`${str} ${options.join('/')} (${warning(defualtOption)}) `)
+		.toLowerCase();
+}
+
+function askYes(str, filp = true) {
+	const answer = askBase(str, filp ? 'no' : 'yes', ['yes', 'no']);
 	return answer === 'y' || answer === 'yes' ? 'yes' : 'no';
 }
 
 function askVersion(packageName) {
-	const answer = readlineSync
-		.question(
-			`Choose requirement mode for ${magenta(packageName)} : ${gary(
-				'L'
-			)}atest/${gary('M')}anual (${warning('latest')}): `
-		)
-		.toLowerCase();
+	const answer = askBase(
+		`Choose requirement mode for ${magenta(packageName)}:`,
+		'manual',
+		['manual', 'latest']
+	);
 	if (answer === 'manual' || answer === 'm') {
 		const manifestVersion = readlineSync.question(
 			`${magenta(packageName)} version in manifest: `
@@ -146,12 +151,7 @@ function askVersion(packageName) {
 }
 
 function askRequire(packagename) {
-	const need =
-		ask(
-			`Require ${magenta(packagename)}? ${gary('Y')}es/${gary(
-				'N'
-			)}o (${warning('no')}) `
-		) === 'yes';
+	const need = askYes(`Require ${magenta(packagename)}? `) === 'yes';
 	let version = { mode: 'latest' };
 	if (need) version = askVersion(packagename);
 
@@ -203,24 +203,14 @@ function getInformation(isDefault) {
 			);
 			const server_net = toRequire(askRequire('@minecraft/server-net'));
 			const res =
-				ask(
-					`Create ${magenta('resource_packs')}? ${gary('Y')}es/${gary(
-						'N'
-					)}o (${warning('yes')})`
-				) === 'no';
+				askYes(`Create ${magenta('resource_packs')}?`, false) === 'no';
 			const allow_eval =
-				ask(
-					`Allow ${magenta('eval')} and ${magenta(
-						'new Function'
-					)}? ${gary('Y')}es/${gary('N')}o (${warning('no')}) `
+				askYes(
+					`Allow ${magenta('eval')} and ${magenta('new Function')}?`
 				) === 'yes';
-			const languageTemp = readlineSync
-				.question(
-					`Language: ${gary('J')}s/${gary('T')}s (${warning('ts')})`
-				)
-				.toLowerCase();
+			const languageStr = askBase('Language:', 'ts', ['js', 'ts']);
 			const language =
-				languageTemp === 'js' || languageTemp === 'j' ? 'js' : 'ts';
+				languageStr === 'js' || languageStr === 'j' ? 'js' : 'ts';
 
 			resolve({
 				name: name,
@@ -239,6 +229,8 @@ function getInformation(isDefault) {
 				}
 			});
 		} else {
+			const reject = { need: false };
+
 			resolve({
 				name: path.basename(process.cwd()),
 				version: '1.0.0',
@@ -252,41 +244,36 @@ function getInformation(isDefault) {
 						need: true,
 						version: { mode: 'latest' }
 					},
-					'@minecraft/server-ui': {
-						need: false
-					},
-					'@minecraft/server-gametest': {
-						need: false
-					},
-					'@minecraft/server-net': {
-						need: false
-					},
-					'@minecraft/server-admin': {
-						need: false
-					}
+					'@minecraft/server-ui': reject,
+					'@minecraft/server-gametest': reject,
+					'@minecraft/server-net': reject,
+					'@minecraft/server-admin': reject
 				}
 			});
 		}
 	});
 }
 
+async function getJSON(url) {
+	const str = await req(url);
+	return JSON.parse(str);
+}
+
 async function downloadVersions() {
 	process.stdout.write('Downloading the lastest dependence version...  ');
-	const versionsStr = await req(
+	const versions = await getJSON(
 		'https://serein.shannon.science/version.json'
 	);
-	const npmVersionStr = await req(
+	const npmVersion = await getJSON(
 		'https://serein.shannon.science/npm_version.json'
 	);
 	console.log(done);
 
-	return [versionsStr, npmVersionStr];
+	return [versions, npmVersion];
 }
 
 async function downloadFiles(informations) {
-	const [versionsStr, npmVersionStr] = await downloadVersions();
-	const npmVersions = JSON.parse(npmVersionStr);
-	const versions = JSON.parse(versionsStr);
+	const [versions, npmVersions] = await downloadVersions();
 
 	process.stdout.write('Downloading the gulpfile...  ');
 	const gulpfile = await req('https://serein.shannon.science/gulpfile.js');
@@ -350,7 +337,7 @@ function dealDependencies(informations) {
 
 async function creatFiles(informations) {
 	console.log('Creating project directory and files... ');
-	await mkdir(['behavior_packs', 'behavior_packs/script', 'scripts']);
+	await mkdir(['behavior_packs', 'behavior_packs/scripts', 'scripts']);
 	if (informations.res) await mkdir(['resource_packs']);
 
 	writeText('behavior_packs/pack_icon.png', informations.icon);
@@ -428,7 +415,8 @@ async function creatFiles(informations) {
 		}
 	};
 
-	writeJSON('package.json', npmPackage);
+	const defaultCode =
+		'/*\n _____________________ \n< do things u want... >\n--------------------- \n      \\   ^__^\n       \\  (oo)_______\n          (__)\\       )\\/\\\n              ||----w |\n              ||     ||\n*/';
 
 	if (informations.language === 'ts') {
 		writeJSON('tsconfig.json', {
@@ -443,26 +431,20 @@ async function creatFiles(informations) {
 				allowUnreachableCode: true,
 				allowUnusedLabels: true,
 				noImplicitAny: true,
-				outDir: 'build/',
 				rootDir: '.',
 				listFiles: false,
 				noEmitHelpers: true
 			},
 			include: ['scripts/**/*'],
-			exclude: [],
 			compileOnSave: false
 		});
 
-		writeText(
-			'scripts/main.ts',
-			'/*\n _____________________ \n< do things u want... >\n--------------------- \n      \\   ^__^\n       \\  (oo)_______\n          (__)\\       )\\/\\\n              ||----w |\n              ||     ||\n*/'
-		);
+		writeText('scripts/main.ts', defaultCode);
 	} else {
-		writeText(
-			'scripts/main.js',
-			'/*\n _____________________ \n< do things u want... >\n--------------------- \n      \\   ^__^\n       \\  (oo)_______\n          (__)\\       )\\/\\\n              ||----w |\n              ||     ||\n*/'
-		);
+		writeText('scripts/main.js', defaultCode);
 	}
+
+	writeJSON('package.json', npmPackage);
 
 	writeText(
 		'.mcattributes',
@@ -496,10 +478,10 @@ function chooseVersions(informations) {
 			informations.manifest['dependencies'][x]['module_name'] || '';
 		if (current.search(/@minecraft/) !== -1) {
 			const switchYes =
-				ask(
+				askYes(
 					`Do you want to switch versions dependent on ${magenta(
 						current
-					)}? ${gary('Y')}es/${gary('N')}o (${warning('no')})`
+					)}?`
 				) === 'yes';
 
 			if (switchYes) {
