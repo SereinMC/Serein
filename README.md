@@ -80,6 +80,6 @@ If you wish to contribute to the project, we welcome Pull Requests, even if it m
 
 ### Special Thanks
 
-- Thanks to Silvigarabis, [@MeowShe](https://github.com/MeowShe), 云梦 for his contribution to the testing of this project.  
+- Thanks to [@Silvigarabis](https://github.com/Silvigarabis), [@MeowShe](https://github.com/MeowShe), [@xboyminemc](https://github.com/xboyminemc), [@HappyTigerV](https://github.com/HappyTigerV) for his contribution to the testing of this project.  
 - Thanks to [@MeowShe](https://github.com/MeowShe) for providing the CDN service.  
 - Thanks to cowsay for contributing a cow to this project.
