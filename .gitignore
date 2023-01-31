@@ -108,3 +108,4 @@ package-lock.json
 build
 behavior_packs
 resource_packs
+.directory
