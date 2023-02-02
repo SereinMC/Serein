@@ -416,7 +416,7 @@ async function creatFiles(informations) {
 	};
 
 	const defaultCode =
-		'/*\n _____________________ \n< do anything you want... >\n--------------------- \n      \\   ^__^\n       \\  (oo)_______\n          (__)\\       )\\/\\\n              ||----w |\n              ||     ||\n*/';
+		'/*\n _____________________ \n< do things u want... >\n--------------------- \n      \\   ^__^\n       \\  (oo)_______\n          (__)\\       )\\/\\\n              ||----w |\n              ||     ||\n*/';
 
 	if (informations.language === 'ts') {
 		writeJSON('tsconfig.json', {
