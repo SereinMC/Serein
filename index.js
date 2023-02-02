@@ -183,7 +183,7 @@ function getInformation(isDefault) {
 			);
 			console.log(
 				warning(
-					'You should ensure the dependencies well arranged. If you wish to use dependencies (latest version) besides @mc/server.'
+					'You should make sure the dependencies are well organized. If you want to use dependencies (latest version) besides @mc/server.'
 				)
 			);
 
