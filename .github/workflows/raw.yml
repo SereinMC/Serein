@@ -16,4 +16,4 @@ jobs:
       - name: Run Deploy Tool
         env:
           DEPLOY_API: ${{ secrets.DEPLOY_API }}
-        run: tools/deploy-ci.js
+        run: tools/deploy-raw.js
