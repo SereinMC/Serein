@@ -1,0 +1,14 @@
+name: Deploy raw
+on:
+  push:
+    paths:
+      - "raw/**"
+
+jobs:
+  deploy-raw:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Deploy Tool
+        run: tools/deploy-ci.js
