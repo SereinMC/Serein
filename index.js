@@ -117,7 +117,7 @@ function exec(command) {
 }
 
 function askBase(str, defualtOption, options) {
-	options = options.map((x) => gary(x.charAt(0).toUpperCase()) + x.substr(1));
+	options = options.map(x => gary(x[0].toUpperCase()) + x.slice(1));
 	return readlineSync
 		.question(`${str} ${options.join('/')} (${warning(defualtOption)}) `)
 		.toLowerCase();
