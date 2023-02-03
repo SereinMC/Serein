@@ -29,7 +29,7 @@ serein # get help
 
 ### Create A Template Project
 
-Use `serein -i` or `serein --init` in an empty directory to create a template project interactively.
+Use `serein i` or `serein init` in an empty directory to create a template project interactively.
 
 Use `-y` or `--yes` flag to create the project without asking any questions.
 
@@ -37,19 +37,19 @@ Use `-y` or `--yes` flag to create the project without asking any questions.
 
 ### Building Project
 
-Use `serein -b` or `serein --build` to build the current project.
+Use `serein b` or `serein build` to build the current project.
 
 Executing build in the project directory will automatically build the Minecraft Resource Package structure in the `build` directory (but not package it to `.mcpack`).
 
 ### Packaging Project
 
-Use `serein -p` or `serein --pack` to build and package the current project.
+Use `serein p` or `serein pack` to build and package the current project.
 
 Executing pack in the project directory will automatically build the Minecraft Resource Package structure in the `build` directory and package it to `.mcpack`.
 
 ### Deploying Project
 
-Use `serein -d` or `serein --deploy` to deploy the current project to the Minecraft: Bedrock Edition resource directory.
+Use `serein d` or `serein deploy` to deploy the current project to the Minecraft: Bedrock Edition resource directory.
 
 - On Windows platforms, the Minecraft Bedrock Edition directory is automatically found and the current project is deployed.
 
@@ -59,7 +59,7 @@ Use `serein -d` or `serein --deploy` to deploy the current project to the Minecr
 
 ### Hot Reload
 
-Use `serein -w` or `serein --watch` to deploy a project and enable hot reloading for it.
+Use `serein w` or `serein watch` to deploy a project and enable hot reloading for it.
 
 Serein will watch the `behavior_packs` and `resource_packs` directories and if any of the files in them change, the project will be rebuilt and automatically deployed to Minecraft: Bedrock Edition.
 
@@ -67,7 +67,7 @@ Serein will watch the `behavior_packs` and `resource_packs` directories and if a
 
 The current Script API iterates very quickly and out-of-date versions of developer resources and games can be disruptive as a result.
 
-Use `serein -s` or `serein --switch` to change the project manifest dependencies and npm module versions interactively.
+Use `serein s` or `serein switch` to change the project manifest dependencies and npm module versions interactively.
 
 Use the `-y` or `--yes` flag to update all dependencies directly to the latest version.
 
