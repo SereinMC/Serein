@@ -5,7 +5,7 @@ on:
 
 env:
   FAST_APPROVE_MESSAGE: >
-    Fast-approve has been requested by @@${{ github.actor }}.
+    Fast-approve has been requested by @${{ github.actor }}.  
     Use Fast-approve only for changes that **DO NOT** require approval, such as `meta`.
 
 permissions:
