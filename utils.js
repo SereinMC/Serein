@@ -1,5 +1,7 @@
+const readlineSync = require('readline-sync');
 const request = require('request');
 const chalk = require('chalk');
+const fs = require('fs');
 const cp = require('node:child_process');
 
 const error = chalk.bold.red;
