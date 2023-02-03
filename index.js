@@ -129,26 +129,19 @@ function askYes(str, filp = true) {
 }
 
 function askVersion(packageName) {
-	const answer = askBase(
-		`Choose dependencies version for ${magenta(packageName)}:`,
-		'manual',
-		['manual', 'latest']
-	);
-	if (answer === 'manual' || answer === 'm') {
-		const manifestVersion = readlineSync.question(
-			`${magenta(packageName)} version in manifest: `
-		);
-		const npmVersion = readlineSync.question(
-			`${magenta(packageName)} version in npm: `
-		);
+  const askQuestions = () => ({
+    mode: 'manual',
+    manifestVersion: readlineSync.question(`${magenta(packageName)} version in manifest: `),
+    npmVersion: readlineSync.question(`${magenta(packageName)} version in npm: `)
+  });
 
-		return {
-			mode: 'manual',
-			manifestVersion: manifestVersion,
-			npmVersion: npmVersion
-		};
-	} else return { mode: 'latest' };
+  return askBase(
+    `Choose dependencies version for ${magenta(packageName)}:`,
+    'manual',
+    ['manual', 'latest']
+  ) === 'manual' ? askQuestions() : { mode: 'latest' };
 }
+
 
 function askRequire(packagename) {
 	const need = askYes(`Require ${magenta(packagename)}? `) === 'yes';
