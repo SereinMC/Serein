@@ -129,25 +129,17 @@ function askYes(str, filp = true) {
 }
 
 function askVersion(packageName) {
-	const answer = askBase(
+	const askQuestions = () => ({
+		mode: 'manual',
+		manifestVersion: readlineSync.question(`${magenta(packageName)} version in manifest: `),
+		npmVersion: readlineSync.question(`${magenta(packageName)} version in npm: `)
+	});
+
+	return askBase(
 		`Choose dependencies version for ${magenta(packageName)}:`,
 		'manual',
 		['manual', 'latest']
-	);
-	if (answer === 'manual' || answer === 'm') {
-		const manifestVersion = readlineSync.question(
-			`${magenta(packageName)} version in manifest: `
-		);
-		const npmVersion = readlineSync.question(
-			`${magenta(packageName)} version in npm: `
-		);
-
-		return {
-			mode: 'manual',
-			manifestVersion: manifestVersion,
-			npmVersion: npmVersion
-		};
-	} else return { mode: 'latest' };
+	) === 'manual' ? askQuestions() : { mode: 'latest' };
 }
 
 function askRequire(packagename) {
