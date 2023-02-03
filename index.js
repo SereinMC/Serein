@@ -117,29 +117,40 @@ function exec(command) {
 }
 
 function askBase(str, defualtOption, options) {
-	options = options.map((x) => gary(x[0].toUpperCase()) + x.slice(1));
-	return readlineSync
-		.question(`${str} ${options.join('/')} (${warning(defualtOption)}) `)
+	const result = readlineSync
+		.question(
+			`${str} ${options
+				.map((x) => gary(x[0].toUpperCase()) + x.slice(1))
+				.join('/')} (${warning(defualtOption)}) `
+		)
 		.toLowerCase();
+	for (const x of options) if (result === x[0] || result === x) return x;
+	return defualtOption;
 }
 
 function askYes(str, filp = true) {
 	const answer = askBase(str, filp ? 'no' : 'yes', ['yes', 'no']);
-	return answer === 'y' || answer === 'yes' ? 'yes' : 'no';
+	return answer === 'yes' ? 'yes' : 'no';
 }
 
 function askVersion(packageName) {
 	const askQuestions = () => ({
 		mode: 'manual',
-		manifestVersion: readlineSync.question(`${magenta(packageName)} version in manifest: `),
-		npmVersion: readlineSync.question(`${magenta(packageName)} version in npm: `)
+		manifestVersion: readlineSync.question(
+			`${magenta(packageName)} version in manifest: `
+		),
+		npmVersion: readlineSync.question(
+			`${magenta(packageName)} version in npm: `
+		)
 	});
 
 	return askBase(
 		`Choose dependencies version for ${magenta(packageName)}:`,
 		'manual',
 		['manual', 'latest']
-	) === 'manual' ? askQuestions() : { mode: 'latest' };
+	) === 'manual'
+		? askQuestions()
+		: { mode: 'latest' };
 }
 
 function askRequire(packagename) {
