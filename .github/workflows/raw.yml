@@ -1,0 +1,19 @@
+name: Deploy raw
+
+on:
+  push:
+    paths:
+      - "raw/**"
+
+  workflow_dispatch:
+
+jobs:
+  deploy-raw:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Deploy Tool
+        env:
+          DEPLOY_API: ${{ secrets.DEPLOY_API }}
+        run: tools/deploy-raw.js

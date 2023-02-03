@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const cli_version = '1.1.8';
+const cli_version = '1.1.9';
 
 const readlineSync = require('readline-sync');
 const program = require('commander');
@@ -22,14 +22,14 @@ const done = accept('[done]');
 
 program
 	.name('serein')
-	.description('A Minecraft Bedrock creation manage tool.')
+	.description('A Minecraft: Bedrock Edition creation manage tool.')
 	.version(cli_version, '-v, --version');
 
 program
 	.command('init')
 	.alias('i')
 	.description('init a project')
-	.option('-y --yes', 'use default config')
+	.option('-y --yes', 'use default config without asking any questions')
 	.action((option) =>
 		getInformation(option.yes)
 			.then(downloadFiles)
@@ -41,7 +41,7 @@ program
 	.command('switch')
 	.alias('s')
 	.description('switch requirements version')
-	.option('-y --yes', 'switch to latest version')
+	.option('-y --yes', 'switch to latest version directly')
 	.action((option) =>
 		getVersionInformations(option.yes)
 			.then(chooseVersions)
@@ -51,7 +51,7 @@ program
 program
 	.command('build')
 	.alias('b')
-	.description('build scripts to product')
+	.description('build scripts for production environment')
 	.action(() => exec('gulp build'));
 
 program
@@ -63,13 +63,13 @@ program
 program
 	.command('pack')
 	.alias('p')
-	.description('build .mcpack form project')
+	.description('build the .mcpack for the current project')
 	.action(() => exec('gulp bundle'));
 
 program
 	.command('watch')
 	.alias('w')
-	.description('listen for changes and deploy automatically')
+	.description('listen for file changes and deploy project automatically')
 	.action(() => exec('gulp watch'));
 
 program.parse(process.argv);
@@ -117,37 +117,40 @@ function exec(command) {
 }
 
 function askBase(str, defualtOption, options) {
-	options = options.map((x) => gary(x.charAt(0).toUpperCase()) + x.substr(1));
-	return readlineSync
-		.question(`${str} ${options.join('/')} (${warning(defualtOption)}) `)
+	const result = readlineSync
+		.question(
+			`${str} ${options
+				.map((x) => gary(x[0].toUpperCase()) + x.slice(1))
+				.join('/')} (${warning(defualtOption)}) `
+		)
 		.toLowerCase();
+	for (const x of options) if (result === x[0] || result === x) return x;
+	return defualtOption;
 }
 
 function askYes(str, filp = true) {
 	const answer = askBase(str, filp ? 'no' : 'yes', ['yes', 'no']);
-	return answer === 'y' || answer === 'yes' ? 'yes' : 'no';
+	return answer === 'yes' ? 'yes' : 'no';
 }
 
 function askVersion(packageName) {
-	const answer = askBase(
-		`Choose requirement mode for ${magenta(packageName)}:`,
+	const askQuestions = () => ({
+		mode: 'manual',
+		manifestVersion: readlineSync.question(
+			`${magenta(packageName)} version in manifest: `
+		),
+		npmVersion: readlineSync.question(
+			`${magenta(packageName)} version in npm: `
+		)
+	});
+
+	return askBase(
+		`Choose dependencies version for ${magenta(packageName)}:`,
 		'manual',
 		['manual', 'latest']
-	);
-	if (answer === 'manual' || answer === 'm') {
-		const manifestVersion = readlineSync.question(
-			`${magenta(packageName)} version in manifest: `
-		);
-		const npmVersion = readlineSync.question(
-			`${magenta(packageName)} version in npm: `
-		);
-
-		return {
-			mode: 'manual',
-			manifestVersion: manifestVersion,
-			npmVersion: npmVersion
-		};
-	} else return { mode: 'latest' };
+	) === 'manual'
+		? askQuestions()
+		: { mode: 'latest' };
 }
 
 function askRequire(packagename) {
@@ -183,7 +186,7 @@ function getInformation(isDefault) {
 			);
 			console.log(
 				warning(
-					'You should ensure the dependencies well arranged. If you wish to use dependencies (latest version) besides @mc/server.'
+					'You should make sure the dependencies are well organized. If you want to use dependencies (latest version) besides @mc/server.'
 				)
 			);
 
@@ -260,7 +263,7 @@ async function getJSON(url) {
 }
 
 async function downloadVersions() {
-	process.stdout.write('Downloading the lastest dependence version...  ');
+	process.stdout.write('Getting the lastest dependencies version...  ');
 	const versions = await getJSON(
 		'https://serein.shannon.science/version.json'
 	);
@@ -336,7 +339,7 @@ function dealDependencies(informations) {
 }
 
 async function creatFiles(informations) {
-	console.log('Creating project directory and files... ');
+	console.log('Creating project... ');
 	await mkdir(['behavior_packs', 'behavior_packs/scripts', 'scripts']);
 	if (informations.res) await mkdir(['resource_packs']);
 
@@ -500,7 +503,7 @@ function chooseVersions(informations) {
 				}
 
 				console.log(
-					`Requirement ${magenta(current)} switched to ${accept(
+					`Dependency ${magenta(current)} update to ${accept(
 						informations.manifest['dependencies'][x]['version']
 					)}`
 				);
