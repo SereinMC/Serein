@@ -22,5 +22,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_USER_TOKEN }}
         run: |
-          gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --body "$FAST_TRACK_MESSAGE"
+          gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --body "$FAST_APPROVE_MESSAGE"
           gh pr review ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --approve
