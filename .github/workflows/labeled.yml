@@ -1,0 +1,26 @@
+name: PRs when labeled
+on:
+  pull_request_target:
+    types: [labeled]
+
+env:
+  FAST_APPROVE_MESSAGE: >
+    Fast-approve has been requested by @@${{ github.actor }}.
+    Use Fast-approve only for changes that **DO NOT** require approval, such as `meta`.
+
+permissions:
+  contents: read
+
+jobs:
+  fast-approve:
+    permissions:
+      pull-requests: write
+    if: github.event.label.name == 'fast-approve'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fast-approve
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_USER_TOKEN }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --body "$FAST_TRACK_MESSAGE"
+          gh pr review ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --approve
