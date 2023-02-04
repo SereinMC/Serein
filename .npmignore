@@ -3,3 +3,4 @@ raw
 .eslintignore
 .eslintrc.js
 .prettierrc
+tsconfig.json

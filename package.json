@@ -1,10 +1,12 @@
 {
   "name": "@pureeval/serein",
   "version": "1.1.9",
-  "type": "commonjs",
+  "type": "module",
   "description": "A Minecraft Bedrock creation manage tool.",
   "main": "index.js",
   "scripts": {
+    "build": "npx tsc",
+    "serein": "npm run build && node dist/serein.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
@@ -21,16 +23,22 @@
   },
   "homepage": "https://github.com/LoveCouple/serein#readme",
   "dependencies": {
+    "@types/inquirer": "^9.0.3",
     "chalk": "4.0.0",
     "commander": "^10.0.0",
     "delete": "^1.1.0",
     "fractal-icon-cjs": "^3.0.0",
+    "inquirer": "^9.1.4",
     "pngjs": "^6.0.0",
     "readline-sync": "^1.4.10",
     "request": "^2.88.2",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "eslint": "^8.32.0"
+    "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "^5.50.0",
+    "@typescript-eslint/parser": "^5.50.0",
+    "eslint": "^8.33.0",
+    "typescript": "^4.9.5"
   }
 }
