@@ -24,13 +24,14 @@ const projectInfomations = [
 
 const program = new Command();
 
-program.name('Serein');
-
 program.name('Serein').version(CLI_VERSION);
 
 program
 	.command('init')
 	.alias('i')
+	.description(
+		'Initialise the project in the current directory, using the -y or --yes parameter to use the default configuration.'
+	)
 	.action((s) => initProject(s.yes));
 
 program.parse(process.argv);
