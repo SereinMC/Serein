@@ -72,7 +72,8 @@ function askBase(str, defualtOption, options) {
 
 function askYes(str, filp = true) {
 	const answer = askBase(str, filp ? 'no' : 'yes', ['yes', 'no']);
-	return answer === 'yes' ? 'yes' : 'no';
+	if (filp === true) return answer === 'yes' ? 'yes' : 'no';
+	else return answer === 'no' ? 'yes' : 'no';
 }
 
 function askVersion(packageName) {
