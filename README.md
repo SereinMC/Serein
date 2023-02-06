@@ -1,5 +1,8 @@
 # <center>Serein</center>
 
+![Typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+Now refactoring to TypeScript.
+
 Serein is a scaffolding project developed for the [Minecraft: Bedrock Edition Script API](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/) to help developers create and manage projects efficiently and elegantly.
 
 View this document in [简体中文](README_zh-CN.md) | English
