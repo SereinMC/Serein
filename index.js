@@ -1,5 +1,5 @@
-import { magenta, accept } from 'your-color-library';
-import { writeJSON } from 'your-json-library';
+import { magenta, accept } from 'chalk';
+import { writeJSON } from 'jsonfile';
 import { exec } from 'child_process';
 import del from 'del';
 
