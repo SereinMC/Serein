@@ -1,6 +1,6 @@
 {
   "name": "@pureeval/serein",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "type": "commonjs",
   "description": "A Minecraft Bedrock creation manage tool.",
   "main": "index.js",
