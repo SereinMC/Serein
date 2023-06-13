@@ -182,10 +182,10 @@ function getInformation(isDefault) {
 async function downloadVersions() {
 	process.stdout.write('Getting the lastest dependencies version...  ');
 	const versions = await getJSON(
-		'https://serein.shannon.science/version.json'
+		'https://serein.meowshe.com/version.json'
 	);
 	const npmVersion = await getJSON(
-		'https://serein.shannon.science/npm_version.json'
+		'https://serein.meowshe.com/npm_version.json'
 	);
 	console.log(done);
 
@@ -196,7 +196,7 @@ async function downloadFiles(informations) {
 	const [versions, npmVersions] = await downloadVersions();
 
 	process.stdout.write('Downloading the gulpfile...  ');
-	const gulpfile = await req('https://serein.shannon.science/gulpfile.js');
+	const gulpfile = await req('https://serein.meowshe.com/gulpfile.js');
 	console.log(done);
 
 	process.stdout.write('Generating project icon... ');
