@@ -1,9 +1,9 @@
 const readlineSync = require('readline-sync');
-const request = require('request');
 const chalk = require('chalk');
+const https = require('https');
 const fs = require('fs');
 const cp = require('node:child_process');
-
+const inquirer = require('inquirer');
 const error = chalk.bold.red;
 const gary = chalk.bold.whiteBright;
 const magenta = chalk.bold.magenta;
@@ -18,18 +18,53 @@ async function getJSON(url) {
 
 function req(options) {
 	return new Promise((resolve, reject) => {
-		request(
-			{
-				url: options,
-				method: 'GET',
-				encoding: null
-			},
-			(err, res, body) => {
-				if (err) reject(err);
-				else resolve(body);
-			}
-		);
+		const req = https.request(options, (res) => {
+			let body = '';
+			res.on('data', (chunk) => {
+				body += chunk;
+			});
+			res.on('end', () => {
+				resolve(body);
+			});
+		});
+		req.on('error', (err) => {
+			reject(err);
+		});
+		req.end();
 	});
+}
+
+async function getNpmPackageVersions(packageName) {
+	process.stdout.write(
+		`Getting the lastest dependencies versions for ${magenta(
+			packageName
+		)}...  `
+	);
+	const data = await getJSON(`https://registry.npmjs.org/${packageName}`);
+	console.log(done);
+	const versions = Object.keys(data.versions)
+		.map((v) => [...v.split('-'), v])
+		.filter((v) => v[0] !== '0.0.1' && !v[1].includes('internal'))
+		.map((v) => {
+			if (v.length < 3) return [v[0], v[0]];
+			const gameVersion = v[1];
+			const version = v[v.length - 1];
+			if (gameVersion.startsWith('rc')) {
+				return [v[0] + '-rc', version];
+			} else if (gameVersion.startsWith('beta')) {
+				return [v[0] + '-beta', version];
+			} else if (gameVersion.startsWith('preview')) {
+				return [v[0] + '-rc', version];
+			}
+		})
+		.reduce((acc, [key, value]) => {
+			if (!acc[key]) {
+				acc[key] = [];
+			}
+			acc[key].push(value);
+			return acc;
+		}, {});
+	return versions;
 }
 
 function mkdir(dirs) {
@@ -58,48 +93,67 @@ function exec(command) {
 	cp.execSync(command, { stdio: [0, 1, 2] });
 }
 
-function askBase(str, defualtOption, options) {
-	const result = readlineSync
-		.question(
-			`${str} ${options
-				.map((x) => gary(x[0].toUpperCase()) + x.slice(1))
-				.join('/')} (${warning(defualtOption)}) `
-		)
-		.toLowerCase();
-	for (const x of options) if (result === x[0] || result === x) return x;
-	return defualtOption;
+async function askBase(str, options) {
+	const { answer } = await inquirer.prompt([
+		{
+			type: 'list',
+			name: 'answer',
+			message: str,
+			choices: options
+		}
+	]);
+	return answer;
 }
 
-function askYes(str, filp = true) {
-	const answer = askBase(str, filp ? 'no' : 'yes', ['yes', 'no']);
-	if (filp === true) return answer === 'yes' ? 'yes' : 'no';
-	else return answer === 'no' ? 'yes' : 'no';
+async function askYes(str, filp = true) {
+	const { answer } = await inquirer.prompt([
+		{
+			type: 'list',
+			name: 'answer',
+			message: str,
+			choices: ['yes', 'no']
+		}
+	]);
+
+	if (filp === true) {
+		return answer === 'yes' ? 'yes' : 'no';
+	} else {
+		return answer === 'no' ? 'yes' : 'no';
+	}
 }
 
-function askVersion(packageName) {
-	const askQuestions = () => ({
-		mode: 'manual',
-		manifestVersion: readlineSync.question(
-			`${magenta(packageName)} version in manifest: `
-		),
-		npmVersion: readlineSync.question(
-			`${magenta(packageName)} version in npm: `
-		)
-	});
+async function askVersion(packageName) {
+	const versions = await getNpmPackageVersions(packageName);
 
-	return askBase(
-		`Choose dependencies version for ${magenta(packageName)}:`,
-		'manual',
-		['manual', 'latest']
-	) === 'manual'
-		? askQuestions()
-		: { mode: 'latest' };
+	const keys = Object.keys(versions).sort().reverse();
+	const keyChoices = keys.map((key) => ({ name: key }));
+	const { selectedKey } = await inquirer.prompt([
+		{
+			type: 'list',
+			name: 'selectedKey',
+			message: `Select yor ${magenta(packageName)} version in manifest`,
+			choices: keyChoices
+		}
+	]);
+
+	const sortedObjects = versions[selectedKey].sort().reverse();
+	const objectChoices = sortedObjects.map((obj) => ({ name: obj }));
+	const { selectedObject } = await inquirer.prompt([
+		{
+			type: 'list',
+			name: 'selectedObject',
+			message: `Select yor ${magenta(packageName)} version in npm`,
+			choices: objectChoices
+		}
+	]);
+
+	return [selectedKey, selectedObject];
 }
 
-function askRequire(packagename) {
-	const need = askYes(`Require ${magenta(packagename)}? `) === 'yes';
+async function askRequire(packagename) {
+	const need = (await askYes(`Require ${magenta(packagename)}? `)) === 'yes';
 	let version = { mode: 'latest' };
-	if (need) version = askVersion(packagename);
+	if (need) version = await askVersion(packagename);
 
 	return [need, version];
 }
@@ -113,6 +167,7 @@ module.exports = {
 	done,
 	getJSON,
 	req,
+	getNpmPackageVersions,
 	mkdir,
 	writeJSON,
 	writeText,
