@@ -6,7 +6,7 @@ const options = {
 	hostname: 'api.cloudflare.com',
 	port: 443,
 	path: process.env.DEPLOY_API,
-	method: 'POST',
+	method: 'POST'
 };
 
 const req = https.request(options, (res) => {

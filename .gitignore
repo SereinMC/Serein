@@ -109,3 +109,5 @@ build
 behavior_packs
 resource_packs
 .directory
+test.js
+pnpm-lock.yaml

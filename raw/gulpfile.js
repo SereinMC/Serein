@@ -99,7 +99,7 @@ function esbuild_system() {
 }
 
 function copy_scripts() {
-	return gulp.src('scripts/**/*').pipe(gulp.dest('build/'));
+	return gulp.src('scripts/**/*').pipe(gulp.dest('build/scripts/'));
 }
 
 function pack_zip() {
