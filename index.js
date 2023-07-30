@@ -85,7 +85,7 @@ program.parse(process.argv);
 
 async function getLatestServerVersion() {
 	const versions = await getNpmPackageVersions('@minecraft/server');
-	return versions.keys().sort().reverse()[0];
+	return Object.keys(versions).sort().reverse()[0];
 }
 
 async function getInformation(isDefault) {
