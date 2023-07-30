@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const cli_version = '1.2.1';
+const cli_version = '1.3.0';
 
 const program = require('commander');
 const path = require('path');
@@ -125,7 +125,7 @@ async function getInformation(isDefault) {
 			});
 
 		console.log(
-			'Now I will aquire you the dependencies of your project, including the version. Please follow the guide to choose a specific version to download.'
+			'Now I will inquire you the dependencies of your project, including the version. Please follow the guide to choose a specific version to download.'
 		);
 		console.log(
 			warning(
