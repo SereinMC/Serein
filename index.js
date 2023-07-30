@@ -375,7 +375,7 @@ async function creatFiles(informations) {
 
 	writeText('gulpfile.js', informations.gulpfile);
 
-	exec('pnpm install');
+	exec('npm install');
 }
 
 async function getVersionInformations(isDefault) {
