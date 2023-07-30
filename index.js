@@ -10,8 +10,6 @@ const PNG = require('pngjs').PNG;
 const icon_gen = require('fractal-icon-cjs');
 const inquirer = require('inquirer');
 const {
-	error,
-	gary,
 	magenta,
 	warning,
 	accept,
@@ -85,7 +83,9 @@ program.parse(process.argv);
 
 async function getLatestServerVersion() {
 	const versions = await getNpmPackageVersions('@minecraft/server');
-	return Object.keys(versions).sort().reverse()[0];
+	return versions[Object.keys(versions).sort().reverse()[0]]
+		.sort()
+		.reverse()[0];
 }
 
 async function getInformation(isDefault) {

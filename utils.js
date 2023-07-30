@@ -1,4 +1,3 @@
-const readlineSync = require('readline-sync');
 const chalk = require('chalk');
 const https = require('https');
 const fs = require('fs');
