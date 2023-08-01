@@ -22,14 +22,25 @@ Serein 是一个为 [Minecraft: Bedrock Edition Script API](https://learn.micros
 请确保您有 Nodejs Stable 及以上的版本。
 
 ```bash
-npm i @pureeval/serein gulp gulp-cli -g
+npm i @pureeval/serein gulp-cli -g
 
 serein # get help
 ```
 
+#### 小提示
+由于 `npm` 包管理工具可能在安装某些依赖时表现不佳（比如用时过长等），如果您的环境中有 `pnpm` 包管理工具，则 Serein 将会优先采用它。
+
+你也可以使用以下方法安装 `pnpm` 工具，它是一个比 `npm` 更优秀的包管理器！
+
+```bash
+npm i pnpm -g
+
+pnpm --version
+```
+
 #### 创建项目
 
-Serein 提供了语义相同的长参数 `init` 与短参数 `i` 以创建项目，在你的项目文件夹中执行该命令即可开启引导。接下来通过回答引导的问题，工具就可以帮你构建一个量身定做的模板项目。
+Serein 提供了语义相同的长参数 `init` 与短参数 `i` 以创建项目，在您的项目文件夹中执行该命令即可开启引导。接下来通过回答引导的问题，工具就可以帮你构建一个量身定做的模板项目。
 
 添加 `-y/--yes` 参数可以跳过引导直接采用默认配置初始化项目。
 

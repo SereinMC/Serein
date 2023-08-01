@@ -66,16 +66,20 @@ async function getNpmPackageVersions(packageName) {
 	return versions;
 }
 
-function mkdir(dirs) {
-	return new Promise((resolve) => {
-		for (let x of dirs) {
-			if (!fs.existsSync(x)) {
-				fs.mkdirSync(x);
-				console.log(x, done);
-			}
+async function getLatestServerVersion() {
+	const versions = await getNpmPackageVersions('@minecraft/server');
+	return versions[Object.keys(versions).sort().reverse()[0]]
+		.sort()
+		.reverse()[0];
+}
+
+async function mkdir(dirs) {
+	for (let x of dirs) {
+		if (!fs.existsSync(x)) {
+			fs.mkdirSync(x);
+			console.log(x, done);
 		}
-		resolve();
-	});
+	}
 }
 
 function writeText(filename, text) {
@@ -88,8 +92,9 @@ function writeJSON(filename, obj) {
 	console.log(filename, done);
 }
 
-function exec(command) {
-	cp.execSync(command, { stdio: [0, 1, 2] });
+function exec(command, withLog = true) {
+	if (withLog) cp.execSync(command, { stdio: [0, 1, 2] });
+	else cp.execSync(command, { stdio: 'ignore' });
 }
 
 async function askBase(str, options) {
@@ -104,21 +109,9 @@ async function askBase(str, options) {
 	return answer;
 }
 
-async function askYes(str, filp = true) {
-	const { answer } = await inquirer.prompt([
-		{
-			type: 'list',
-			name: 'answer',
-			message: str,
-			choices: ['yes', 'no']
-		}
-	]);
-
-	if (filp === true) {
-		return answer === 'yes' ? 'yes' : 'no';
-	} else {
-		return answer === 'no' ? 'yes' : 'no';
-	}
+async function askYes(str, flip = true) {
+	const { answer } = await askBase(str, ['no', 'yes']);
+	return flip ? answer === 'yes' : answer === 'no';
 }
 
 async function askVersion(packageName) {
@@ -157,6 +150,26 @@ async function askRequire(packagename) {
 	return [need, version];
 }
 
+function checkPnpm() {
+	try {
+		exec('pnpm --version', false);
+	} catch (e) {
+		return false;
+	}
+	return true;
+}
+
+function npmInstall(context) {
+	if (context.pnpm) {
+		console.log(
+			accept(
+				'Detects that you have pnpm and will automatically enable the pnpm installation dependency.'
+			)
+		);
+		exec('pnpm install');
+	} else exec('npm install');
+}
+
 module.exports = {
 	error,
 	gary,
@@ -167,6 +180,7 @@ module.exports = {
 	getJSON,
 	req,
 	getNpmPackageVersions,
+	getLatestServerVersion,
 	mkdir,
 	writeJSON,
 	writeText,
@@ -174,5 +188,7 @@ module.exports = {
 	askBase,
 	askRequire,
 	askVersion,
-	askYes
+	askYes,
+	checkPnpm,
+	npmInstall
 };
