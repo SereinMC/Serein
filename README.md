@@ -27,13 +27,24 @@ npm i @pureeval/serein gulp gulp-cli -g
 serein # get help
 ```
 
+#### Tips
+Due to potential performance issues with the `npm` package manager while the installation of some dependencies (such as long-time installation), Serein will prioritize using the `pnpm` package manager if it was installed in your environment.
+
+You can also install the `pnpm` tool using the following method, which is a superior package manager compared to `npm`!
+
+```bash
+npm i pnpm -g
+
+pnpm --version
+```
+
 ### Create A Template Project
 
 Use `serein i` or `serein init` in an empty directory to create a template project interactively.
 
 Use `-y` or `--yes` flag to create the project without asking any questions.
 
-> On the Android platform, `npm` may not work properly, so ignore the errors it throws.
+> Notice: On the Android platform, `npm` may not work properly, so ignore the errors it throws.
 
 ### Building Project
 
