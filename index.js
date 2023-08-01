@@ -1,5 +1,8 @@
 #!/usr/bin/env node
-const cli_version = '1.3.0';
+const context = {
+	cli_version: '1.3.1',
+	pnpm: false
+};
 
 const program = require('commander');
 const path = require('path');
@@ -14,7 +17,6 @@ const {
 	warning,
 	accept,
 	done,
-	getJSON,
 	req,
 	mkdir,
 	writeJSON,
@@ -24,7 +26,9 @@ const {
 	askRequire,
 	askVersion,
 	askYes,
-	getNpmPackageVersions
+	getLatestServerVersion,
+	checkPnpm,
+	npmInstall
 } = require('./utils.js');
 
 program
@@ -38,7 +42,8 @@ program
 	.description('init a project')
 	.option('-y --yes', 'use default config without asking any questions')
 	.action((option) =>
-		getInformation(option.yes)
+		checkIfPnpmExist(option.yes)
+			.then(getInformation)
 			.then(downloadFiles)
 			.then(dealDependencies)
 			.then(creatFiles)
@@ -50,7 +55,8 @@ program
 	.description('switch requirements version')
 	.option('-y --yes', 'switch to latest version directly')
 	.action((option) =>
-		getVersionInformations(option.yes)
+		checkIfPnpmExist(option.yes)
+			.then(getVersionInformations)
 			.then(chooseVersions)
 			.then(switchVersions)
 	);
@@ -81,11 +87,9 @@ program
 
 program.parse(process.argv);
 
-async function getLatestServerVersion() {
-	const versions = await getNpmPackageVersions('@minecraft/server');
-	return versions[Object.keys(versions).sort().reverse()[0]]
-		.sort()
-		.reverse()[0];
+async function checkIfPnpmExist(isDefault) {
+	context.pnpm = checkPnpm();
+	return isDefault;
 }
 
 async function getInformation(isDefault) {
@@ -155,7 +159,7 @@ async function getInformation(isDefault) {
 			(await askYes(
 				`Allow ${magenta('eval')} and ${magenta('new Function')}?`
 			)) === 'yes';
-		const language = await askBase('Language:', ['js', 'ts']);
+		const language = await askBase('Language:', ['ts', 'js']);
 
 		return {
 			name: name,
@@ -330,7 +334,6 @@ async function creatFiles(informations) {
 			...informations.npmVersionsFiltered,
 			del: '7.0.0',
 			gulp: '^4.0.2',
-			'gulp-cli': '^2.3.0',
 			'gulp-esbuild': '^0.11.0',
 			'gulp-typescript': '^6.0.0-alpha.1',
 			'gulp-zip': '^5.1.0'
@@ -375,7 +378,7 @@ async function creatFiles(informations) {
 
 	writeText('gulpfile.js', informations.gulpfile);
 
-	exec('npm install');
+	npmInstall(context);
 }
 
 async function getVersionInformations(isDefault) {
@@ -426,7 +429,9 @@ function switchVersions(informations) {
 	writeJSON('package.json', informations.packages);
 
 	del.sync('node_modules');
+	if (context.pnpm && fs.existsSync('pnpm-lock.yaml'))
+		del.sync('pnpm-lock.yaml');
 	del.sync('package-lock.json');
 
-	exec('npm install');
+	npmInstall(context);
 }
