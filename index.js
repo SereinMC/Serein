@@ -34,7 +34,7 @@ const {
 program
 	.name('serein')
 	.description('A Minecraft: Bedrock Edition creation manage tool.')
-	.version(cli_version);
+	.version(context.cli_version);
 
 program
 	.command('init')
