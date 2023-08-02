@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const context = {
-	cli_version: '1.3.1',
+	cli_version: '1.3.2',
 	pnpm: false,
 	defaultCode:
 		'/*\n _____________________ \n< do things u want... >\n--------------------- \n      \\   ^__^\n       \\  (oo)_______\n          (__)\\       )\\/\\\n              ||----w |\n              ||     ||\n*/'
