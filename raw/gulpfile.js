@@ -14,7 +14,7 @@ import os from 'os';
 import gulpEsbuild from 'gulp-esbuild';
 import { join } from 'path';
 
-const get_Mojang_dir = () => {
+const get_mojang_dir = () => {
 	if (config.mc_dir !== null) return config.mc_dir;
 	const homeDir = os.homedir();
 	switch (process.platform) {
@@ -31,7 +31,7 @@ const get_Mojang_dir = () => {
 			break;
 	}
 };
-const mc_dir = get_Mojang_dir();
+const mc_dir = get_mojang_dir();
 
 const del_gen = (files) => (fn) => {
 	deleteAsync(files).then(
@@ -58,10 +58,7 @@ function copy_resource_packs() {
 		.pipe(gulp.dest('build/resource_packs'));
 }
 
-const copy_content = gulp.parallel(
-	copy_behavior_packs,
-	copy_resource_packs
-);
+const copy_content = gulp.parallel(copy_behavior_packs, copy_resource_packs);
 
 function compile_scripts() {
 	return gulp
@@ -85,6 +82,7 @@ function esbuild_system() {
 			gulpEsbuild({
 				outfile: script_entry,
 				bundle: true,
+				sourcemap: true,
 				external: [
 					'@minecraft/server-ui',
 					'@minecraft/server',
@@ -133,9 +131,7 @@ function deploy_local_mc_behavior_packs() {
 	return gulp
 		.src(['build/behavior_packs/**/*'])
 		.pipe(
-			gulp.dest(
-				join(mc_dir, 'development_behavior_packs/', pack_name)
-			)
+			gulp.dest(join(mc_dir, 'development_behavior_packs/', pack_name))
 		);
 }
 
@@ -143,9 +139,7 @@ function deploy_local_mc_resource_packs() {
 	return gulp
 		.src(['build/resource_packs/**/*'])
 		.pipe(
-			gulp.dest(
-				join(mc_dir, 'development_resource_packs/', pack_name)
-			)
+			gulp.dest(join(mc_dir, 'development_resource_packs/', pack_name))
 		);
 }
 
