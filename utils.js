@@ -68,13 +68,13 @@ async function getNpmPackageVersions(packageName) {
 
 async function getLatestServerVersion() {
 	const versions = await getNpmPackageVersions('@minecraft/server');
-	return versions[Object.keys(versions).sort().reverse()[0]]
-		.sort()
-		.reverse()[0];
+	const api = Object.keys(versions).sort().reverse()[0];
+	const npm = versions[api].sort().reverse()[0];
+	return [api, npm];
 }
 
 async function mkdir(dirs) {
-	for (let x of dirs) {
+	for (const x of dirs) {
 		if (!fs.existsSync(x)) {
 			fs.mkdirSync(x);
 			console.log(x, done);
@@ -114,40 +114,38 @@ async function askYes(str, filp = false) {
 	return answer === 'yes';
 }
 
+async function promptUser(message, choices) {
+	const { selected } = await inquirer.prompt([
+		{
+			type: 'list',
+			name: 'selected',
+			message: message,
+			choices: choices.map((choice) => ({ name: choice }))
+		}
+	]);
+	return selected;
+}
+
 async function askVersion(packageName) {
 	const versions = await getNpmPackageVersions(packageName);
-
 	const keys = Object.keys(versions).sort().reverse();
-	const keyChoices = keys.map((key) => ({ name: key }));
-	const { selectedKey } = await inquirer.prompt([
-		{
-			type: 'list',
-			name: 'selectedKey',
-			message: `Select yor ${magenta(packageName)} version in manifest`,
-			choices: keyChoices
-		}
-	]);
 
-	const sortedObjects = versions[selectedKey].sort().reverse();
-	const objectChoices = sortedObjects.map((obj) => ({ name: obj }));
-	const { selectedObject } = await inquirer.prompt([
-		{
-			type: 'list',
-			name: 'selectedObject',
-			message: `Select yor ${magenta(packageName)} version in npm`,
-			choices: objectChoices
-		}
-	]);
+	const selectedKey = await promptUser(
+		`Select your ${magenta(packageName)} version in manifest`,
+		keys
+	);
+	const selectedObject = await promptUser(
+		`Select your ${magenta(packageName)} version in npm`,
+		versions[selectedKey].sort().reverse()
+	);
 
 	return [selectedKey, selectedObject];
 }
 
 async function askRequire(packagename) {
 	const need = (await askYes(`Require ${magenta(packagename)}? `)) === 'yes';
-	let version = { mode: 'latest' };
-	if (need) version = await askVersion(packagename);
-
-	return { need, version };
+	if (need) return { need, version: await askVersion(packagename) };
+	else return { need };
 }
 
 function checkPnpm() {
@@ -159,8 +157,8 @@ function checkPnpm() {
 	return true;
 }
 
-function npmInstall(context) {
-	if (context.pnpm) {
+function npmInstall(pnpm) {
+	if (pnpm) {
 		console.log(
 			accept(
 				'Detects that you have pnpm and will automatically enable the pnpm installation dependency.'
