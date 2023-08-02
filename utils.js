@@ -109,9 +109,9 @@ async function askBase(str, options) {
 	return answer;
 }
 
-async function askYes(str, flip = true) {
-	const { answer } = await askBase(str, ['no', 'yes']);
-	return flip ? answer === 'yes' : answer === 'no';
+async function askYes(str, filp = false) {
+	const { answer } = await askBase(str, filp ? ['yes', 'no'] : ['no', 'yes']);
+	return answer === 'yes';
 }
 
 async function askVersion(packageName) {
@@ -147,7 +147,7 @@ async function askRequire(packagename) {
 	let version = { mode: 'latest' };
 	if (need) version = await askVersion(packagename);
 
-	return [need, version];
+	return { need, version };
 }
 
 function checkPnpm() {

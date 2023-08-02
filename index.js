@@ -137,28 +137,18 @@ async function getInformation(isDefault) {
 			)
 		);
 
-		const toRequire = ([x, y]) => {
-			return {
-				need: x,
-				version: y
-			};
+		const server = {
+			need: true,
+			version: await askVersion('@minecraft/server')
 		};
-		const server = toRequire([true, await askVersion('@minecraft/server')]);
-		const server_ui = toRequire(await askRequire('@minecraft/server-ui'));
-		const server_admin = toRequire(
-			await askRequire('@minecraft/server-admin')
+		const server_ui = await askRequire('@minecraft/server-ui');
+		const server_admin = await askRequire('@minecraft/server-admin');
+		const server_gametest = await askRequire('@minecraft/server-gametest');
+		const server_net = await askRequire('@minecraft/server-net');
+		const res = await askYes(`Create ${magenta('resource_packs')}?`, true);
+		const allow_eval = await askYes(
+			`Allow ${magenta('eval')} and ${magenta('new Function')}?`
 		);
-		const server_gametest = toRequire(
-			await askRequire('@minecraft/server-gametest')
-		);
-		const server_net = toRequire(await askRequire('@minecraft/server-net'));
-		const res =
-			(await askYes(`Create ${magenta('resource_packs')}?`, false)) ===
-			'no';
-		const allow_eval =
-			(await askYes(
-				`Allow ${magenta('eval')} and ${magenta('new Function')}?`
-			)) === 'yes';
 		const language = await askBase('Language:', ['ts', 'js']);
 
 		return {
@@ -273,8 +263,6 @@ async function creatFiles(informations) {
 		res: informations.res,
 		name: informations.name,
 		mc_preview: false,
-		bds: false,
-		bds_path: '~/bds/',
 		output: 'build',
 		mc_dir: null
 	});
@@ -347,7 +335,6 @@ async function creatFiles(informations) {
 		writeJSON('tsconfig.json', {
 			compilerOptions: {
 				target: 'es2020',
-				moduleResolution: 'node',
 				module: 'es2020',
 				noLib: false,
 				emitDecoratorMetadata: true,
