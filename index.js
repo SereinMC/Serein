@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 const context = {
 	cli_version: '1.3.1',
-	pnpm: false
+	pnpm: false,
+	defaultCode:
+		'/*\n _____________________ \n< do things u want... >\n--------------------- \n      \\   ^__^\n       \\  (oo)_______\n          (__)\\       )\\/\\\n              ||----w |\n              ||     ||\n*/'
 };
 
 const program = require('commander');
@@ -218,13 +220,6 @@ async function dealDependencies(informations) {
 		informations.versions[x] = current.version[0];
 	}
 
-	const toDependencies = (name) => {
-		return {
-			module_name: name,
-			version: informations.versions[name]
-		};
-	};
-
 	const resuuid = uuid(),
 		dependencies = [],
 		npmVersionsFiltered = {};
@@ -235,11 +230,14 @@ async function dealDependencies(informations) {
 			version: informations.versionArray
 		});
 
-	for (const x in informations.packageVersions) {
-		const current = informations.packageVersions[x];
+	for (const name in informations.packageVersions) {
+		const current = informations.packageVersions[name];
 		if (current.need) {
-			dependencies.push(toDependencies(x));
-			npmVersionsFiltered[x] = informations.npmVersions[x];
+			dependencies.push({
+				module_name: name,
+				version: informations.versions[name]
+			});
+			npmVersionsFiltered[name] = informations.npmVersions[name];
 		}
 	}
 
@@ -328,9 +326,6 @@ async function creatFiles(informations) {
 		}
 	};
 
-	const defaultCode =
-		'/*\n _____________________ \n< do things u want... >\n--------------------- \n      \\   ^__^\n       \\  (oo)_______\n          (__)\\       )\\/\\\n              ||----w |\n              ||     ||\n*/';
-
 	if (informations.language === 'ts') {
 		writeJSON('tsconfig.json', {
 			compilerOptions: {
@@ -351,9 +346,9 @@ async function creatFiles(informations) {
 			compileOnSave: false
 		});
 
-		writeText('scripts/main.ts', defaultCode);
+		writeText('scripts/main.ts', context.defaultCode);
 	} else {
-		writeText('scripts/main.js', defaultCode);
+		writeText('scripts/main.js', context.defaultCode);
 	}
 
 	writeJSON('package.json', npmPackage);
@@ -365,7 +360,7 @@ async function creatFiles(informations) {
 
 	writeText('gulpfile.js', informations.gulpfile);
 
-	npmInstall(context);
+	npmInstall(context.pnpm);
 }
 
 async function getVersionInformations(isDefault) {
@@ -384,21 +379,23 @@ async function getVersionInformations(isDefault) {
 async function chooseVersions(informations) {
 	for (const x in informations.manifest['dependencies']) {
 		const current =
-			informations.manifest['dependencies'][x]['module_name'] || '';
+			informations.manifest.dependencies[x]['module_name'] || '';
 		if (current.search(/@minecraft/) !== -1) {
 			const switchYes =
+				informations.isDefault ||
 				(await askYes(
 					`Do you want to switch versions dependent on ${magenta(
 						current
 					)}?`
-				)) === 'yes';
+				));
 
 			if (switchYes) {
-				let version;
-				if (!informations.isDefault)
-					version = await askVersion(current);
-				else version = await getLatestServerVersion();
-				version = console.log(
+				const version = !informations.isDefault
+					? await askVersion(current)
+					: await getLatestServerVersion();
+				informations.manifest.dependencies[x]['version'] = version[0];
+				informations.packages['dependencies'][current] = version[1];
+				console.log(
 					`Dependency ${magenta(current)} update to ${accept(
 						informations.manifest['dependencies'][x]['version']
 					)}`
@@ -420,5 +417,5 @@ function switchVersions(informations) {
 		del.sync('pnpm-lock.yaml');
 	del.sync('package-lock.json');
 
-	npmInstall(context);
+	npmInstall(context.pnpm);
 }
