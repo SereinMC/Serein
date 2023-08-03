@@ -13,7 +13,13 @@ const fs = require('fs');
 const del = require('delete');
 const PNG = require('pngjs').PNG;
 const icon_gen = require('fractal-icon-cjs');
-const inquirer = require('inquirer');
+const {
+	SERVER,
+	SERVER_UI,
+	SERVER_ADMIN,
+	SERVER_GAMETEST,
+	SERVER_NET
+} = require('./src/constants.js');
 const {
 	magenta,
 	warning,
@@ -24,6 +30,7 @@ const {
 	writeJSON,
 	writeText,
 	exec,
+	askProjectInfo,
 	askBase,
 	askRequire,
 	askVersion,
@@ -31,7 +38,7 @@ const {
 	getLatestServerVersion,
 	checkPnpm,
 	npmInstall
-} = require('./utils.js');
+} = require('./src/utils.js');
 
 program
 	.name('serein')
@@ -99,36 +106,9 @@ async function getInformation(isDefault) {
 		console.log('This utility will walk you through creating a project.');
 		console.log('Press ^C at any time to quit.');
 
-		const [name, version, versionArray, description] = await inquirer
-			.prompt([
-				{
-					type: 'input',
-					name: 'name',
-					message: `project name: (${warning(
-						path.basename(process.cwd())
-					)}) `,
-					default: path.basename(process.cwd())
-				},
-				{
-					type: 'input',
-					name: 'version',
-					message: `version: ${warning('(1.0.0)')} `,
-					default: '1.0.0'
-				},
-				{
-					type: 'input',
-					name: 'description',
-					message: 'description: ',
-					default: ''
-				}
-			])
-			.then((answers) => {
-				const name = answers.name;
-				const version = answers.version;
-				const versionArray = version.split('.').map((x) => parseInt(x));
-				const description = answers.description;
-				return [name, version, versionArray, description];
-			});
+		const { name, version, description } = await askProjectInfo();
+
+		const versionArray = version.split('.').map((x) => parseInt(x));
 
 		console.log(
 			'Now I will inquire you the dependencies of your project, including the version. Please follow the guide to choose a specific version to download.'
@@ -138,15 +118,14 @@ async function getInformation(isDefault) {
 				'You should make sure the dependencies are well organized if you want to use dependencies (latest version) besides @mc/server.'
 			)
 		);
-
 		const server = {
 			need: true,
-			version: await askVersion('@minecraft/server')
+			version: await askVersion(SERVER)
 		};
-		const server_ui = await askRequire('@minecraft/server-ui');
-		const server_admin = await askRequire('@minecraft/server-admin');
-		const server_gametest = await askRequire('@minecraft/server-gametest');
-		const server_net = await askRequire('@minecraft/server-net');
+		const server_ui = await askRequire(SERVER_UI);
+		const server_admin = await askRequire(SERVER_ADMIN);
+		const server_gametest = await askRequire(SERVER_GAMETEST);
+		const server_net = await askRequire(SERVER_NET);
 		const res = await askYes(`Create ${magenta('resource_packs')}?`, true);
 		const allow_eval = await askYes(
 			`Allow ${magenta('eval')} and ${magenta('new Function')}?`
@@ -162,11 +141,11 @@ async function getInformation(isDefault) {
 			allow_eval: allow_eval,
 			language: language,
 			packageVersions: {
-				'@minecraft/server': server,
-				'@minecraft/server-ui': server_ui,
-				'@minecraft/server-gametest': server_gametest,
-				'@minecraft/server-net': server_net,
-				'@minecraft/server-admin': server_admin
+				[SERVER]: server,
+				[SERVER_UI]: server_ui,
+				[SERVER_GAMETEST]: server_gametest,
+				[SERVER_NET]: server_net,
+				[SERVER_ADMIN]: server_admin
 			}
 		};
 	} else {
@@ -181,14 +160,14 @@ async function getInformation(isDefault) {
 			allow_eval: false,
 			language: 'ts',
 			packageVersions: {
-				'@minecraft/server': {
+				[SERVER]: {
 					need: true,
 					version: await getLatestServerVersion()
 				},
-				'@minecraft/server-ui': reject,
-				'@minecraft/server-gametest': reject,
-				'@minecraft/server-net': reject,
-				'@minecraft/server-admin': reject
+				[SERVER_UI]: reject,
+				[SERVER_GAMETEST]: reject,
+				[SERVER_NET]: reject,
+				[SERVER_ADMIN]: reject
 			}
 		};
 	}
@@ -216,8 +195,8 @@ async function dealDependencies(informations) {
 	for (const x in informations.packageVersions) {
 		const current = informations.packageVersions[x];
 		if (current.need === false) continue;
-		informations.npmVersions[x] = current.version[1];
-		informations.versions[x] = current.version[0];
+		informations.npmVersions[x] = current.version.npm;
+		informations.versions[x] = current.version.api;
 	}
 
 	const resuuid = uuid(),
@@ -377,9 +356,8 @@ async function getVersionInformations(isDefault) {
 }
 
 async function chooseVersions(informations) {
-	for (const x in informations.manifest['dependencies']) {
-		const current =
-			informations.manifest.dependencies[x]['module_name'] || '';
+	for (const x in informations.manifest.dependencies) {
+		const current = informations.manifest.dependencies[x].module_name || '';
 		if (current.search(/@minecraft/) !== -1) {
 			const switchYes =
 				informations.isDefault ||
@@ -393,11 +371,11 @@ async function chooseVersions(informations) {
 				const version = !informations.isDefault
 					? await askVersion(current)
 					: await getLatestServerVersion();
-				informations.manifest.dependencies[x]['version'] = version[0];
-				informations.packages['dependencies'][current] = version[1];
+				informations.manifest.dependencies[x].version = version.api;
+				informations.packages.dependencies[current] = version.npm;
 				console.log(
 					`Dependency ${magenta(current)} update to ${accept(
-						informations.manifest['dependencies'][x]['version']
+						informations.manifest.dependencies[x].version
 					)}`
 				);
 			}
