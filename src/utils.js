@@ -1,6 +1,7 @@
 const chalk = require('chalk');
 const https = require('https');
 const fs = require('fs');
+const path = require('path');
 const cp = require('node:child_process');
 const inquirer = require('inquirer');
 const error = chalk.bold.red;
@@ -9,11 +10,6 @@ const magenta = chalk.bold.magenta;
 const warning = chalk.hex('#FFA500');
 const accept = chalk.bold.green;
 const done = accept('[done]');
-
-async function getJSON(url) {
-	const str = await req(url);
-	return JSON.parse(str);
-}
 
 function req(options) {
 	return new Promise((resolve, reject) => {
@@ -31,6 +27,11 @@ function req(options) {
 		});
 		req.end();
 	});
+}
+
+async function getJSON(url) {
+	const str = await req(url);
+	return JSON.parse(str);
 }
 
 async function getNpmPackageVersions(packageName) {
@@ -70,7 +71,7 @@ async function getLatestServerVersion() {
 	const versions = await getNpmPackageVersions('@minecraft/server');
 	const api = Object.keys(versions).sort().reverse()[0];
 	const npm = versions[api].sort().reverse()[0];
-	return [api, npm];
+	return { api, npm };
 }
 
 async function mkdir(dirs) {
@@ -110,8 +111,32 @@ async function askBase(str, options) {
 }
 
 async function askYes(str, filp = false) {
-	const { answer } = await askBase(str, filp ? ['yes', 'no'] : ['no', 'yes']);
-	return answer === 'yes';
+	return (await askBase(str, filp ? ['yes', 'no'] : ['no', 'yes'])) === 'yes';
+}
+
+async function askProjectInfo() {
+	return inquirer.prompt([
+		{
+			type: 'input',
+			name: 'name',
+			message: `project name: (${warning(
+				path.basename(process.cwd())
+			)}) `,
+			default: path.basename(process.cwd())
+		},
+		{
+			type: 'input',
+			name: 'version',
+			message: `version: ${warning('(1.0.0)')} `,
+			default: '1.0.0'
+		},
+		{
+			type: 'input',
+			name: 'description',
+			message: 'description: ',
+			default: ''
+		}
+	]);
 }
 
 async function promptUser(message, choices) {
@@ -130,16 +155,19 @@ async function askVersion(packageName) {
 	const versions = await getNpmPackageVersions(packageName);
 	const keys = Object.keys(versions).sort().reverse();
 
-	const selectedKey = await promptUser(
+	const api = await promptUser(
 		`Select your ${magenta(packageName)} version in manifest`,
 		keys
 	);
-	const selectedObject = await promptUser(
+	const npm = await promptUser(
 		`Select your ${magenta(packageName)} version in npm`,
-		versions[selectedKey].sort().reverse()
+		versions[api].sort().reverse()
 	);
 
-	return [selectedKey, selectedObject];
+	return {
+		api,
+		npm
+	};
 }
 
 async function askRequire(packagename) {
@@ -183,6 +211,7 @@ module.exports = {
 	writeJSON,
 	writeText,
 	exec,
+	askProjectInfo,
 	askBase,
 	askRequire,
 	askVersion,
