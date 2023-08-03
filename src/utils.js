@@ -171,7 +171,7 @@ async function askVersion(packageName) {
 }
 
 async function askRequire(packagename) {
-	const need = (await askYes(`Require ${magenta(packagename)}? `)) === 'yes';
+	const need = await askYes(`Require ${magenta(packagename)}? `);
 	if (need) return { need, version: await askVersion(packagename) };
 	else return { need };
 }
