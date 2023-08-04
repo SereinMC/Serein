@@ -22,7 +22,7 @@ View this document in [简体中文](README_zh-CN.md) | English
 Make sure you have Node.js Stable version or newer.
 
 ```bash
-npm i @pureeval/serein gulp gulp-cli -g
+npm i @pureeval/serein gulp-cli -g
 
 serein # get help
 ```
