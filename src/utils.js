@@ -10,6 +10,14 @@ const magenta = chalk.bold.magenta;
 const warning = chalk.hex('#FFA500');
 const accept = chalk.bold.green;
 const done = accept('[done]');
+const {
+	SERVER,
+	SERVER_UI,
+	SERVER_ADMIN,
+	SERVER_GAMETEST,
+	SERVER_NET,
+	SERVER_EDITOR
+} = require('./constants.js');
 
 function req(options) {
 	return new Promise((resolve, reject) => {
@@ -36,9 +44,7 @@ async function getJSON(url) {
 
 async function getNpmPackageVersions(packageName) {
 	process.stdout.write(
-		`Getting the lastest dependencies versions for ${magenta(
-			packageName
-		)}...  `
+		`Getting the dependencies versions for ${magenta(packageName)}...  `
 	);
 	const data = await getJSON(`https://registry.npmjs.org/${packageName}`);
 	console.log(done);
@@ -170,10 +176,28 @@ async function askVersion(packageName) {
 	};
 }
 
-async function askRequire(packagename) {
-	const need = await askYes(`Require ${magenta(packagename)}? `);
-	if (need) return { need, version: await askVersion(packagename) };
-	else return { need };
+async function getDeps(versions, msg) {
+	const choices = [
+		{ name: SERVER, value: SERVER },
+		{ name: SERVER_UI, value: SERVER_UI },
+		{ name: SERVER_ADMIN, value: SERVER_ADMIN },
+		{ name: SERVER_GAMETEST, value: SERVER_GAMETEST },
+		{ name: SERVER_NET, value: SERVER_NET },
+		{ name: SERVER_EDITOR, value: SERVER_EDITOR }
+	].filter((v) => versions.includes(v.name));
+	const { deps } = await inquirer.prompt([
+		{
+			type: 'checkbox',
+			message: msg,
+			name: 'deps',
+			choices: choices
+		}
+	]);
+	const packageVersions = {};
+	for (const packageName of deps) {
+		packageVersions[packageName] = await askVersion(packageName);
+	}
+	return packageVersions;
 }
 
 function checkPnpm() {
@@ -187,14 +211,14 @@ function checkPnpm() {
 
 function npmInstall(pnpm) {
 	const platform = process.platform;
-	const android_suffix = platform === 'android' ? '' : ' --no-bin-links';
+	const android_suffix = platform === 'android' ? ' --no-bin-links' : '';
 	if (pnpm) {
 		console.log(
 			accept(
 				'Detects that you have pnpm and will automatically enable the pnpm installation dependency.'
 			)
 		);
-		exec('pnpm install' + android_suffix);
+		exec('pnpm install');
 	} else exec('npm install' + android_suffix);
 }
 
@@ -207,15 +231,14 @@ module.exports = {
 	done,
 	getJSON,
 	req,
-	getNpmPackageVersions,
 	getLatestServerVersion,
+	getDeps,
 	mkdir,
 	writeJSON,
 	writeText,
 	exec,
 	askProjectInfo,
 	askBase,
-	askRequire,
 	askVersion,
 	askYes,
 	checkPnpm,
