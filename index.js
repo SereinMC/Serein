@@ -362,12 +362,12 @@ async function chooseVersions(informations) {
 		);
 		const packages = Object.keys(packageVersions);
 		for (const i in nowDeps) {
-			const package = nowDeps[i].module_name || '';
-			if (!packages.includes(package)) continue;
-			if (package.search(/@minecraft/) !== -1) {
-				nowDeps[i].version = packageVersions[package].api;
-				informations.packages.dependencies[package] =
-					packageVersions[package].npm;
+			const packageName = nowDeps[i].module_name || '';
+			if (!packages.includes(packageName)) continue;
+			if (packageName.search(/@minecraft/) !== -1) {
+				nowDeps[i].version = packageVersions[packageName].api;
+				informations.packages.dependencies[packageName] =
+					packageVersions[packageName].npm;
 			}
 		}
 	}
