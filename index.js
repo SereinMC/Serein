@@ -345,9 +345,9 @@ async function chooseVersions(informations) {
 	const deps = [],
 		nowDeps = [];
 	for (const current of informations.manifest.dependencies) {
-		const package = current.module_name || '';
-		if (package.search(/@minecraft/) !== -1) {
-			if (informations.isDefault && package === SERVER) {
+		const packageName = current.module_name || '';
+		if (packageName.search(/@minecraft/) !== -1) {
+			if (informations.isDefault && packageName === SERVER) {
 				const version = await getLatestServerVersion();
 				current.version = version.api;
 				informations.packages.dependencies[current] = version.npm;

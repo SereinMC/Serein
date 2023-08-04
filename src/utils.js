@@ -194,8 +194,8 @@ async function getDeps(versions, msg) {
 		}
 	]);
 	const packageVersions = {};
-	for (const package of deps) {
-		packageVersions[package] = await askVersion(package);
+	for (const packageName of deps) {
+		packageVersions[packageName] = await askVersion(packageName);
 	}
 	return packageVersions;
 }
