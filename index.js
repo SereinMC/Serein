@@ -154,10 +154,7 @@ async function getInformation(isDefault) {
 			allow_eval: false,
 			language: 'ts',
 			packageVersions: {
-				[SERVER]: {
-					need: true,
-					version: await getLatestServerVersion()
-				}
+				[SERVER]: await getLatestServerVersion()
 			}
 		};
 	}
