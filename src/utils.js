@@ -2,7 +2,7 @@ const chalk = require('chalk');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
-const cp = require('node:child_process');
+const cp = require('child_process');
 const inquirer = require('inquirer');
 const error = chalk.bold.red;
 const gary = chalk.bold.whiteBright;
@@ -186,14 +186,16 @@ function checkPnpm() {
 }
 
 function npmInstall(pnpm) {
+	const platform = process.platform;
+	const android_suffix = platform === 'android' ? '' : ' --no-bin-links';
 	if (pnpm) {
 		console.log(
 			accept(
 				'Detects that you have pnpm and will automatically enable the pnpm installation dependency.'
 			)
 		);
-		exec('pnpm install');
-	} else exec('npm install');
+		exec('pnpm install' + android_suffix);
+	} else exec('npm install' + android_suffix);
 }
 
 module.exports = {
