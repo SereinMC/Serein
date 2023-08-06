@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Usage: tools/deploy-ci.js
-const https = require('node:https');
+import { request } from 'https';
 
 const options = {
 	hostname: 'api.cloudflare.com',
@@ -9,7 +9,7 @@ const options = {
 	method: 'POST'
 };
 
-const req = https.request(options, (res) => {
+const req = request(options, (res) => {
 	console.log('statusCode:', res.statusCode);
 
 	res.on('data', (d) => {
