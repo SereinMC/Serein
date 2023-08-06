@@ -15,7 +15,7 @@ Serein 是一个为 [Minecraft: Bedrock Edition Script API](https://learn.micros
 - 🪐 为每个项目生成独一无二的 "pack_icon"
 - 🔌 支持嵌入到现有项目中（开发中）
 
-[![asciicast](https://asciinema.org/a/600096.svg)](https://asciinema.org/a/600096)
+[![asciicast](https://asciinema.org/a/600827.svg)](https://asciinema.org/a/600827)
 
 ### 快速开始
 

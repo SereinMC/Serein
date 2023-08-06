@@ -15,7 +15,7 @@ View this document in [简体中文](README_zh-CN.md) | English
 - 🪐 Random `pack_icon` generator
 - 🔌 Support for embedding into existing projects (under development)
 
-[![asciicast](https://asciinema.org/a/600096.svg)](https://asciinema.org/a/600096)
+[![asciicast](https://asciinema.org/a/600827.svg)](https://asciinema.org/a/600827)
 
 ### Getting Started
 
