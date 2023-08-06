@@ -1,9 +1,24 @@
+// === NPM PACKAGES
 const SERVER = '@minecraft/server';
 const SERVER_UI = '@minecraft/server-ui';
 const SERVER_ADMIN = '@minecraft/server-admin';
 const SERVER_GAMETEST = '@minecraft/server-gametest';
 const SERVER_NET = '@minecraft/server-net';
 const SERVER_EDITOR = '@minecraft/server-editor';
+// === END NPM PACKAGES
+
+// === NPM MIRRORS
+const Mirrors = [
+	'https://registry.npmmirror.com/',
+	'https://registry.npmjs.org/'
+];
+// === END NPM MIRRORS
+
+
+// === DEFAULT CODE
+const DefaultCode =
+	'/*\n _____________________ \n< do things u want... >\n--------------------- \n      \\   ^__^\n       \\  (oo)_______\n          (__)\\       )\\/\\\n              ||----w |\n              ||     ||\n*/';
+// === END DEFAULT CODE
 
 export {
 	SERVER,
@@ -11,5 +26,7 @@ export {
 	SERVER_ADMIN,
 	SERVER_GAMETEST,
 	SERVER_NET,
-	SERVER_EDITOR
+	SERVER_EDITOR,
+	Mirrors,
+	DefaultCode
 };
