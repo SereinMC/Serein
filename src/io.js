@@ -47,4 +47,4 @@ function npmInstall(pnpm) {
 	} else exec('npm install' + android_suffix);
 }
 
-export { mkdir, writeText, writeJSON, checkPnpm, npmInstall };
+export { mkdir, writeText, writeJSON, exec, checkPnpm, npmInstall };
