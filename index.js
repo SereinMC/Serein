@@ -20,14 +20,7 @@ import {
 	SERVER_NET,
 	SERVER_EDITOR
 } from './src/constants.js';
-import {
-	req,
-	askProjectInfo,
-	askBase,
-	askYes,
-	getLatestServerVersion,
-	getDeps
-} from './src/inquirer.js';
+import { askProjectInfo, askBase, askYes, getDeps } from './src/inquirer.js';
 import {
 	mkdir,
 	writeJSON,
@@ -37,6 +30,7 @@ import {
 	npmInstall
 } from './src/io.js';
 import { magenta, warning, done } from './src/console.js';
+import { req, getLatestServerVersion } from './src/net.js';
 
 program
 	.name('serein')
