@@ -6,12 +6,12 @@ const context = {
 		'/*\n _____________________ \n< do things u want... >\n--------------------- \n      \\   ^__^\n       \\  (oo)_______\n          (__)\\       )\\/\\\n              ||----w |\n              ||     ||\n*/'
 };
 
-import { program } from 'commander';
 import { basename } from 'path';
 import { v4 as uuid } from 'uuid';
-import { readFileSync, existsSync } from 'fs';
 import { deleteAsync } from 'del';
+import { program } from 'commander';
 import { gen_icon } from './src/fractal.js';
+import { readFileSync, existsSync } from 'fs';
 import {
 	SERVER,
 	SERVER_UI,
@@ -20,23 +20,17 @@ import {
 	SERVER_NET,
 	SERVER_EDITOR
 } from './src/constants.js';
+import { askProjectInfo, askBase, askYes, getDeps } from './src/inquirer.js';
 import {
-	magenta,
-	warning,
-	done,
-	req,
 	mkdir,
 	writeJSON,
 	writeText,
 	exec,
-	askProjectInfo,
-	askBase,
-	askYes,
-	getLatestServerVersion,
-	getDeps,
 	checkPnpm,
 	npmInstall
-} from './src/utils.js';
+} from './src/io.js';
+import { magenta, warning, done } from './src/console.js';
+import { req, getLatestServerVersion } from './src/net.js';
 
 program
 	.name('serein')
