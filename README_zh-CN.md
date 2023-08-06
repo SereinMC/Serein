@@ -12,7 +12,7 @@ Serein 是一个为 [Minecraft: Bedrock Edition Script API](https://learn.micros
 - 📦 自动打包资源包到 `mcpack`。
 - 🎛️ 支持跨平台（Windows/Linux/Android）部署与热重载资源包
 - 💡 使用 `esbuild` 构建项目代码，支持打包 npm 依赖
-- 🪐 为每个项目生成独一无二的 "pack_icon"
+- 🪐 为每个项目生成独一无二的 `pack_icon`
 - 🔌 支持嵌入到现有项目中（开发中）
 
 [![asciicast](https://asciinema.org/a/600827.svg)](https://asciinema.org/a/600827)

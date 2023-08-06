@@ -1,6 +1,7 @@
 import { exec } from './io.js';
 import { existsSync } from 'fs';
 import { deleteSync } from 'del';
+import { writeText } from './io.js';
 import { accept } from './console.js';
 import MirrorHandler from './mirror.js';
 
@@ -35,9 +36,10 @@ class NpmClass {
 
 	clearModules() {
 		deleteSync('node_modules');
-		if (this.pnpm && existsSync('pnpm-lock.yaml'))
-			deleteSync('pnpm-lock.yaml');
-		else deleteSync('package-lock.json');
+		if (this.pnpm) {
+			if (existsSync('pnpm-lock.yaml')) deleteSync('pnpm-lock.yaml');
+			if (existsSync('.npmrc')) deleteSync('.npmrc');
+		} else deleteSync('package-lock.json');
 	}
 
 	async install() {
@@ -45,6 +47,8 @@ class NpmClass {
 		const android_suffix =
 			this.platform === 'android' ? '--no-bin-links' : '';
 		if (this.pnpm) {
+			if (this.platform === 'android')
+				writeText('.npmrc', 'node-linker=hoisted');
 			console.log(
 				accept(
 					'Detects that you have pnpm and will automatically enable the pnpm installation dependency.'
