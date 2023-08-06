@@ -18,7 +18,7 @@ function render(hash, size, dst, fg, margin = 0.1) {
 	const baseMargin = Math.floor(size * margin);
 	const cell = Math.floor((size - baseMargin * 2) / 5);
 	margin = Math.floor((size - cell * 5) / 2);
-	for (let i = 0; i < 15; i++) {
+	for (let i = 0; i < 15; ++i) {
 		let color = parseInt(hash.charAt(i), 16) % 2 ? bg : fg;
 		if (i < 5) {
 			rectangle(
