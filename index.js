@@ -6,22 +6,21 @@ const context = {
 		'/*\n _____________________ \n< do things u want... >\n--------------------- \n      \\   ^__^\n       \\  (oo)_______\n          (__)\\       )\\/\\\n              ||----w |\n              ||     ||\n*/'
 };
 
-const program = require('commander');
-const path = require('path');
-const { v4: uuid } = require('uuid');
-const fs = require('fs');
-const del = require('delete');
-const PNG = require('pngjs').PNG;
-const icon_gen = require('fractal-icon-cjs');
-const {
+import { program } from 'commander';
+import { basename } from 'path';
+import { v4 as uuid } from 'uuid';
+import { readFileSync, existsSync } from 'fs';
+import { deleteAsync } from 'del';
+import { gen_icon } from './src/fractal.js';
+import {
 	SERVER,
 	SERVER_UI,
 	SERVER_ADMIN,
 	SERVER_GAMETEST,
 	SERVER_NET,
 	SERVER_EDITOR
-} = require('./src/constants.js');
-const {
+} from './src/constants.js';
+import {
 	magenta,
 	warning,
 	done,
@@ -37,7 +36,7 @@ const {
 	getDeps,
 	checkPnpm,
 	npmInstall
-} = require('./src/utils.js');
+} from './src/utils.js';
 
 program
 	.name('serein')
@@ -146,7 +145,7 @@ async function getInformation(isDefault) {
 		};
 	} else {
 		return {
-			name: path.basename(process.cwd()),
+			name: basename(process.cwd()),
 			version: '1.0.0',
 			versionArray: [1, 0, 0],
 			description: '',
@@ -166,7 +165,7 @@ async function downloadFiles(informations) {
 	console.log(done);
 
 	process.stdout.write('Generating project icon... ');
-	const icon = PNG.sync.write(icon_gen.gen_icon(informations.name));
+	const icon = gen_icon(informations.name);
 	console.log(done);
 
 	return {
@@ -327,9 +326,9 @@ async function creatFiles(informations) {
 
 async function getVersionInformations(isDefault) {
 	const manifest = JSON.parse(
-		fs.readFileSync('./behavior_packs/manifest.json', 'utf-8')
+		readFileSync('./behavior_packs/manifest.json', 'utf-8')
 	);
-	const packages = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
+	const packages = JSON.parse(readFileSync('package.json', 'utf-8'));
 
 	return {
 		isDefault: isDefault,
@@ -372,15 +371,15 @@ async function chooseVersions(informations) {
 	return informations;
 }
 
-function switchVersions(informations) {
+async function switchVersions(informations) {
 	writeJSON('./behavior_packs/manifest.json', informations.manifest);
 
 	writeJSON('package.json', informations.packages);
 
-	del.sync('node_modules');
-	if (context.pnpm && fs.existsSync('pnpm-lock.yaml'))
-		del.sync('pnpm-lock.yaml');
-	del.sync('package-lock.json');
+	await deleteAsync('node_modules');
+	if (context.pnpm && existsSync('pnpm-lock.yaml'))
+		await deleteAsync('pnpm-lock.yaml');
+	else await deleteAsync('package-lock.json');
 
 	npmInstall(context.pnpm);
 }

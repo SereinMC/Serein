@@ -1,27 +1,27 @@
-const chalk = require('chalk');
-const https = require('https');
-const fs = require('fs');
-const path = require('path');
-const cp = require('child_process');
-const inquirer = require('inquirer');
+import chalk from 'chalk';
+import inquirer from 'inquirer';
+import { request } from 'https';
+import { basename } from 'path';
+import { execSync } from 'child_process';
+import { writeFileSync, existsSync, mkdirSync } from 'fs';
 const error = chalk.bold.red;
 const gary = chalk.bold.whiteBright;
 const magenta = chalk.bold.magenta;
 const warning = chalk.hex('#FFA500');
 const accept = chalk.bold.green;
 const done = accept('[done]');
-const {
+import {
 	SERVER,
 	SERVER_UI,
 	SERVER_ADMIN,
 	SERVER_GAMETEST,
 	SERVER_NET,
 	SERVER_EDITOR
-} = require('./constants.js');
+} from './constants.js';
 
 function req(options) {
 	return new Promise((resolve, reject) => {
-		const req = https.request(options, (res) => {
+		const req = request(options, (res) => {
 			let body = '';
 			res.on('data', (chunk) => {
 				body += chunk;
@@ -82,26 +82,26 @@ async function getLatestServerVersion() {
 
 async function mkdir(dirs) {
 	for (const x of dirs) {
-		if (!fs.existsSync(x)) {
-			fs.mkdirSync(x);
+		if (!existsSync(x)) {
+			mkdirSync(x);
 			console.log(x, done);
 		}
 	}
 }
 
 function writeText(filename, text) {
-	fs.writeFileSync(filename, text);
+	writeFileSync(filename, text);
 	console.log(filename, done);
 }
 
 function writeJSON(filename, obj) {
-	fs.writeFileSync(filename, JSON.stringify(obj, null, '\t'));
+	writeFileSync(filename, JSON.stringify(obj, null, '\t'));
 	console.log(filename, done);
 }
 
 function exec(command, withLog = true) {
-	if (withLog) cp.execSync(command, { stdio: [0, 1, 2] });
-	else cp.execSync(command, { stdio: 'ignore' });
+	if (withLog) execSync(command, { stdio: [0, 1, 2] });
+	else execSync(command, { stdio: 'ignore' });
 }
 
 async function askBase(str, options) {
@@ -121,14 +121,12 @@ async function askYes(str, filp = false) {
 }
 
 async function askProjectInfo() {
-	return inquirer.prompt([
+	return await inquirer.prompt([
 		{
 			type: 'input',
 			name: 'name',
-			message: `project name: (${warning(
-				path.basename(process.cwd())
-			)}) `,
-			default: path.basename(process.cwd())
+			message: `project name: (${warning(basename(process.cwd()))}) `,
+			default: basename(process.cwd())
 		},
 		{
 			type: 'input',
@@ -222,7 +220,7 @@ function npmInstall(pnpm) {
 	} else exec('npm install' + android_suffix);
 }
 
-module.exports = {
+export {
 	error,
 	gary,
 	magenta,
