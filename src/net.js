@@ -1,5 +1,6 @@
 import { request } from 'https';
-import { magenta, done } from './console.js';
+import MirrorHandler from './mirror.js';
+import { magenta, start, done } from './console.js';
 
 function req(options) {
 	return new Promise((resolve, reject) => {
@@ -25,11 +26,11 @@ async function getJSON(url) {
 }
 
 async function getNpmPackageVersions(packageName) {
-	process.stdout.write(
-		`Getting the dependencies versions for ${magenta(packageName)}...  `
+	start(`Getting the dependencies versions for ${magenta(packageName)}...  `);
+	const data = await getJSON(
+		(await MirrorHandler.getFastestMirror()) + packageName
 	);
-	const data = await getJSON(`https://registry.npmjs.org/${packageName}`);
-	console.log(done);
+	done(`Getting the dependencies versions for ${magenta(packageName)}.`);
 	const versions = Object.keys(data.versions)
 		.map((v) => [...v.split('-'), v])
 		.filter((v) => v[0] !== '0.0.1' && !v[1].includes('internal'))

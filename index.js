@@ -1,41 +1,30 @@
 #!/usr/bin/env node
-const context = {
-	cli_version: '1.3.2',
-	pnpm: false,
-	defaultCode:
-		'/*\n _____________________ \n< do things u want... >\n--------------------- \n      \\   ^__^\n       \\  (oo)_______\n          (__)\\       )\\/\\\n              ||----w |\n              ||     ||\n*/'
-};
+const cli_version = '1.3.5';
 
 import { basename } from 'path';
 import { v4 as uuid } from 'uuid';
-import { deleteAsync } from 'del';
 import { program } from 'commander';
+import NpmHandler from './src/npm.js';
 import { gen_icon } from './src/fractal.js';
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync } from 'fs';
 import {
 	SERVER,
 	SERVER_UI,
 	SERVER_ADMIN,
 	SERVER_GAMETEST,
 	SERVER_NET,
-	SERVER_EDITOR
+	SERVER_EDITOR,
+	DefaultCode
 } from './src/constants.js';
 import { askProjectInfo, askBase, askYes, getDeps } from './src/inquirer.js';
-import {
-	mkdir,
-	writeJSON,
-	writeText,
-	exec,
-	checkPnpm,
-	npmInstall
-} from './src/io.js';
-import { magenta, warning, done } from './src/console.js';
+import { mkdir, writeJSON, writeText, exec } from './src/io.js';
+import { magenta, warning, start, done } from './src/console.js';
 import { req, getLatestServerVersion } from './src/net.js';
 
 program
 	.name('serein')
 	.description('A Minecraft: Bedrock Edition creation manage tool.')
-	.version(context.cli_version);
+	.version(cli_version);
 
 program
 	.command('init')
@@ -43,8 +32,7 @@ program
 	.description('init a project')
 	.option('-y --yes', 'use default config without asking any questions')
 	.action((option) =>
-		checkIfPnpmExist(option.yes)
-			.then(getInformation)
+		getInformation(option.yes)
 			.then(downloadFiles)
 			.then(dealDependencies)
 			.then(creatFiles)
@@ -56,8 +44,7 @@ program
 	.description('switch requirements version')
 	.option('-y --yes', 'switch to latest version directly')
 	.action((option) =>
-		checkIfPnpmExist(option.yes)
-			.then(getVersionInformations)
+		getVersionInformations(option.yes)
 			.then(chooseVersions)
 			.then(switchVersions)
 	);
@@ -87,11 +74,6 @@ program
 	.action(() => exec('gulp watch'));
 
 program.parse(process.argv);
-
-async function checkIfPnpmExist(isDefault) {
-	context.pnpm = checkPnpm();
-	return isDefault;
-}
 
 async function getInformation(isDefault) {
 	if (!isDefault) {
@@ -154,13 +136,13 @@ async function getInformation(isDefault) {
 }
 
 async function downloadFiles(informations) {
-	process.stdout.write('Downloading the gulpfile...  ');
+	start('Downloading the gulpfile...');
 	const gulpfile = await req('https://serein.meowshe.com/gulpfile.js');
-	console.log(done);
+	done('Download the gulpfile.');
 
-	process.stdout.write('Generating project icon... ');
+	start('Generating project icon...');
 	const icon = gen_icon(informations.name);
-	console.log(done);
+	done('Generate project icon. ');
 
 	return {
 		...informations,
@@ -301,9 +283,9 @@ async function creatFiles(informations) {
 			compileOnSave: false
 		});
 
-		writeText('scripts/main.ts', context.defaultCode);
+		writeText('scripts/main.ts', DefaultCode);
 	} else {
-		writeText('scripts/main.js', context.defaultCode);
+		writeText('scripts/main.js', DefaultCode);
 	}
 
 	writeJSON('package.json', npmPackage);
@@ -315,7 +297,7 @@ async function creatFiles(informations) {
 
 	writeText('gulpfile.js', informations.gulpfile);
 
-	npmInstall(context.pnpm);
+	await NpmHandler.install();
 }
 
 async function getVersionInformations(isDefault) {
@@ -370,10 +352,7 @@ async function switchVersions(informations) {
 
 	writeJSON('package.json', informations.packages);
 
-	await deleteAsync('node_modules');
-	if (context.pnpm && existsSync('pnpm-lock.yaml'))
-		await deleteAsync('pnpm-lock.yaml');
-	else await deleteAsync('package-lock.json');
+	NpmHandler.clearModules();
 
-	npmInstall(context.pnpm);
+	await NpmHandler.install();
 }
