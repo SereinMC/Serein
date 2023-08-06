@@ -1,34 +1,31 @@
 {
-  "name": "@pureeval/serein",
-  "version": "1.3.5",
-  "type": "module",
-  "description": "A Minecraft Bedrock creation manage tool.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "bin": {
-    "serein": "index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/LoveCouple/serein.git"
-  },
-  "author": "Serein Dev",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/LoveCouple/serein/issues"
-  },
-  "homepage": "https://github.com/LoveCouple/serein#readme",
-  "dependencies": {
-    "chalk": "^5.3.0",
-    "commander": "^11.0.0",
-    "del": "^7.0.0",
-    "inquirer": "^9.2.10",
-    "pngjs": "^7.0.0",
-    "uuid": "^9.0.0"
-  },
-  "devDependencies": {
-    "eslint": "^8.32.0"
-  }
+	"name": "@pureeval/serein",
+	"version": "1.3.5",
+	"type": "module",
+	"description": "A Minecraft Bedrock creation manage tool.",
+	"main": "index.js",
+	"bin": {
+		"serein": "index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/LoveCouple/serein.git"
+	},
+	"author": "Serein Dev",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/LoveCouple/serein/issues"
+	},
+	"homepage": "https://github.com/LoveCouple/serein#readme",
+	"dependencies": {
+		"chalk": "^5.3.0",
+		"commander": "^11.0.0",
+		"del": "^7.0.0",
+		"inquirer": "^9.2.10",
+		"pngjs": "^7.0.0",
+		"uuid": "^9.0.0"
+	},
+	"devDependencies": {
+		"eslint": "^8.32.0"
+	}
 }

@@ -1,3 +1,7 @@
+// === CLI INFORMATIONS
+const CLI_VERSION = '1.3.5';
+// === END CLI INFORMATIONS
+
 // === NPM PACKAGES
 const SERVER = '@minecraft/server';
 const SERVER_UI = '@minecraft/server-ui';
@@ -14,13 +18,13 @@ const Mirrors = [
 ];
 // === END NPM MIRRORS
 
-
 // === DEFAULT CODE
 const DefaultCode =
 	'/*\n _____________________ \n< do things u want... >\n--------------------- \n      \\   ^__^\n       \\  (oo)_______\n          (__)\\       )\\/\\\n              ||----w |\n              ||     ||\n*/';
 // === END DEFAULT CODE
 
 export {
+	CLI_VERSION,
 	SERVER,
 	SERVER_UI,
 	SERVER_ADMIN,

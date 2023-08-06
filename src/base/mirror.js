@@ -1,7 +1,6 @@
 import { request } from 'https';
-import { done, start } from './console.js';
-import { magenta } from './console.js';
 import { Mirrors } from './constants.js';
+import { magenta, done, start } from './console.js';
 
 class MirrorClass {
 	constructor(mirror) {
