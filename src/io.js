@@ -1,4 +1,4 @@
-import { done } from './console';
+import { done } from './console.js';
 import { execSync } from 'child_process';
 import { writeFileSync, existsSync, mkdirSync } from 'fs';
 
