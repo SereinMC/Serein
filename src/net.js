@@ -1,5 +1,5 @@
 import { request } from 'https';
-import { magenta, done } from './console';
+import { magenta, done } from './console.js';
 
 function req(options) {
 	return new Promise((resolve, reject) => {
