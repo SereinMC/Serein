@@ -4,7 +4,7 @@ import { createHash } from 'crypto';
 function rectangle(x, y, w, h, c, size, dst) {
 	for (let i = x; i < x + w; ++i) {
 		for (let j = y; j < y + h; ++j) {
-			let idx = (size * j + i) << 2;
+			const idx = (size * j + i) << 2;
 			dst.data[idx] = c[0];
 			dst.data[idx + 1] = c[1];
 			dst.data[idx + 2] = c[2];
@@ -19,7 +19,7 @@ function render(hash, size, dst, fg, margin = 0.1) {
 	const cell = Math.floor((size - baseMargin * 2) / 5);
 	margin = Math.floor((size - cell * 5) / 2);
 	for (let i = 0; i < 15; ++i) {
-		let color = parseInt(hash.charAt(i), 16) % 2 ? bg : fg;
+		const color = parseInt(hash.charAt(i), 16) % 2 ? bg : fg;
 		if (i < 5) {
 			rectangle(
 				2 * cell + margin,
