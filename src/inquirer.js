@@ -1,12 +1,7 @@
 import inquirer from 'inquirer';
 import { basename } from 'path';
 import { magenta, warning } from './console.js';
-import {
-	req,
-	getJSON,
-	getNpmPackageVersions,
-	getLatestServerVersion
-} from './net.js';
+import { getNpmPackageVersions } from './net.js';
 import {
 	SERVER,
 	SERVER_UI,
@@ -110,10 +105,4 @@ async function getDeps(versions, msg) {
 	return packageVersions;
 }
 
-export {
-	getDeps,
-	askProjectInfo,
-	askBase,
-	askVersion,
-	askYes
-};
+export { getDeps, askProjectInfo, askBase, askVersion, askYes };
