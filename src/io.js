@@ -1,3 +1,4 @@
+import { done } from './console';
 import { execSync } from 'child_process';
 import { writeFileSync, existsSync, mkdirSync } from 'fs';
 
