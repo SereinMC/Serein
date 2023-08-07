@@ -9,7 +9,7 @@ class ConfigClass extends Hanlder {
 	}
 
 	update() {
-		if (existsSync('.serein')) {
+		if (existsSync('.serein.json')) {
 			this.context = JSON.parse(readFileSync('', 'utf-8'));
 			this.updated = true;
 		}
@@ -18,7 +18,7 @@ class ConfigClass extends Hanlder {
 	writeConfig(context) {
 		this.context = context;
 		this.updated = true;
-		writeJSON('.serein', context);
+		writeJSON('.serein.json', context);
 	}
 
 	getConfig() {
