@@ -1,3 +1,4 @@
+import { first } from '../base/utils.js';
 import { request } from 'https';
 import { HanlderPromise } from './base.js';
 import { Mirrors } from '../base/constants.js';
@@ -41,7 +42,7 @@ class MirrorClass extends HanlderPromise {
 		});
 		try {
 			const result = await Promise.race(promises);
-			this.mirror = result.mirror | this.mirror;
+			this.mirror = first(result.mirror, this.mirror);
 		} catch (e) {
 			/* empty */
 		}
