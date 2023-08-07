@@ -111,8 +111,8 @@ const del_build_scripts = del_gen(['build/scripts']);
 const clean_and_copy = gulp.series(clean_build, copy_content);
 const build =
 	config.type === 'ts'
-		? gulp.series(clean_and_copy, compile_scripts, esbuild_system)
-		: gulp.series(clean_and_copy, copy_scripts, esbuild_system);
+		? gulp.series(clean_and_copy, compile_scripts, esbuild_system,del_build_scripts)
+		: gulp.series(clean_and_copy, copy_scripts, esbuild_system,del_build_scripts);
 const bundle = gulp.series(build, del_build_scripts, pack_zip);
 
 function clean_local(fn) {
