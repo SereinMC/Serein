@@ -1,9 +1,10 @@
-import { exec } from './io.js';
 import { existsSync } from 'fs';
 import { deleteSync } from 'del';
-import { writeText } from './io.js';
-import { accept } from './console.js';
+import { exec } from '../base/io.js';
 import MirrorHandler from './mirror.js';
+import { writeText } from '../base/io.js';
+import { HanlderPromise } from './base.js';
+import { accept } from '../base/console.js';
 
 function checkPnpm() {
 	try {
@@ -14,20 +15,15 @@ function checkPnpm() {
 	return true;
 }
 
-class NpmClass {
+class NpmClass extends HanlderPromise {
 	constructor() {
-		this.updated = false;
+		super();
 		this.mirror = '';
 		this.platform = '';
 		this.pnpm = false;
 	}
 
-	async check() {
-		if (this.updated) return;
-		else await this.updateNpm();
-	}
-
-	async updateNpm() {
+	async update() {
 		this.pnpm = checkPnpm();
 		this.platform = process.platform;
 		this.mirror = await MirrorHandler.getFastestMirror();

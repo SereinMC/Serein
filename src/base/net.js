@@ -1,5 +1,5 @@
 import { request } from 'https';
-import MirrorHandler from './mirror.js';
+import MirrorHandler from '../handlers/mirror.js';
 import { magenta, start, done } from './console.js';
 
 function req(options) {
