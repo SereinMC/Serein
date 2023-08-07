@@ -12,7 +12,13 @@ class MirrorClass extends HanlderPromise {
 
 	async update() {
 		start(`Getting the fastest ${magenta('npm source')}...`);
-
+		function timeout(ms) {
+			return new Promise((reject) => {
+				setTimeout(() => {
+					reject(new Error('Promise timeout'));
+				}, ms);
+			});
+		}
 		const promises = this.mirrors.map((mirror) => {
 			const start = Date.now();
 			return new Promise((resolve) => {
@@ -30,11 +36,15 @@ class MirrorClass extends HanlderPromise {
 					resolve({ mirror, time: Infinity });
 				});
 				req.end();
+				timeout(10000);
 			});
 		});
-
-		const result = await Promise.race(promises);
-		this.mirror = result.mirror;
+		try {
+			const result = await Promise.race(promises);
+			this.mirror = result.mirror | this.mirror;
+		} catch (e) {
+			/* empty */
+		}
 		this.updated = true;
 
 		done(`Get the fastest ${magenta('npm source')}.`);
