@@ -1,7 +1,8 @@
 import { basename } from 'path';
 import { v4 as uuid } from 'uuid';
-import NpmHandler from '../base/npm.js';
+import NpmHandler from '../handlers/npm.js';
 import { gen_icon } from '../addons/fractal.js';
+import ConfigRender from '../handlers/config.js';
 import {
 	SERVER,
 	SERVER_UI,
@@ -134,7 +135,7 @@ async function creatFiles(informations) {
 
 	writeText('behavior_packs/pack_icon.png', informations.icon);
 
-	writeJSON('.serein.json', {
+	ConfigRender.writeConfig({
 		type: informations.language,
 		res: informations.res,
 		name: informations.name,

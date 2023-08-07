@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import NpmHandler from '../base/npm.js';
+import NpmHandler from '../handlers/npm.js';
 import { writeJSON } from '../base/io.js';
 import { SERVER } from '../base/constants.js';
 import { getDeps } from '../base/inquirer.js';

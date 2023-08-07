@@ -1,29 +1,30 @@
 import { request } from 'https';
-import { Mirrors } from './constants.js';
-import { magenta, done, start } from './console.js';
+import { HanlderPromise } from './base.js';
+import { Mirrors } from '../base/constants.js';
+import { magenta, done, start } from '../base/console.js';
 
-class MirrorClass {
+class MirrorClass extends HanlderPromise {
 	constructor(mirror) {
+		super();
 		this.mirrors = mirror;
-		this.updated = false;
 		this.mirror = 'https://registry.npmjs.org/';
 	}
 
-	async check() {
-		if (this.updated === true) return;
-		else await this.updateMirror();
-	}
-
-	async updateMirror() {
+	async update() {
 		start(`Getting the fastest ${magenta('npm source')}...`);
+
 		const promises = this.mirrors.map((mirror) => {
 			const start = Date.now();
 			return new Promise((resolve) => {
+				const url = new URL(mirror);
 				const req = request(
-					{ hostname: mirror, path: '/', method: 'GET' },
-					() => {
-						resolve({ mirror, time: Date.now() - start });
-					}
+					{
+						protocol: url.protocol,
+						hostname: url.hostname,
+						path: '/',
+						method: 'GET'
+					},
+					() => resolve({ mirror, time: Date.now() - start })
 				);
 				req.on('error', () => {
 					resolve({ mirror, time: Infinity });
@@ -32,11 +33,11 @@ class MirrorClass {
 			});
 		});
 
-		const results = await Promise.all(promises);
-		results.sort((a, b) => a.time - b.time);
-		done(`Get the fastest ${magenta('npm source')}.`);
-		this.mirror = results[0].mirror;
+		const result = await Promise.race(promises);
+		this.mirror = result.mirror;
 		this.updated = true;
+
+		done(`Get the fastest ${magenta('npm source')}.`);
 	}
 
 	async getFastestMirror() {
