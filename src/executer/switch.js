@@ -1,9 +1,9 @@
 import { readFileSync } from 'fs';
-import NpmHandler from '../handlers/npm.js';
 import { writeJSON } from '../base/io.js';
+import NpmHandler from '../handlers/npm.js';
+import NetWork from '../handlers/network.js';
 import { SERVER } from '../base/constants.js';
 import { getDeps } from '../base/inquirer.js';
-import { getLatestServerVersion } from '../base/net.js';
 
 async function getVersionInformations(isDefault) {
 	const manifest = JSON.parse(
@@ -25,7 +25,7 @@ async function chooseVersions(informations) {
 		const packageName = current.module_name || '';
 		if (packageName.search(/@minecraft/) !== -1) {
 			if (informations.isDefault && packageName === SERVER) {
-				const version = await getLatestServerVersion();
+				const version = await NetWork.getLatestVersion(SERVER);
 				current.version = version.api;
 				informations.packages.dependencies[current] = version.npm;
 			}

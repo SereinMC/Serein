@@ -23,6 +23,10 @@ const DefaultCode =
 	'/*\n _____________________ \n< do things u want... >\n--------------------- \n      \\   ^__^\n       \\  (oo)_______\n          (__)\\       )\\/\\\n              ||----w |\n              ||     ||\n*/';
 // === END DEFAULT CODE
 
+// === GULPFILE URL
+const GULPFILE = 'https://serein.meowshe.com/gulpfile.js';
+// === END GULPFILE URL
+
 export {
 	CLI_VERSION,
 	SERVER,
@@ -32,5 +36,6 @@ export {
 	SERVER_NET,
 	SERVER_EDITOR,
 	Mirrors,
-	DefaultCode
+	DefaultCode,
+	GULPFILE
 };

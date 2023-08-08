@@ -1,7 +1,8 @@
 import { basename } from 'path';
 import { v4 as uuid } from 'uuid';
+import NetWork from '../handlers/network.js';
 import NpmHandler from '../handlers/npm.js';
-import { gen_icon } from '../addons/fractal.js';
+import { gen_icon } from '../base/fractal.js';
 import ConfigRender from '../handlers/config.js';
 import {
 	SERVER,
@@ -12,10 +13,10 @@ import {
 	SERVER_EDITOR,
 	DefaultCode
 } from '../base/constants.js';
-import { askProjectInfo, askBase, askYes, getDeps } from '../base/inquirer.js';
+import { getText } from '../base/network.js';
 import { mkdir, writeJSON, writeText } from '../base/io.js';
 import { magenta, warning, start, done } from '../base/console.js';
-import { req, getLatestServerVersion } from '../base/net.js';
+import { askProjectInfo, askBase, askYes, getDeps } from '../base/inquirer.js';
 
 async function getInformation(isDefault) {
 	if (!isDefault) {
@@ -71,7 +72,7 @@ async function getInformation(isDefault) {
 			allow_eval: false,
 			language: 'ts',
 			packageVersions: {
-				[SERVER]: await getLatestServerVersion()
+				[SERVER]: await NetWork.getLatestVersion(SERVER)
 			}
 		};
 	}
@@ -79,7 +80,7 @@ async function getInformation(isDefault) {
 
 async function downloadFiles(informations) {
 	start('Downloading the gulpfile...');
-	const gulpfile = await req('https://serein.meowshe.com/gulpfile.js');
+	const gulpfile = await NetWork.getGulpFile();
 	done('Download the gulpfile.');
 
 	start('Generating project icon...');

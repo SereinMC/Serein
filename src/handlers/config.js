@@ -1,8 +1,8 @@
-import { Hanlder } from './base.js';
 import { writeJSON } from '../base/io.js';
+import { DelayHanlder } from './delayBase.js';
 import { existsSync, readFileSync } from 'fs';
 
-class ConfigClass extends Hanlder {
+class ConfigClass extends DelayHanlder {
 	constructor() {
 		super();
 		this.context = {};

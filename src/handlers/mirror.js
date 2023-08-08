@@ -1,10 +1,10 @@
-import { first } from '../base/utils.js';
 import { request } from 'https';
-import { HanlderPromise } from './base.js';
+import { first } from '../base/utils.js';
 import { Mirrors } from '../base/constants.js';
+import { DelayHanlderPromise } from './delayBase.js';
 import { magenta, done, start } from '../base/console.js';
 
-class MirrorClass extends HanlderPromise {
+class MirrorClass extends DelayHanlderPromise {
 	constructor(mirror) {
 		super();
 		this.mirrors = mirror;

@@ -3,8 +3,8 @@ import { deleteSync } from 'del';
 import { exec } from '../base/io.js';
 import MirrorHandler from './mirror.js';
 import { writeText } from '../base/io.js';
-import { HanlderPromise } from './base.js';
 import { accept } from '../base/console.js';
+import { DelayHanlderPromise } from './delayBase.js';
 
 function checkPnpm() {
 	try {
@@ -15,7 +15,7 @@ function checkPnpm() {
 	return true;
 }
 
-class NpmClass extends HanlderPromise {
+class NpmClass extends DelayHanlderPromise {
 	constructor() {
 		super();
 		this.mirror = '';
