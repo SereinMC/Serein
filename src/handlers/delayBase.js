@@ -13,7 +13,7 @@ class DelayHanlder {
 	}
 }
 
-class DelayHanlderPromise extends DelayHanlderHanlder {
+class DelayHanlderPromise extends DelayHanlder {
 	constructor(defaultValue) {
 		super(defaultValue);
 	}
