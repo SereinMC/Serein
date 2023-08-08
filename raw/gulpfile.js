@@ -88,7 +88,8 @@ function esbuild_system() {
 					'@minecraft/server',
 					'@minecraft/server-net',
 					'@minecraft/server-gametest',
-					'@minecraft/server-admin'
+					'@minecraft/server-admin',
+                    '@minecraft/server-editor'
 				],
 				format: 'esm'
 			})
