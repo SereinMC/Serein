@@ -1,6 +1,6 @@
-class Hanlder {
-	constructor() {
-		this.updated = false;
+class DelayHanlder {
+	constructor(defaultValue = false) {
+		this.updated = defaultValue;
 	}
 
 	check() {
@@ -13,9 +13,9 @@ class Hanlder {
 	}
 }
 
-class HanlderPromise extends Hanlder{
-	constructor() {
-		super();
+class DelayHanlderPromise extends DelayHanlderHanlder {
+	constructor(defaultValue) {
+		super(defaultValue);
 	}
 
 	async check() {
@@ -28,4 +28,4 @@ class HanlderPromise extends Hanlder{
 	}
 }
 
-export { Hanlder,HanlderPromise };
+export { DelayHanlder, DelayHanlderPromise };

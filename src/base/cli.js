@@ -1,7 +1,7 @@
 import { exec } from './io.js';
 import { program } from 'commander';
-import initProject from '../executer/init.js';
 import { CLI_VERSION } from './constants.js';
+import initProject from '../executer/init.js';
 import switchVersion from '../executer/switch.js';
 
 program

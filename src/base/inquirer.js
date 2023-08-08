@@ -1,7 +1,7 @@
 import inquirer from 'inquirer';
 import { basename } from 'path';
+import NetWork from '../handlers/network.js';
 import { magenta, warning } from './console.js';
-import { getNpmPackageVersions } from './net.js';
 import {
 	SERVER,
 	SERVER_UI,
@@ -63,7 +63,7 @@ async function promptUser(message, choices) {
 }
 
 async function askVersion(packageName) {
-	const versions = await getNpmPackageVersions(packageName);
+	const versions = await NetWork.getNpmPackageVersions(packageName);
 	const keys = Object.keys(versions).sort().reverse();
 
 	const api = await promptUser(
@@ -82,14 +82,7 @@ async function askVersion(packageName) {
 }
 
 async function getDeps(versions, msg) {
-	const choices = [
-		{ name: SERVER, value: SERVER },
-		{ name: SERVER_UI, value: SERVER_UI },
-		{ name: SERVER_ADMIN, value: SERVER_ADMIN },
-		{ name: SERVER_GAMETEST, value: SERVER_GAMETEST },
-		{ name: SERVER_NET, value: SERVER_NET },
-		{ name: SERVER_EDITOR, value: SERVER_EDITOR }
-	].filter((v) => versions.includes(v.name));
+	const choices = versions.map((v) => ({ name: v, value: v }));
 	const { deps } = await inquirer.prompt([
 		{
 			type: 'checkbox',
