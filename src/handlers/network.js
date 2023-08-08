@@ -1,7 +1,7 @@
 import MirrorHandler from './mirror.js';
 import { GULPFILE } from '../base/constants.js';
-import { getText, getJSON } from '../base/network';
-import { magenta, start, done } from '../base/console';
+import { getText, getJSON } from '../base/network.js';
+import { magenta, start, done } from '../base/console.js';
 
 const NetWork = {
 	getNpmPackageVersions: async (packageName) => {
