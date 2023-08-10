@@ -1,8 +1,8 @@
 import { done } from './console.js';
 import { execSync } from 'child_process';
-import { writeFileSync, existsSync, mkdirSync } from 'fs';
+import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
 
-async function mkdir(dirs) {
+function mkdir(dirs) {
 	for (const x of dirs) {
 		if (!existsSync(x)) {
 			mkdirSync(x);
@@ -21,9 +21,13 @@ function writeJSON(filename, obj) {
 	done('Create ' + filename);
 }
 
+function readJSON(filename) {
+	return JSON.parse(readFileSync(filename, 'utf-8'));
+}
+
 function exec(command, withLog = true) {
 	if (withLog) execSync(command, { stdio: [0, 1, 2] });
 	else execSync(command, { stdio: 'ignore' });
 }
 
-export { mkdir, writeText, writeJSON, exec };
+export { mkdir, writeText, writeJSON, readJSON, exec };

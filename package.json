@@ -18,6 +18,7 @@
 	},
 	"homepage": "https://github.com/LoveCouple/serein#readme",
 	"dependencies": {
+		"axios": "^1.4.0",
 		"chalk": "^5.3.0",
 		"commander": "^11.0.0",
 		"del": "^7.0.0",

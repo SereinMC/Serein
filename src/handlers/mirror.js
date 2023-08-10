@@ -1,10 +1,10 @@
-import { request } from 'https';
+import axios from 'axios';
+import DelayHanlder from './delay.js';
 import { first } from '../base/utils.js';
 import { Mirrors } from '../base/constants.js';
-import { DelayHanlderPromise } from './delayBase.js';
 import { magenta, done, start } from '../base/console.js';
 
-class MirrorClass extends DelayHanlderPromise {
+class MirrorClass extends DelayHanlder {
 	constructor(mirror) {
 		super();
 		this.mirrors = mirror;
@@ -13,41 +13,21 @@ class MirrorClass extends DelayHanlderPromise {
 
 	async update() {
 		start(`Getting the fastest ${magenta('npm source')}...`);
-		function timeout(ms) {
-			return new Promise((reject) => {
-				setTimeout(() => {
-					reject(new Error('Promise timeout'));
-				}, ms);
-			});
-		}
+
 		const promises = this.mirrors.map((mirror) => {
 			const start = Date.now();
-			return new Promise((resolve) => {
-				const url = new URL(mirror);
-				const req = request(
-					{
-						protocol: url.protocol,
-						hostname: url.hostname,
-						path: '/',
-						method: 'GET'
-					},
-					() => resolve({ mirror, time: Date.now() - start })
-				);
-				req.on('error', () => {
-					resolve({ mirror, time: Infinity });
-				});
-				req.end();
-				timeout(10000);
-			});
+			return axios
+				.get(mirror, { timeout: 5000 })
+				.then(() => {
+					const time = Date.now() - start;
+					return { mirror, time };
+				})
+				.catch(() => ({ mirror, time: Infinity }));
 		});
-		try {
-			const result = await Promise.race(promises);
-			this.mirror = first(result.mirror, this.mirror);
-		} catch (e) {
-			/* empty */
-		}
-		this.updated = true;
 
+		const result = await Promise.race(promises);
+		this.mirror = first(result.mirror, this.mirror);
+		this.updated = true;
 		done(`Get the fastest ${magenta('npm source')}.`);
 	}
 
