@@ -2,14 +2,7 @@ import inquirer from 'inquirer';
 import { basename } from 'path';
 import NetWork from '../handlers/network.js';
 import { magenta, warning } from './console.js';
-import {
-	SERVER,
-	SERVER_UI,
-	SERVER_ADMIN,
-	SERVER_GAMETEST,
-	SERVER_NET,
-	SERVER_EDITOR
-} from './constants.js';
+import { DATA } from './constants.js';
 
 async function askBase(str, options) {
 	const { answer } = await inquirer.prompt([
@@ -62,23 +55,36 @@ async function promptUser(message, choices) {
 	return selected;
 }
 
-async function askVersion(packageName) {
-	const versions = await NetWork.getNpmPackageVersions(packageName);
-	const keys = Object.keys(versions).sort().reverse();
+async function askVersion(packageName, isData = false) {
+	const versions = await NetWork.getNpmPackageVersions(packageName, isData);
+	if (isData) {
+		const npm = await promptUser(
+			`Select your ${magenta(packageName)} version in manifest`,
+			versions
+		);
 
-	const api = await promptUser(
-		`Select your ${magenta(packageName)} version in manifest`,
-		keys
-	);
-	const npm = await promptUser(
-		`Select your ${magenta(packageName)} version in npm`,
-		versions[api].sort().reverse()
-	);
+		return {
+			npm,
+			isData: true
+		};
+	} else {
+		const keys = Object.keys(versions).sort().reverse();
 
-	return {
-		api,
-		npm
-	};
+		const api = await promptUser(
+			`Select your ${magenta(packageName)} version in manifest`,
+			keys
+		);
+		const npm = await promptUser(
+			`Select your ${magenta(packageName)} version in npm`,
+			versions[api].sort().reverse()
+		);
+
+		return {
+			api,
+			npm,
+			isData: false
+		};
+	}
 }
 
 async function getDeps(versions, msg) {
@@ -93,7 +99,9 @@ async function getDeps(versions, msg) {
 	]);
 	const packageVersions = {};
 	for (const packageName of deps) {
-		packageVersions[packageName] = await askVersion(packageName);
+		if (DATA.includes(packageName))
+			packageVersions[packageName] = await askVersion(packageName, true);
+		else packageVersions[packageName] = await askVersion(packageName);
 	}
 	return packageVersions;
 }
