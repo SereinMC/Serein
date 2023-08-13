@@ -1,8 +1,8 @@
 import { basename } from 'path';
 import DelayHanlder from './delay.js';
-import { magenta } from '../base/console.js';
-import { askProjectInfo, askBase, askYes } from '../base/inquirer.js';
 import ConfigRender from './config.js';
+import { magenta } from '../base/console.js';
+import { askProjectInfo, askYes, askList, askText } from '../base/inquirer.js';
 
 class InfoClass extends DelayHanlder {
 	constructor() {
@@ -28,6 +28,7 @@ class InfoClass extends DelayHanlder {
 				behPath: 'behavior_packs/',
 				resPath: 'resource_packs/',
 				scriptsPath: 'scripts/',
+				entry: 'main.js',
 				auto: true
 			});
 		} else {
@@ -38,7 +39,7 @@ class InfoClass extends DelayHanlder {
 			});
 		}
 
-		this.updated = true;
+		this.done();
 	}
 
 	async update() {
@@ -57,7 +58,9 @@ class InfoClass extends DelayHanlder {
 			const allow_eval = await askYes(
 				`Allow ${magenta('eval')} and ${magenta('new Function')}?`
 			);
-			const language = await askBase('Language:', ['ts', 'js']);
+			const language = await askList('Language:', ['ts', 'js']);
+
+			const entry = await askText('Scripts entry(suffixless):', 'main');
 
 			Object.assign(this.info, {
 				name,
@@ -67,6 +70,7 @@ class InfoClass extends DelayHanlder {
 				res,
 				allow_eval,
 				language,
+				entry,
 				auto: false,
 				mode: 'init',
 				scriptsPath: 'scripts/',
@@ -80,7 +84,7 @@ class InfoClass extends DelayHanlder {
 			});
 		}
 
-		this.updated = true;
+		this.done();
 	}
 
 	async getInfo() {

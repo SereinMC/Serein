@@ -8,11 +8,11 @@ async function switchVersion(isDefault) {
 
 	if (isDefault) await InfoHandler.init();
 
-	await ManifestHandler.resolveDependencies(
-		await ModuleResolver.getDependencies()
-	);
+	const modules = await ModuleResolver.getDependencies();
 
-	await NpmHandler.addDependencies(await ModuleResolver.getDependencies());
+	await ManifestHandler.resolveDependencies(modules);
+
+	await NpmHandler.addDependencies(modules);
 
 	await ManifestHandler.write();
 

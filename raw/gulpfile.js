@@ -6,13 +6,13 @@ const useMinecraftPreview = config.mc_preview; // Whether to target the "Minecra
 const script_entry = manifest.modules[0].entry;
 // === END CONFIGURABLE VARIABLES
 
-import zip from 'gulp-zip';
+import os from 'os';
 import gulp from 'gulp';
+import zip from 'gulp-zip';
+import { join } from 'path';
 import ts from 'gulp-typescript';
 import { deleteAsync } from 'del';
-import os from 'os';
 import gulpEsbuild from 'gulp-esbuild';
-import { join } from 'path';
 
 const get_mojang_dir = () => {
 	if (config.mc_dir !== null) return config.mc_dir;
@@ -27,8 +27,6 @@ const get_mojang_dir = () => {
 				homeDir +
 				'/.var/app/io.mrarm.mcpelauncher/data/mcpelauncher/games/com.mojang/'
 			);
-		case 'android':
-			break;
 	}
 };
 const mc_dir = get_mojang_dir();
@@ -89,7 +87,7 @@ function esbuild_system() {
 					'@minecraft/server-net',
 					'@minecraft/server-gametest',
 					'@minecraft/server-admin',
-                    '@minecraft/server-editor'
+					'@minecraft/server-editor'
 				],
 				format: 'esm'
 			})
@@ -111,9 +109,19 @@ function pack_zip() {
 const del_build_scripts = del_gen(['build/scripts']);
 const clean_and_copy = gulp.series(clean_build, copy_content);
 const build =
-	config.type === 'ts'
-		? gulp.series(clean_and_copy, compile_scripts, esbuild_system,del_build_scripts)
-		: gulp.series(clean_and_copy, copy_scripts, esbuild_system,del_build_scripts);
+	config.language === 'ts'
+		? gulp.series(
+				clean_and_copy,
+				compile_scripts,
+				esbuild_system,
+				del_build_scripts
+		  )
+		: gulp.series(
+				clean_and_copy,
+				copy_scripts,
+				esbuild_system,
+				del_build_scripts
+		  );
 const bundle = gulp.series(build, del_build_scripts, pack_zip);
 
 function clean_local(fn) {

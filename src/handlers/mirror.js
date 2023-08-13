@@ -1,6 +1,5 @@
 import axios from 'axios';
 import DelayHanlder from './delay.js';
-import { first } from '../base/utils.js';
 import { Mirrors } from '../base/constants.js';
 import { magenta, done, start } from '../base/console.js';
 
@@ -26,9 +25,10 @@ class MirrorClass extends DelayHanlder {
 		});
 
 		const result = await Promise.race(promises);
-		this.mirror = first(result.mirror, this.mirror);
-		this.updated = true;
+		this.mirror = result.mirror || this.mirror;
+        
 		done(`Get the fastest ${magenta('npm source')}.`);
+		this.done();
 	}
 
 	async getFastestMirror() {

@@ -1,5 +1,5 @@
+import IO from '../base/io.js';
 import DelayHanlder from './delay.js';
-import { writeJSON } from '../base/io.js';
 import InfoHandler from './information.js';
 import { existsSync, readFileSync } from 'fs';
 
@@ -12,32 +12,33 @@ class ConfigClass extends DelayHanlder {
 	async update() {
 		if (existsSync('.serein.json')) {
 			this.context = JSON.parse(readFileSync('.serein.json', 'utf-8'));
-			this.updated = true;
+			this.done();
 		}
 	}
 
 	async init() {
 		this.check();
-		const { language, res, name, behPath, resPath } =
+		const { language, res, name, behPath, resPath, entry } =
 			await InfoHandler.getInfo();
 
 		this.context = {
-			type: language,
+			language,
 			res,
 			name,
 			behPath,
 			resPath,
+			entry,
 			mc_preview: false,
 			output: 'build',
 			mc_dir: null
 		};
 
-		this.updated = true;
+		this.done();
 	}
 
 	async write() {
 		await this.check();
-		writeJSON('.serein.json', this.context);
+		IO.writeJSON('.serein.json', this.context);
 	}
 
 	async getConfig() {

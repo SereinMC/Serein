@@ -1,5 +1,5 @@
 import NpmHandler from './npm.js';
-import NetWork from './network.js';
+import NetWork from '../base/network.js';
 import { warning } from '../base/console.js';
 import { getDeps } from '../base/inquirer.js';
 import DelayHanlderWithInfo from './delayInfo.js';
@@ -44,7 +44,8 @@ class ModuleClass extends DelayHanlderWithInfo {
 				);
 			}
 		}
-		this.updated = true;
+        
+		this.done();
 	}
 
 	async getDependencies() {

@@ -1,4 +1,4 @@
-import { writeJSON, writeText } from '../base/io.js';
+import IO from '../base/io.js';
 import DelayHanlderWithInfo from './delayInfo.js';
 import { DefaultCode, TSCONFIG } from '../base/constants.js';
 
@@ -16,16 +16,18 @@ class CodeClass extends DelayHanlderWithInfo {
 			this.tsconfig.include.push(scriptPath + '**/*');
 		}
 
-		this.updated = true;
+		this.done();
 	}
 
 	async write() {
 		await this.check();
-		if (this.info.language === 'ts') {
-			writeJSON('tsconfig.json', this.tsconfig);
-			writeText(this.info.scriptsPath + 'main.ts', DefaultCode);
+		const { language, scriptsPath, entry } = this.info;
+
+		if (language === 'ts') {
+			IO.writeJSON('tsconfig.json', this.tsconfig);
+			IO.writeText(scriptsPath + entry + '.ts', DefaultCode);
 		} else {
-			writeText(this.info.scriptsPath + 'main.js', DefaultCode);
+			IO.writeText(scriptsPath + entry + '.js', DefaultCode);
 		}
 	}
 }
