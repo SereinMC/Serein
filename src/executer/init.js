@@ -1,13 +1,12 @@
+import Others from '../handlers/others.js';
 import NpmHandler from '../handlers/npm.js';
 import GulpHandler from '../handlers/gulp.js';
 import LogoHandler from '../handlers/logo.js';
-import { mkdir, writeText } from '../base/io.js';
+import CodeHandler from '../handlers/code.js';
 import ConfigRender from '../handlers/config.js';
 import ModuleResolver from '../handlers/module.js';
 import InfoHandler from '../handlers/information.js';
 import ManifestHandler from '../handlers/manifest.js';
-import CodeHandler from '../handlers/code.js';
-import { MCATTRIBUTES } from '../base/constants.js';
 
 async function getInformation(isDefault) {
 	InfoHandler.bind('init');
@@ -20,32 +19,29 @@ async function getInformation(isDefault) {
 
 	await ConfigRender.init();
 
-	await NpmHandler.addDependencies(await ModuleResolver.getDependencies());
+	const modules = await ModuleResolver.getDependencies();
 
-	await ManifestHandler.resolveDependencies(
-		await ModuleResolver.getDependencies()
-	);
+	await NpmHandler.addDependencies(modules);
+
+	await ManifestHandler.resolveDependencies(modules);
 }
 
 async function creatFiles() {
-	console.log('Creating project... ');
+	await Others.mkdir();
 
-	mkdir(['behavior_packs', 'behavior_packs/scripts', 'scripts']);
-	if ((await InfoHandler.getInfo()).res) mkdir(['resource_packs']);
-
-	ConfigRender.write();
+	await ConfigRender.write();
 
 	await ManifestHandler.write();
 
 	await LogoHandler.write();
 
-	await NpmHandler.writePackage();
+	await NpmHandler.write();
 
 	await CodeHandler.write();
 
 	await GulpHandler.write();
 
-	writeText('.mcattributes', MCATTRIBUTES);
+	await Others.writeAttributes();
 
 	await NpmHandler.install();
 }

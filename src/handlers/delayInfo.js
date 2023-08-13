@@ -19,7 +19,11 @@ class DelayHanlderWithInfo {
 	}
 
 	async update() {
-		throw new Error('You have to implement the method check!');
+		this.done();
+	}
+
+	done() {
+		this.updated = true;
 	}
 }
 

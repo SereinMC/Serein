@@ -1,5 +1,5 @@
+import Fractal from '../base/fractal.js';
 import { writeText } from '../base/io.js';
-import { gen_icon } from '../base/fractal.js';
 import { start, done } from '../base/console.js';
 import DelayHanlderWithInfo from './delayInfo.js';
 
@@ -13,11 +13,11 @@ class LogoClass extends DelayHanlderWithInfo {
 		start('Generating project icon...');
 
 		const { name } = await this.info;
-		this.png = gen_icon(name);
+		this.png = Fractal.generate(name);
 
 		done('Generate project icon. ');
 
-		this.updated = true;
+		this.done();
 	}
 
 	async write() {

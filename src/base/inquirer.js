@@ -1,10 +1,22 @@
 import inquirer from 'inquirer';
 import { basename } from 'path';
-import NetWork from '../handlers/network.js';
-import { magenta, warning } from './console.js';
+import NetWork from './network.js';
 import { DATA } from './constants.js';
+import { magenta, warning } from './console.js';
 
-async function askBase(str, options) {
+async function askText(msg, defaultMsg) {
+	const { answer } = inquirer.prompt([
+		{
+			type: 'input',
+			name: 'answer',
+			message: msg,
+			default: defaultMsg
+		}
+	]);
+	return answer;
+}
+
+async function askList(str, options) {
 	const { answer } = await inquirer.prompt([
 		{
 			type: 'list',
@@ -17,7 +29,7 @@ async function askBase(str, options) {
 }
 
 async function askYes(str, filp = false) {
-	return (await askBase(str, filp ? ['yes', 'no'] : ['no', 'yes'])) === 'yes';
+	return (await askList(str, filp ? ['yes', 'no'] : ['no', 'yes'])) === 'yes';
 }
 
 async function askProjectInfo() {
@@ -106,4 +118,4 @@ async function getDeps(versions, msg) {
 	return packageVersions;
 }
 
-export { getDeps, askProjectInfo, askBase, askVersion, askYes };
+export { getDeps, askProjectInfo, askText, askList, askVersion, askYes };

@@ -31,7 +31,7 @@ class NpmClass extends DelayHanlderWithInfo {
 		if (existsSync('package.json')) {
 			this.package = readJSON('package.json');
 		}
-		this.updated = true;
+		this.done();
 	}
 
 	async init() {
@@ -64,7 +64,7 @@ class NpmClass extends DelayHanlderWithInfo {
 		return this.package.devDependencies;
 	}
 
-	async writePackage() {
+	async write() {
 		await this.check();
 		writeJSON('package.json', this.package);
 	}

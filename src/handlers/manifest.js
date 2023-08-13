@@ -12,10 +12,10 @@ class ManifestClass extends DelayHanlderWithInfo {
 
 	async update() {
 		const { behPath, resPath, res } = await this.info;
-        
+
 		if (existsSync(behPath + 'manifest.json')) {
 			this.behContext = readJSON(behPath + 'manifest.json');
-			this.updated = true;
+			this.done();
 		}
 
 		if (res && existsSync(resPath + 'manifest.json')) {
@@ -26,7 +26,8 @@ class ManifestClass extends DelayHanlderWithInfo {
 	async init() {
 		await this.check();
 
-		const { name, description, versionArray, allow_eval, res } = this.info;
+		const { name, description, versionArray, allow_eval, res, entry } =
+			this.info;
 
 		const resUUID = uuid();
 
@@ -46,7 +47,7 @@ class ManifestClass extends DelayHanlderWithInfo {
 					type: 'script',
 					uuid: uuid(),
 					version: [2, 0, 0],
-					entry: 'scripts/main.js'
+					entry: 'scripts/' + entry
 				}
 			],
 			dependencies: [],
@@ -79,7 +80,7 @@ class ManifestClass extends DelayHanlderWithInfo {
 			});
 		}
 
-		this.updated = true;
+		this.done();
 	}
 
 	async getDependencies() {

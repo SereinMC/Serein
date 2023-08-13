@@ -1,7 +1,7 @@
 import axios from 'axios';
-import MirrorHandler from './mirror.js';
-import { DATA, GULPFILE } from '../base/constants.js';
-import { magenta, start, done } from '../base/console.js';
+import MirrorHandler from '../handlers/mirror.js';
+import { DATA, GULPFILE } from './constants.js';
+import { magenta, start, done } from './console.js';
 
 const NetWork = {
 	getNpmPackageVersions: async (packageName, isData) => {

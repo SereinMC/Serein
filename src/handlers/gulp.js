@@ -1,6 +1,6 @@
-import NetWork from './network.js';
+import IO from '../base/io.js';
+import NetWork from '../base/network.js';
 import DelayHanlder from './delayInfo.js';
-import { writeText } from '../base/io.js';
 import { start, done } from '../base/console.js';
 
 class GulpClass extends DelayHanlder {
@@ -15,11 +15,13 @@ class GulpClass extends DelayHanlder {
 		this.context = await NetWork.getGulpFile();
 
 		done('Download the gulpfile.');
+
+		this.done();
 	}
 
 	async write() {
 		await this.check();
-		writeText('gulpfile.js', this.context);
+		IO.writeText('gulpfile.js', this.context);
 	}
 }
 
