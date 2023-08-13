@@ -1,4 +1,14 @@
-# <center>Serein</center>
+<p align="center">
+  <h1 align="center">Serein</h1>
+</p>
+<p align="center"><img width="200" src="./logo.svg" alt="logo"></a></p>
+<p align="center">
+  <a href="https://github.com/SereinMC/Serein/blob/main/LICENSE"><img src="https://img.shields.io/github/license/SereinMC/serein" alt="license"></a>
+  <a href="https://www.npmjs.com/package/@pureeval/serein"><img src="https://img.shields.io/npm/v/%40pureeval%2Fserein" alt="npm"></a>
+  <a href="https://www.npmjs.com/package/@pureeval/serein"><img src="https://img.shields.io/npm/dw/%40pureeval%2Fserein" alt="download"></a>
+  <a href="https://www.npmjs.com/package/@pureeval/serein"><img src="https://img.shields.io/badge/minecraft_support-latest-8A2BE2" alt="minecraft"></a>
+</p>
+
 
 Serein is a scaffolding project developed for the [Minecraft: Bedrock Edition Script API](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/) to help developers create and manage projects efficiently and elegantly.
 
