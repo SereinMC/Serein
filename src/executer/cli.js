@@ -1,4 +1,4 @@
-import { exec } from '../base/io.js';
+import IO from '../base/io.js';
 import { program } from 'commander';
 import { CLI_VERSION } from '../base/constants.js';
 import initProject from './init.js';
@@ -27,24 +27,24 @@ program
 	.command('build')
 	.alias('b')
 	.description('build scripts for production environment')
-	.action(() => exec('gulp build'));
+	.action(() => IO.exec('gulp build'));
 
 program
 	.command('deploy')
 	.alias('d')
 	.description('deploy project to game')
-	.action(() => exec('gulp'));
+	.action(() => IO.exec('gulp'));
 
 program
 	.command('pack')
 	.alias('p')
 	.description('build the .mcpack for the current project')
-	.action(() => exec('gulp bundle'));
+	.action(() => IO.exec('gulp bundle'));
 
 program
 	.command('watch')
 	.alias('w')
 	.description('listen for file changes and deploy project automatically')
-	.action(() => exec('gulp watch'));
+	.action(() => IO.exec('gulp watch'));
 
 export default program;

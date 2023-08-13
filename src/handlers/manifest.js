@@ -1,7 +1,7 @@
+import IO from '../base/io.js';
 import { existsSync } from 'fs';
 import { v4 as uuid } from 'uuid';
 import DelayHanlderWithInfo from './delayInfo.js';
-import { readJSON, writeJSON } from '../base/io.js';
 
 class ManifestClass extends DelayHanlderWithInfo {
 	constructor() {
@@ -120,8 +120,8 @@ class ManifestClass extends DelayHanlderWithInfo {
 		await this.check();
 		const { behPath, resPath, res } = this.info;
 
-		writeJSON(behPath + 'manifest.json', this.behContext);
-		if (res) writeJSON(resPath + 'manifest.json', this.resContext);
+		IO.writeJSON(behPath + 'manifest.json', this.behContext);
+		if (res) IO.writeJSON(resPath + 'manifest.json', this.resContext);
 	}
 }
 

@@ -2,10 +2,10 @@ import inquirer from 'inquirer';
 import { basename } from 'path';
 import NetWork from './network.js';
 import { DATA } from './constants.js';
-import { magenta, warning } from './console.js';
+import { magenta } from './console.js';
 
 async function askText(msg, defaultMsg) {
-	const { answer } = inquirer.prompt([
+	const { answer } = await inquirer.prompt([
 		{
 			type: 'input',
 			name: 'answer',
@@ -37,19 +37,19 @@ async function askProjectInfo() {
 		{
 			type: 'input',
 			name: 'name',
-			message: `project name: (${warning(basename(process.cwd()))}) `,
+			message: 'project name:',
 			default: basename(process.cwd())
 		},
 		{
 			type: 'input',
 			name: 'version',
-			message: `version: ${warning('(1.0.0)')} `,
+			message: 'version:',
 			default: '1.0.0'
 		},
 		{
 			type: 'input',
 			name: 'description',
-			message: 'description: ',
+			message: 'description:',
 			default: ''
 		}
 	]);

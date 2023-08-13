@@ -1,14 +1,13 @@
+import IO from '../base/io.js';
 import { existsSync } from 'fs';
 import { deleteSync } from 'del';
 import MirrorHandler from './mirror.js';
-import { writeText } from '../base/io.js';
 import { accept } from '../base/console.js';
 import DelayHanlderWithInfo from './delayInfo.js';
-import { exec, readJSON, writeJSON } from '../base/io.js';
 
 function checkPnpm() {
 	try {
-		exec('pnpm --version', false);
+		IO.exec('pnpm --version', false);
 	} catch (e) {
 		return false;
 	}
@@ -26,6 +25,7 @@ class NpmClass extends DelayHanlderWithInfo {
 
 	async update() {
 		this.pnpm = checkPnpm();
+		console.log(this.pnpm);
 		this.platform = process.platform;
 		this.mirror = await MirrorHandler.getFastestMirror();
 		if (existsSync('package.json')) {
@@ -66,7 +66,7 @@ class NpmClass extends DelayHanlderWithInfo {
 
 	async write() {
 		await this.check();
-		writeJSON('package.json', this.package);
+		IO.writeJSON('package.json', this.package);
 	}
 
 	async clearModules() {
@@ -84,14 +84,15 @@ class NpmClass extends DelayHanlderWithInfo {
 			this.platform === 'android' ? '--no-bin-links' : '';
 		if (this.pnpm) {
 			if (this.platform === 'android')
-				writeText('.npmrc', 'node-linker=hoisted');
+				IO.writeText('.npmrc', 'node-linker=hoisted');
 			console.log(
 				accept(
 					'Detects that you have pnpm and will automatically enable the pnpm installation dependency.'
 				)
 			);
-			exec(`pnpm install --registry=${this.mirror}`);
-		} else exec(`npm install --registry=${this.mirror} ${android_suffix}`);
+			IO.exec(`pnpm install --registry=${this.mirror}`);
+		} else
+			IO.exec(`npm install --registry=${this.mirror} ${android_suffix}`);
 	}
 }
 

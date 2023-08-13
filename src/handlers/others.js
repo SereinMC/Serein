@@ -1,5 +1,6 @@
-import { mkdir, writeText } from '../base/io.js';
+import IO from '../base/io.js';
 import DelayHanlderWithInfo from './delayInfo.js';
+import { MCATTRIBUTES } from '../base/constants.js';
 
 class OthersClass extends DelayHanlderWithInfo {
 	constructor() {
@@ -11,15 +12,15 @@ class OthersClass extends DelayHanlderWithInfo {
 
 		const { behPath, resPath, res, scriptsPath } = this.info;
 
-		mkdir([behPath, behPath + scriptsPath, scriptsPath]);
+		IO.mkdir([behPath, behPath + scriptsPath, scriptsPath]);
 
-		if (res) mkdir([resPath]);
+		if (res) IO.mkdir([resPath]);
 	}
 
 	async writeAttributes() {
 		await this.check();
-        
-		writeText('.mcattributes', MCATTRIBUTES);
+
+		IO.writeText('.mcattributes', MCATTRIBUTES);
 	}
 }
 

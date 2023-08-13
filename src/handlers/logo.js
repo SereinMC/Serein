@@ -1,5 +1,5 @@
+import IO from '../base/io.js';
 import Fractal from '../base/fractal.js';
-import { writeText } from '../base/io.js';
 import { start, done } from '../base/console.js';
 import DelayHanlderWithInfo from './delayInfo.js';
 
@@ -25,8 +25,8 @@ class LogoClass extends DelayHanlderWithInfo {
 
 		const { behPath, resPath, res } = this.info;
 
-		writeText(behPath + 'pack_icon.png', this.png);
-		if (res) writeText(resPath + 'pack_icon.png', this.png);
+		IO.writeText(behPath + 'pack_icon.png', this.png);
+		if (res) IO.writeText(resPath + 'pack_icon.png', this.png);
 	}
 }
 
