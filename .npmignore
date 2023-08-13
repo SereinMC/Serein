@@ -2,6 +2,7 @@
 tools
 config
 raw
+logo.svg
 .eslintignore
 .eslintrc.js
 .prettierrc
