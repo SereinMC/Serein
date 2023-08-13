@@ -47,7 +47,7 @@ class ManifestClass extends DelayHanlderWithInfo {
 					type: 'script',
 					uuid: uuid(),
 					version: [2, 0, 0],
-					entry: 'scripts/' + entry
+					entry: 'scripts/' + entry + '.js'
 				}
 			],
 			dependencies: [],
