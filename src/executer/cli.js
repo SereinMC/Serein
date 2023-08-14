@@ -1,8 +1,8 @@
 import IO from '../base/io.js';
-import { program } from 'commander';
-import { CLI_VERSION } from '../base/constants.js';
 import initProject from './init.js';
+import { program } from 'commander';
 import switchVersion from './switch.js';
+import { CLI_VERSION } from '../base/constants.js';
 
 program
 	.name('serein')

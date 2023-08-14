@@ -1,9 +1,13 @@
 // === CONFIGURABLE VARIABLES
 import config from './.serein.json' assert { type: 'json' };
 import manifest from './behavior_packs/manifest.json' assert { type: 'json' };
+const output = config.output;
+const behPath = config.behPath;
+const resPath = config.resPath;
 const pack_name = config.name;
+const scriptsPath = config.scriptsPath;
 const useMinecraftPreview = config.mc_preview; // Whether to target the "Minecraft Preview" version of Minecraft vs. the main store version of Minecraft
-const script_entry = manifest.modules[0].entry;
+const scriptEntry = manifest.modules[0].entry;
 // === END CONFIGURABLE VARIABLES
 
 import os from 'os';
@@ -42,25 +46,25 @@ const del_gen = (files) => (fn) => {
 	);
 };
 
-const clean_build = del_gen(['build']);
+const clean_build = del_gen([output]);
 
 function copy_behavior_packs() {
 	return gulp
-		.src(['behavior_packs/**/*'])
-		.pipe(gulp.dest('build/behavior_packs'));
+		.src([join(behPath, '**/*')])
+		.pipe(gulp.dest(join(output, behPath)));
 }
 
 function copy_resource_packs() {
 	return gulp
-		.src(['resource_packs/**/*'])
-		.pipe(gulp.dest('build/resource_packs'));
+		.src([join(resPath, '**/*')])
+		.pipe(gulp.dest(join(output, resPath)));
 }
 
 const copy_content = gulp.parallel(copy_behavior_packs, copy_resource_packs);
 
 function compile_scripts() {
 	return gulp
-		.src('scripts/**/*.ts')
+		.src(join(scriptsPath, '**/*.ts'))
 		.pipe(
 			ts({
 				module: 'es2020',
@@ -70,15 +74,15 @@ function compile_scripts() {
 				target: 'es2020'
 			})
 		)
-		.pipe(gulp.dest('build/scripts'));
+		.pipe(gulp.dest(join(output, 'scripts')));
 }
 
 function esbuild_system() {
 	return gulp
-		.src('build/' + script_entry)
+		.src(join(output, scriptEntry))
 		.pipe(
 			gulpEsbuild({
-				outfile: script_entry,
+				outfile: scriptEntry,
 				bundle: true,
 				sourcemap: true,
 				external: [
@@ -92,21 +96,23 @@ function esbuild_system() {
 				format: 'esm'
 			})
 		)
-		.pipe(gulp.dest('build/behavior_packs/'));
+		.pipe(gulp.dest(join(output, behPath)));
 }
 
 function copy_scripts() {
-	return gulp.src('scripts/**/*').pipe(gulp.dest('build/scripts/'));
+	return gulp
+		.src(join(scriptsPath, '**/*'))
+		.pipe(gulp.dest(join(output, 'scripts')));
 }
 
 function pack_zip() {
 	return gulp
-		.src('./build/**/*')
+		.src(join(output, '**/*'))
 		.pipe(zip(`${pack_name}.mcpack`))
 		.pipe(gulp.dest(config.output || '.'));
 }
 
-const del_build_scripts = del_gen(['build/scripts']);
+const del_build_scripts = del_gen([join(output, scriptsPath)]);
 const clean_and_copy = gulp.series(clean_build, copy_content);
 const build =
 	config.language === 'ts'
@@ -138,7 +144,7 @@ function clean_local(fn) {
 
 function deploy_local_mc_behavior_packs() {
 	return gulp
-		.src(['build/behavior_packs/**/*'])
+		.src([join(output, behPath, '**/*')])
 		.pipe(
 			gulp.dest(join(mc_dir, 'development_behavior_packs/', pack_name))
 		);
@@ -146,7 +152,7 @@ function deploy_local_mc_behavior_packs() {
 
 function deploy_local_mc_resource_packs() {
 	return gulp
-		.src(['build/resource_packs/**/*'])
+		.src([join(output, resPath, '**/*')])
 		.pipe(
 			gulp.dest(join(mc_dir, 'development_resource_packs/', pack_name))
 		);
@@ -162,7 +168,7 @@ const deploy = gulp.series(
 
 function watch() {
 	return gulp.watch(
-		['behavior_packs/**/*', 'resource_packs/**/*'],
+		[join(behPath, '**/*'), join(resPath, '**/*')],
 		gulp.series(build, deploy)
 	);
 }
