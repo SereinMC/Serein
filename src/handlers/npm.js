@@ -25,11 +25,10 @@ class NpmClass extends DelayHanlderWithInfo {
 
 	async update() {
 		this.pnpm = checkPnpm();
-		console.log(this.pnpm);
 		this.platform = process.platform;
 		this.mirror = await MirrorHandler.getFastestMirror();
 		if (existsSync('package.json')) {
-			this.package = readJSON('package.json');
+			this.package = IO.readJSON('package.json');
 		}
 		this.done();
 	}

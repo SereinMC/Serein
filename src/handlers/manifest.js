@@ -14,12 +14,12 @@ class ManifestClass extends DelayHanlderWithInfo {
 		const { behPath, resPath, res } = await this.info;
 
 		if (existsSync(behPath + 'manifest.json')) {
-			this.behContext = readJSON(behPath + 'manifest.json');
+			this.behContext = IO.readJSON(behPath + 'manifest.json');
 			this.done();
 		}
 
 		if (res && existsSync(resPath + 'manifest.json')) {
-			this.resContext = readJSON(resPath + 'manifest.json');
+			this.resContext = IO.readJSON(resPath + 'manifest.json');
 		}
 	}
 
