@@ -96,7 +96,8 @@ function esbuild_system() {
 					'@minecraft/server-net',
 					'@minecraft/server-gametest',
 					'@minecraft/server-admin',
-					'@minecraft/server-editor'
+					'@minecraft/server-editor',
+					'@minecraft/vanilla-data'
 				],
 				format: 'esm'
 			})
