@@ -24,6 +24,7 @@
 		"del": "^7.0.0",
 		"inquirer": "^9.2.10",
 		"pngjs": "^7.0.0",
+		"strip-json-comments": "^5.0.1",
 		"uuid": "^9.0.0"
 	},
 	"devDependencies": {

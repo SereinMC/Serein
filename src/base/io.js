@@ -1,5 +1,6 @@
 import { done } from './console.js';
 import { execSync } from 'child_process';
+import stripJsonComments from 'strip-json-comments';
 import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
 
 const IO = {
@@ -23,7 +24,7 @@ const IO = {
 	},
 
 	readJSON: (filename) => {
-		return JSON.parse(readFileSync(filename, 'utf-8'));
+		return JSON.parse(stripJsonComments(readFileSync(filename, 'utf-8')));
 	},
 
 	exec: (command, withLog = true) => {

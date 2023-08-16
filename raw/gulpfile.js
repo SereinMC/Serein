@@ -7,7 +7,9 @@ const resPath = config.resPath;
 const behManifestPath = config.behManifestPath;
 const scriptsPath = config.scriptsPath;
 const useMinecraftPreview = config.mc_preview; // Whether to target the "Minecraft Preview" version of Minecraft vs. the main store version of Minecraft
-const manifest = JSON.parse(readFileSync(behManifestPath, 'utf-8'));
+const manifest = JSON.parse(
+	stripJsonComments(readFileSync(behManifestPath, 'utf-8'))
+);
 const scriptEntry = manifest.modules[0].entry;
 // === END CONFIGURABLE VARIABLES
 
@@ -19,6 +21,7 @@ import ts from 'gulp-typescript';
 import { deleteAsync } from 'del';
 import { readFileSync } from 'fs';
 import gulpEsbuild from 'gulp-esbuild';
+import stripJsonComments from 'strip-json-comments';
 
 const get_mojang_dir = () => {
 	if (config.mc_dir !== null) return config.mc_dir;
