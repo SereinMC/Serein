@@ -1,5 +1,5 @@
 // === CLI INFORMATIONS
-const CLI_VERSION = '1.4.0';
+const CLI_VERSION = '1.4.2';
 // === END CLI INFORMATIONS
 
 // === NPM PACKAGES
