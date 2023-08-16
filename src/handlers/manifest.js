@@ -12,17 +12,18 @@ class ManifestClass extends DelayHanlderWithInfo {
 	}
 
 	async update() {
-		const { mode, behPath, resPath, res } = await this.info;
+		const { mode, behManifestPath, resManifestPath, res } = this.info;
 
-		if (existsSync(behPath + 'manifest.json')) {
-			this.behContext = IO.readJSON(behPath + 'manifest.json');
-			if (mode === 'adapt')
-				InfoHandler.Merge('name', this.behContext.header.name);
+		if (existsSync(behManifestPath)) {
+			this.behContext = IO.readJSON(behManifestPath);
+			if (mode === 'adapt') {
+				await InfoHandler.Merge('name', this.behContext.header.name);
+			}
 			this.done();
 		}
 
-		if (res && existsSync(resPath + 'manifest.json')) {
-			this.resContext = IO.readJSON(resPath + 'manifest.json');
+		if (res && existsSync(resManifestPath)) {
+			this.resContext = IO.readJSON(resManifestPath);
 		}
 	}
 
@@ -121,10 +122,10 @@ class ManifestClass extends DelayHanlderWithInfo {
 
 	async write() {
 		await this.check();
-		const { behPath, resPath, res } = this.info;
+		const { behManifestPath, resManifestPath, res } = this.info;
 
-		IO.writeJSON(behPath + 'manifest.json', this.behContext);
-		if (res) IO.writeJSON(resPath + 'manifest.json', this.resContext);
+		IO.writeJSON(behManifestPath, this.behContext);
+		if (res) IO.writeJSON(resManifestPath, this.resContext);
 	}
 }
 

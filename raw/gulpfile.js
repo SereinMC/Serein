@@ -1,12 +1,13 @@
 // === CONFIGURABLE VARIABLES
 import config from './.serein.json' assert { type: 'json' };
-import manifest from './behavior_packs/manifest.json' assert { type: 'json' };
 const output = config.output;
 const pack_name = config.name;
 const behPath = config.behPath;
 const resPath = config.resPath;
+const behManifestPath = config.behManifestPath;
 const scriptsPath = config.scriptsPath;
 const useMinecraftPreview = config.mc_preview; // Whether to target the "Minecraft Preview" version of Minecraft vs. the main store version of Minecraft
+const manifest = JSON.parse(readFileSync(behManifestPath, 'utf-8'));
 const scriptEntry = manifest.modules[0].entry;
 // === END CONFIGURABLE VARIABLES
 
@@ -16,6 +17,7 @@ import zip from 'gulp-zip';
 import { join } from 'path';
 import ts from 'gulp-typescript';
 import { deleteAsync } from 'del';
+import { readFileSync } from 'fs';
 import gulpEsbuild from 'gulp-esbuild';
 
 const get_mojang_dir = () => {
