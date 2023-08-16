@@ -23,7 +23,7 @@ View this document in [简体中文](README_zh-CN.md) | English
 - 🎛️ Automatically cross-platform (Windows/Linux/Android) deployment with Hot Reload
 - 💡 Build with `esbuild` and support for npm modules
 - 🪐 Random `pack_icon` generator
-- 🔌 Support for embedding into existing projects (under development)
+- 🔌 Support for embedding into existing projects
 
 [![asciicast](https://asciinema.org/a/600827.svg)](https://asciinema.org/a/600827)
 
