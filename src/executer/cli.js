@@ -1,6 +1,7 @@
 import IO from '../base/io.js';
 import initProject from './init.js';
 import { program } from 'commander';
+import adaptProject from './adapt.js';
 import switchVersion from './switch.js';
 import { CLI_VERSION } from '../base/constants.js';
 
@@ -22,6 +23,12 @@ program
 	.description('switch requirements version')
 	.option('-y --yes', 'switch to latest version directly')
 	.action((option) => switchVersion(option.yes));
+
+program
+	.command('adapt')
+	.alias('a')
+	.description('adapt to projects that already exist')
+	.action(() => adaptProject());
 
 program
 	.command('build')

@@ -1,6 +1,7 @@
 import IO from '../base/io.js';
 import { existsSync } from 'fs';
 import { v4 as uuid } from 'uuid';
+import InfoHandler from './information.js';
 import DelayHanlderWithInfo from './delayInfo.js';
 
 class ManifestClass extends DelayHanlderWithInfo {
@@ -11,10 +12,12 @@ class ManifestClass extends DelayHanlderWithInfo {
 	}
 
 	async update() {
-		const { behPath, resPath, res } = await this.info;
+		const { mode, behPath, resPath, res } = await this.info;
 
 		if (existsSync(behPath + 'manifest.json')) {
 			this.behContext = IO.readJSON(behPath + 'manifest.json');
+			if (mode === 'adapt')
+				InfoHandler.Merge('name', this.behContext.header.name);
 			this.done();
 		}
 
