@@ -17,9 +17,17 @@ class ConfigClass extends DelayHanlder {
 	}
 
 	async init() {
-		this.check();
-		const { language, res, name, behPath, resPath, scriptsPath } =
-			await InfoHandler.getInfo();
+		await this.check();
+		const {
+			language,
+			res,
+			name,
+			behPath,
+			resPath,
+			behManifestPath,
+			resManifestPath,
+			scriptsPath
+		} = await InfoHandler.getInfo();
 
 		this.context = {
 			language,
@@ -28,6 +36,8 @@ class ConfigClass extends DelayHanlder {
 			behPath,
 			resPath,
 			scriptsPath,
+			behManifestPath,
+			resManifestPath,
 			mc_preview: false,
 			output: 'build',
 			mc_dir: null

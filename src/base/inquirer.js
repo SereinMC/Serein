@@ -119,7 +119,7 @@ async function getDeps(versions, msg) {
 	return packageVersions;
 }
 
-async function askDirectory(msg,defaultOption) {
+async function askFile(msg,defaultOption) {
 	let directory = await askText(msg,defaultOption);
 
 	while (!existsSync(directory)) {
@@ -130,4 +130,4 @@ async function askDirectory(msg,defaultOption) {
 	return directory;
 }
 
-export { askYes, askText, askList, askDirectory, askProjectInfo, getDeps };
+export { askYes, askText, askList, askFile, askProjectInfo, getDeps };

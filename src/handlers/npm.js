@@ -2,6 +2,7 @@ import IO from '../base/io.js';
 import { existsSync } from 'fs';
 import { deleteSync } from 'del';
 import MirrorHandler from './mirror.js';
+import { ALL } from '../base/constants.js';
 import { accept } from '../base/console.js';
 import DelayHanlderWithInfo from './delayInfo.js';
 
@@ -56,6 +57,45 @@ class NpmClass extends DelayHanlderWithInfo {
 		for (const packageName in deps) {
 			this.package.devDependencies[packageName] = deps[packageName].npm;
 		}
+	}
+
+	async resolveDependencies(deps) {
+		await this.check();
+		for (const [name, version] of deps) {
+			this.package.devDependencies[name] = version;
+		}
+	}
+
+	async tidyDependencies() {
+		await this.check();
+		if (!this.package.devDependencies) this.package.devDependencies = {};
+		if (this.package.dependencies) {
+			const packages = [];
+			for (const packageName in this.package.dependencies) {
+				if (
+					ALL.includes(packageName) ||
+					[
+						'del',
+						'gulp',
+						'gulp-esbuild',
+						'gulp-typescript',
+						'gulp-zip'
+					].includes(packageName)
+				) {
+					packages.push(packageName);
+					this.package.devDependencies[packageName] =
+						this.package.dependencies[packageName];
+				}
+			}
+			for (const packageName of packages) {
+				delete this.package.dependencies[packageName];
+			}
+		}
+	}
+
+	async toESM() {
+		await this.check();
+		this.package['type'] = 'module';
 	}
 
 	async getDependencies() {

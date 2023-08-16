@@ -1,13 +1,15 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable indent */
 import DelayHanlder from './delay.js';
 import { basename, join } from 'path';
 import ConfigRender from './config.js';
 import { magenta } from '../base/console.js';
 import {
-	askProjectInfo,
 	askYes,
 	askList,
 	askText,
-	askDirectory
+	askFile,
+	askProjectInfo
 } from '../base/inquirer.js';
 
 class InfoClass extends DelayHanlder {
@@ -33,6 +35,8 @@ class InfoClass extends DelayHanlder {
 				language: 'js',
 				behPath: 'behavior_packs/',
 				resPath: 'resource_packs/',
+				behManifestPath: 'behavior_packs/manifest.json',
+				resManifestPath: 'resource_packs/manifest.json',
 				scriptsPath: 'scripts/',
 				entry: 'main',
 				auto: true
@@ -85,7 +89,9 @@ class InfoClass extends DelayHanlder {
 				mode: 'init',
 				scriptsPath: 'scripts/',
 				behPath: 'behavior_packs/',
-				resPath: 'resource_packs/'
+				resPath: 'resource_packs/',
+				behManifestPath: 'behavior_packs/manifest.json',
+				resManifestPath: 'resource_packs/manifest.json'
 			});
 		} else if (this.info.mode === 'switch') {
 			Object.assign(this.info, {
@@ -98,21 +104,30 @@ class InfoClass extends DelayHanlder {
 			);
 			console.log('Press ^C at any time to quit.');
 
-			const behPath = await askDirectory(
+			const behPath = await askFile(
 				'Behavior pack path:',
 				'behavior_packs'
 			);
 
-			const res = await askYes(
-				'Does your program have a resource pack?',
-				true
+			const behManifestPath = await askFile(
+				'Path to manifest.json in the behavior pack:',
+				join(behPath, 'manifest.json')
 			);
 
-			const resPath = res
-				? await askDirectory('Resource pack path:', 'resource_packs')
-				: '';
+			const res = await askYes('Does your project have a resource pack?');
 
-			const scriptsPath = await askDirectory(
+			const resPath = res
+				? await askFile('Resource pack path:', 'resource_packs')
+				: 'resource_pack';
+
+			const resManifestPath = res
+				? await askFile(
+						'Path to manifest.json in the resource pack:',
+						join(resPath, 'manifest.json')
+				  )
+				: 'resource_pack';
+
+			const scriptsPath = await askFile(
 				'The directory where the script is stored:',
 				join(behPath, 'scripts')
 			);
@@ -128,6 +143,8 @@ class InfoClass extends DelayHanlder {
 				resPath,
 				language,
 				scriptsPath,
+				behManifestPath,
+				resManifestPath,
 				mode: 'adapt'
 			});
 		}

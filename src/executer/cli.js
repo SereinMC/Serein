@@ -8,7 +8,7 @@ import { CLI_VERSION } from '../base/constants.js';
 program
 	.name('serein')
 	.description('A Minecraft: Bedrock Edition creation manage tool.')
-	.version(CLI_VERSION);
+	.version(CLI_VERSION,'-v --version');
 
 program
 	.command('init')

@@ -3,7 +3,7 @@ import InfoHandler from './information.js';
 class DelayHanlderWithInfo {
 	constructor() {
 		this.updated = false;
-		this.info = '';
+		this.info = {};
 	}
 
 	async syncInfo() {
