@@ -12,12 +12,17 @@ const options = {
 const req = request(options, (res) => {
 	console.log('statusCode:', res.statusCode);
 
+	if (res.statusCode !== 200) {
+		throw new Error(`The RAW can not be deployed with status code: ${res.statusCode}`);
+	}
+
 	res.on('data', (d) => {
 		process.stdout.write(d);
 	});
 });
 
 req.on('error', (e) => {
-	console.error(e);
+	throw e;
 });
+
 req.end();
