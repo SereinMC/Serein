@@ -6,11 +6,16 @@ const behPath = config.behPath;
 const resPath = config.resPath;
 const behManifestPath = config.behManifestPath;
 const scriptsPath = config.scriptsPath;
-const useMinecraftPreview = config.mc_preview; // Whether to target the "Minecraft Preview" version of Minecraft vs. the main store version of Minecraft
+const useMinecraftPreview = config.mc_preview;
 const manifest = JSON.parse(
 	stripJsonComments(readFileSync(behManifestPath, 'utf-8'))
 );
-const scriptEntry = manifest.modules[0].entry;
+const scriptEntry = (function () {
+	for (const current of manifest.modules) {
+		if (current.type === 'script') return current.entry;
+	}
+	return 'script module not found.';
+})();
 // === END CONFIGURABLE VARIABLES
 
 import os from 'os';
