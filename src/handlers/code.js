@@ -9,11 +9,11 @@ class CodeClass extends DelayHanlderWithInfo {
 	}
 
 	async update() {
-		const { language, scriptPath } = this.info;
+		const { language, scriptsPath } = this.info;
 
 		if (language === 'ts') {
 			this.tsconfig = TSCONFIG;
-			this.tsconfig.include.push(scriptPath + '**/*');
+			this.tsconfig.include.push(scriptsPath + '**/*');
 		}
 
 		this.done();
