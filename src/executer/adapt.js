@@ -16,7 +16,8 @@ async function adaptProject() {
 		['gulp', '^4.0.2'],
 		['gulp-esbuild', '^0.11.0'],
 		['gulp-typescript', '^6.0.0-alpha.1'],
-		['gulp-zip', '^5.1.0']
+		['gulp-zip', '^5.1.0'],
+		['strip-json-comments', '^5.0.1']
 	]);
 
 	await ManifestHandler.check();
