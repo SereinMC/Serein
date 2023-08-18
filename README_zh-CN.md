@@ -8,6 +8,7 @@
   <a href="https://www.npmjs.com/package/@pureeval/serein"><img src="https://img.shields.io/npm/dw/%40pureeval%2Fserein" alt="download"></a>
   <a href="https://www.npmjs.com/package/@pureeval/serein"><img src="https://img.shields.io/badge/minecraft_support-latest-8A2BE2" alt="minecraft"></a>
 </p>
+
 Serein 是一个为 [Minecraft: Bedrock Edition Script API](https://learn.microsoft.com/zh-CN/minecraft/creator/scriptapi/) 开发的脚手架项目，帮助开发者高效、优雅地创建和管理项目。
 
 查看此文档的 [English](README.md) | 简体中文 版本
