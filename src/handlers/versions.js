@@ -1,6 +1,8 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable indent */
 import inquirer from 'inquirer';
 import NetWork from '../base/network.js';
-import { ALL, DATA } from '../base/constants.js';
+import { ALL, DATA, SERVER } from '../base/constants.js';
 import DelayHanlderWithInfo from './delayInfo.js';
 import { start, done, magenta } from '../base/console.js';
 
@@ -32,12 +34,20 @@ class Versions extends DelayHanlderWithInfo {
 		const choices = ALL.map((v) => ({ name: v, value: v }));
 
 		const { deps } = await inquirer.prompt([
-			{
-				type: 'checkbox',
-				message: msg,
-				name: 'deps',
-				choices: choices
-			}
+			mode === 'init'
+				? {
+						type: 'checkbox',
+						message: msg,
+						name: 'deps',
+						choices: choices,
+						default: [SERVER]
+				  }
+				: {
+						type: 'checkbox',
+						message: msg,
+						name: 'deps',
+						choices: choices
+				  }
 		]);
 
 		start('Getting version information...');

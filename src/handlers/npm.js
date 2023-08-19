@@ -60,13 +60,6 @@ class NpmClass extends DelayHanlderWithInfo {
 		}
 	}
 
-	async resolveDependencies(deps) {
-		await this.check();
-		for (const [name, version] of deps) {
-			this.package.devDependencies[name] = version;
-		}
-	}
-
 	async tidyDependencies() {
 		await this.check();
 		if (!this.package.devDependencies) this.package.devDependencies = {};
