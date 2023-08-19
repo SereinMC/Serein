@@ -40,7 +40,9 @@ class ConfigClass extends DelayHanlder {
 			resManifestPath,
 			mc_preview: false,
 			output: 'build',
-			mc_dir: null
+			mc_dir: null,
+			esbuild: {},
+			tsconfig: {}
 		};
 
 		this.done();
