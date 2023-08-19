@@ -16,6 +16,8 @@ const scriptEntry = (function () {
 	}
 	return 'script module not found.';
 })();
+const esbuildConfig = config.esbuild;
+const tsconfig = config.tsconfig;
 // === END CONFIGURABLE VARIABLES
 
 import os from 'os';
@@ -76,13 +78,18 @@ function compile_scripts() {
 	return gulp
 		.src(join(scriptsPath, '**/*.ts'))
 		.pipe(
-			ts({
-				module: 'es2020',
-				moduleResolution: 'node',
-				lib: ['es2020', 'dom'],
-				strict: true,
-				target: 'es2020'
-			})
+			ts(
+				Object.assign(
+					{
+						module: 'es2020',
+						moduleResolution: 'node',
+						lib: ['es2020', 'dom'],
+						strict: true,
+						target: 'es2020'
+					},
+					tsconfig
+				)
+			)
 		)
 		.pipe(gulp.dest(join(output, 'scripts')));
 }
@@ -91,21 +98,26 @@ function esbuild_system() {
 	return gulp
 		.src(join(output, scriptEntry))
 		.pipe(
-			gulpEsbuild({
-				outfile: scriptEntry,
-				bundle: true,
-				sourcemap: true,
-				external: [
-					'@minecraft/server-ui',
-					'@minecraft/server',
-					'@minecraft/server-net',
-					'@minecraft/server-gametest',
-					'@minecraft/server-admin',
-					'@minecraft/server-editor',
-					'@minecraft/vanilla-data'
-				],
-				format: 'esm'
-			})
+			gulpEsbuild(
+				Object.assign(
+					{
+						outfile: scriptEntry,
+						bundle: true,
+						sourcemap: true,
+						external: [
+							'@minecraft/server-ui',
+							'@minecraft/server',
+							'@minecraft/server-net',
+							'@minecraft/server-gametest',
+							'@minecraft/server-admin',
+							'@minecraft/server-editor',
+							'@minecraft/vanilla-data'
+						],
+						format: 'esm'
+					},
+					esbuildConfig
+				)
+			)
 		)
 		.pipe(gulp.dest(join(output, behPath)));
 }
@@ -179,7 +191,11 @@ const deploy = gulp.series(
 
 function watch() {
 	return gulp.watch(
-		[join(behPath, '**/*'), join(resPath, '**/*')],
+		[
+			join(behPath, '**/*'),
+			join(resPath, '**/*'),
+			join(scriptsPath, '**/*')
+		],
 		gulp.series(build, deploy)
 	);
 }
