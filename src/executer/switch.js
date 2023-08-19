@@ -14,6 +14,8 @@ async function switchVersion(isDefault) {
 
 	await NpmHandler.addDependencies(modules);
 
+	await NpmHandler.write();
+
 	await ManifestHandler.write();
 
 	await NpmHandler.clearModules();

@@ -1,9 +1,8 @@
-import NpmHandler from './npm.js';
 import NetWork from '../base/network.js';
+import VerionsHandler from './versions.js';
 import { warning } from '../base/console.js';
-import { getDeps } from '../base/inquirer.js';
+import { SERVER } from '../base/constants.js';
 import DelayHanlderWithInfo from './delayInfo.js';
-import { ALL, SERVER } from '../base/constants.js';
 
 class ModuleClass extends DelayHanlderWithInfo {
 	constructor() {
@@ -28,7 +27,7 @@ class ModuleClass extends DelayHanlderWithInfo {
 						'You should make sure the dependencies are well organized if you want to use dependencies (latest version) besides @mc/server.'
 					)
 				);
-				this.packages = await getDeps(ALL, 'Select dependencies:');
+				this.packages = await VerionsHandler.getPackageVersions();
 			}
 		} else {
 			if (auto) {
@@ -36,15 +35,10 @@ class ModuleClass extends DelayHanlderWithInfo {
 					[SERVER]: await NetWork.getLatestVersion(SERVER)
 				};
 			} else {
-				this.packages = await getDeps(
-					Object.keys(await NpmHandler.getDependencies()).filter(
-						(v) => ALL.includes(v)
-					),
-					'Select dependencies which need to swicth:'
-				);
+				this.packages = await VerionsHandler.getPackageVersions();
 			}
 		}
-        
+
 		this.done();
 	}
 

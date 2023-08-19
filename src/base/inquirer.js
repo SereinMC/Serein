@@ -56,69 +56,6 @@ async function askProjectInfo() {
 	]);
 }
 
-async function promptUser(message, choices) {
-	const { selected } = await inquirer.prompt([
-		{
-			type: 'list',
-			name: 'selected',
-			message: message,
-			choices: choices.map((choice) => ({ name: choice }))
-		}
-	]);
-	return selected;
-}
-
-async function askVersion(packageName, isData = false) {
-	const versions = await NetWork.getNpmPackageVersions(packageName, isData);
-	if (isData) {
-		const npm = await promptUser(
-			`Select your ${magenta(packageName)} version in manifest`,
-			versions
-		);
-
-		return {
-			npm,
-			isData: true
-		};
-	} else {
-		const keys = Object.keys(versions).sort().reverse();
-
-		const api = await promptUser(
-			`Select your ${magenta(packageName)} version in manifest`,
-			keys
-		);
-		const npm = await promptUser(
-			`Select your ${magenta(packageName)} version in npm`,
-			versions[api].sort().reverse()
-		);
-
-		return {
-			api,
-			npm,
-			isData: false
-		};
-	}
-}
-
-async function getDeps(versions, msg) {
-	const choices = versions.map((v) => ({ name: v, value: v }));
-	const { deps } = await inquirer.prompt([
-		{
-			type: 'checkbox',
-			message: msg,
-			name: 'deps',
-			choices: choices
-		}
-	]);
-	const packageVersions = {};
-	for (const packageName of deps) {
-		if (DATA.includes(packageName))
-			packageVersions[packageName] = await askVersion(packageName, true);
-		else packageVersions[packageName] = await askVersion(packageName);
-	}
-	return packageVersions;
-}
-
 async function askFile(msg,defaultOption) {
 	let directory = await askText(msg,defaultOption);
 
@@ -130,4 +67,4 @@ async function askFile(msg,defaultOption) {
 	return directory;
 }
 
-export { askYes, askText, askList, askFile, askProjectInfo, getDeps };
+export { askYes, askText, askList, askFile, askProjectInfo};
