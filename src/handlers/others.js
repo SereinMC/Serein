@@ -12,7 +12,7 @@ class OthersClass extends DelayHanlderWithInfo {
 
 		const { behPath, resPath, res, scriptsPath } = this.info;
 
-		IO.mkdir([behPath, behPath + scriptsPath, scriptsPath]);
+		IO.mkdir([behPath, scriptsPath]);
 
 		if (res) IO.mkdir([resPath]);
 	}

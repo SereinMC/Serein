@@ -1,3 +1,4 @@
+import { existsSync } from 'fs';
 import IO from '../base/io.js';
 import DelayHanlderWithInfo from './delayInfo.js';
 import { DefaultCode, TSCONFIG } from '../base/constants.js';
@@ -24,7 +25,8 @@ class CodeClass extends DelayHanlderWithInfo {
 		const { language, scriptsPath, entry } = this.info;
 
 		if (language === 'ts') {
-			IO.writeJSON('tsconfig.json', this.tsconfig);
+			if (!existsSync('tsconfig.json'))
+				IO.writeJSON('tsconfig.json', this.tsconfig);
 			IO.writeText(scriptsPath + entry + '.ts', DefaultCode);
 		} else {
 			IO.writeText(scriptsPath + entry + '.js', DefaultCode);
