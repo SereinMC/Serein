@@ -53,23 +53,7 @@ class Versions extends DelayHanlderWithInfo {
 			}
 
 			if (addList.length) {
-				start('Getting version information...');
-				this.versions = {};
-				for (const packageName of addList) {
-					if (DATA.includes(packageName))
-						this.versions[packageName] =
-							await NetWork.getNpmPackageVersions(
-								packageName,
-								true
-							);
-					else
-						this.versions[packageName] =
-							await NetWork.getNpmPackageVersions(
-								packageName,
-								false
-							);
-				}
-				done('Getting version information.');
+				await this.getNpmVersions(addList);
 
 				for (const packageName of addList) {
 					if (DATA.includes(packageName))
@@ -98,17 +82,7 @@ class Versions extends DelayHanlderWithInfo {
 				}
 			]);
 
-			start('Getting version information...');
-			this.versions = {};
-			for (const packageName of deps) {
-				if (DATA.includes(packageName))
-					this.versions[packageName] =
-						await NetWork.getNpmPackageVersions(packageName, true);
-				else
-					this.versions[packageName] =
-						await NetWork.getNpmPackageVersions(packageName, false);
-			}
-			done('Getting version information.');
+			await this.getNpmVersions(deps);
 
 			this.packageVersions = {};
 			for (const packageName of deps) {
@@ -158,6 +132,20 @@ class Versions extends DelayHanlderWithInfo {
 				isData: false
 			};
 		}
+	}
+
+	async getNpmVersions(packageList) {
+		start('Getting version information...');
+		this.versions = {};
+		for (const packageName of packageList) {
+			if (DATA.includes(packageName))
+				this.versions[packageName] =
+					await NetWork.getNpmPackageVersions(packageName, true);
+			else
+				this.versions[packageName] =
+					await NetWork.getNpmPackageVersions(packageName, false);
+		}
+		done('Getting version information.');
 	}
 
 	async getPackageVersions(packages, defaultOption = []) {
