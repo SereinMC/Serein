@@ -2,7 +2,6 @@ import IO from '../base/io.js';
 import { existsSync } from 'fs';
 import { v4 as uuid } from 'uuid';
 import InfoHandler from './information.js';
-import { DATA } from '../base/constants.js';
 import DelayHanlderWithInfo from './delayInfo.js';
 
 class ManifestClass extends DelayHanlderWithInfo {
@@ -95,56 +94,54 @@ class ManifestClass extends DelayHanlderWithInfo {
 			.map((v) => v.module_name);
 	}
 
+	findDependeceIdx(packageName) {
+		for (const idx in this.behContext.dependencies) {
+			if (!this.behContext.dependencies[idx].module_name) continue;
+			if (this.behContext.dependencies[idx].module_name === packageName) {
+				return idx;
+			}
+		}
+	}
+
+	switchVersion(packageName, version) {
+		const idx = this.findDependeceIdx(packageName);
+		this.behContext.dependencies[idx].version = version;
+	}
+
+	deleteDependence(packageName) {
+		const idx = this.findDependeceIdx(packageName);
+		this.behContext.dependencies.splice(idx, 1);
+	}
+
+	addDependence(packageName, version) {
+		this.behContext.dependencies.push({
+			module_name: packageName,
+			version: version
+		});
+	}
+
 	async addDependencies(deps) {
 		await this.check();
 		const nowDeps = await this.getDependencies();
-
 		for (const packageName in deps) {
 			const current = deps[packageName];
 			if (current.isData) continue;
 			if (nowDeps.includes(packageName)) {
-				for (const idx in this.behContext.dependencies) {
-					if (!this.behContext.dependencies[idx].module_name)
-						continue;
-					if (
-						this.behContext.dependencies[idx].module_name ===
-						packageName
-					) {
-						this.behContext.dependencies[idx].version = current.api;
-					}
-				}
+				this.switchVersion(packageName, current.api);
 			} else {
-				this.behContext.dependencies.push({
-					module_name: packageName,
-					version: current.api
-				});
+				this.addDependence(packageName, current.api);
 			}
 		}
 	}
 
 	async resolveDependencies(deps) {
 		await this.check();
-
-		const addList = [],
-			delList = [];
-
 		for (const packageName in deps) {
-			if (deps[packageName].type === 'add') addList.push(packageName);
-			else delList.push(packageName);
+			const current = deps[packageName];
+			if (current.type === 'add')
+				this.addDependence(packageName, current.api);
+			else this.deleteDependence(packageName);
 		}
-
-		const dependencies = this.behContext.dependencies.filter(
-			(v) => !v.module_name || !delList.includes(v.module_name)
-		);
-
-		for (const packageName of addList) {
-			dependencies.push({
-				module_name: packageName,
-				version: deps[packageName].api
-			});
-		}
-
-		this.behContext.dependencies = dependencies;
 	}
 
 	async write() {
