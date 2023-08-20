@@ -2,6 +2,7 @@ import IO from '../base/io.js';
 import { existsSync } from 'fs';
 import { v4 as uuid } from 'uuid';
 import InfoHandler from './information.js';
+import { DATA } from '../base/constants.js';
 import DelayHanlderWithInfo from './delayInfo.js';
 
 class ManifestClass extends DelayHanlderWithInfo {
@@ -94,9 +95,10 @@ class ManifestClass extends DelayHanlderWithInfo {
 			.map((v) => v.module_name);
 	}
 
-	async resolveDependencies(deps) {
+	async addDependencies(deps) {
 		await this.check();
 		const nowDeps = await this.getDependencies();
+
 		for (const packageName in deps) {
 			const current = deps[packageName];
 			if (current.isData) continue;
@@ -118,6 +120,31 @@ class ManifestClass extends DelayHanlderWithInfo {
 				});
 			}
 		}
+	}
+
+	async resolveDependencies(deps) {
+		await this.check();
+
+		const addList = [],
+			delList = [];
+
+		for (const packageName in deps) {
+			if (deps[packageName].type === 'add') addList.push(packageName);
+			else delList.push(packageName);
+		}
+
+		const dependencies = this.behContext.dependencies.filter(
+			(v) => !v.module_name || !delList.includes(v.module_name)
+		);
+
+		for (const packageName of addList) {
+			dependencies.push({
+				module_name: packageName,
+				version: deps[packageName].api
+			});
+		}
+
+		this.behContext.dependencies = dependencies;
 	}
 
 	async write() {

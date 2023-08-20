@@ -26,57 +26,105 @@ class Versions extends DelayHanlderWithInfo {
 	async update() {
 		const { mode } = this.info;
 
-		const msg =
-			mode === 'init'
-				? 'Select dependencies:'
-				: 'Select dependencies which need to swicth(or add):';
+		const choices = this.packageList.map((v) => ({ name: v, value: v }));
 
-		const choices = ALL.map((v) => ({ name: v, value: v }));
+		if (mode === 'module') {
+			const { deps } = await inquirer.prompt([
+				{
+					type: 'checkbox',
+					message: 'Select dependencies:',
+					name: 'deps',
+					choices: choices,
+					default: this.defaultOption
+				}
+			]);
 
-		const { deps } = await inquirer.prompt([
-			mode === 'init'
-				? {
-						type: 'checkbox',
-						message: msg,
-						name: 'deps',
-						choices: choices,
-						default: [SERVER]
-				  }
-				: {
-						type: 'checkbox',
-						message: msg,
-						name: 'deps',
-						choices: choices
-				  }
-		]);
+			this.packageVersions = {};
+			const addList = [],
+				delList = [];
 
-		start('Getting version information...');
-		this.versions = {};
-		for (const packageName of deps) {
-			if (DATA.includes(packageName))
-				this.versions[packageName] =
-					await NetWork.getNpmPackageVersions(packageName, true);
-			else
-				this.versions[packageName] =
-					await NetWork.getNpmPackageVersions(packageName, false);
-		}
-		done('Getting version information.');
+			for (const packageName of deps) {
+				if (this.defaultOption.includes(packageName)) continue;
+				addList.push(packageName);
+			}
 
-		this.packageVersions = {};
-		for (const packageName of deps) {
-			if (DATA.includes(packageName))
-				this.packageVersions[packageName] = await this.askVersion(
-					packageName,
-					true
-				);
-			else
-				this.packageVersions[packageName] = await this.askVersion(
-					packageName
-				);
+			for (const packageName of this.defaultOption) {
+				if (!deps.includes(packageName)) delList.push(packageName);
+			}
+
+			if (addList.length) {
+				start('Getting version information...');
+				this.versions = {};
+				for (const packageName of addList) {
+					if (DATA.includes(packageName))
+						this.versions[packageName] =
+							await NetWork.getNpmPackageVersions(
+								packageName,
+								true
+							);
+					else
+						this.versions[packageName] =
+							await NetWork.getNpmPackageVersions(
+								packageName,
+								false
+							);
+				}
+				done('Getting version information.');
+
+				for (const packageName of addList) {
+					if (DATA.includes(packageName))
+						this.packageVersions[packageName] =
+							await this.askVersion(packageName, true);
+					else
+						this.packageVersions[packageName] =
+							await this.askVersion(packageName);
+					this.packageVersions[packageName]['type'] = 'add';
+				}
+			}
+
+			for (const packageName of delList) {
+				this.packageVersions[packageName] = {
+					type: 'del'
+				};
+			}
+		} else {
+			const { deps } = await inquirer.prompt([
+				{
+					type: 'checkbox',
+					message: 'Select dependencies:',
+					name: 'deps',
+					choices: choices,
+					default: [SERVER]
+				}
+			]);
+
+			start('Getting version information...');
+			this.versions = {};
+			for (const packageName of deps) {
+				if (DATA.includes(packageName))
+					this.versions[packageName] =
+						await NetWork.getNpmPackageVersions(packageName, true);
+				else
+					this.versions[packageName] =
+						await NetWork.getNpmPackageVersions(packageName, false);
+			}
+			done('Getting version information.');
+
+			this.packageVersions = {};
+			for (const packageName of deps) {
+				if (DATA.includes(packageName))
+					this.packageVersions[packageName] = await this.askVersion(
+						packageName,
+						true
+					);
+				else
+					this.packageVersions[packageName] = await this.askVersion(
+						packageName
+					);
+			}
 		}
 
 		this.done();
-		return this.packageVersions;
 	}
 
 	async askVersion(packageName, isData = false) {
@@ -112,9 +160,10 @@ class Versions extends DelayHanlderWithInfo {
 		}
 	}
 
-	async getPackageVersions() {
+	async getPackageVersions(packages, defaultOption = []) {
+		this.packageList = packages;
+		this.defaultOption = defaultOption;
 		await this.check();
-
 		return this.packageVersions;
 	}
 }

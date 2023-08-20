@@ -23,7 +23,7 @@ async function getInformation(isDefault) {
 
 	await NpmHandler.addDependencies(modules);
 
-	await ManifestHandler.resolveDependencies(modules);
+	await ManifestHandler.addDependencies(modules);
 }
 
 async function creatFiles() {

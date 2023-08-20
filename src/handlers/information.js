@@ -93,12 +93,12 @@ class InfoClass extends DelayHanlder {
 				behManifestPath: 'behavior_packs/manifest.json',
 				resManifestPath: 'resource_packs/manifest.json'
 			});
-		} else if (this.info.mode === 'switch') {
+		} else if (this.info.mode === 'switch' || this.info.mode === 'module') {
 			Object.assign(this.info, {
-				mode: 'switch',
+				mode: this.info.mode,
 				...(await ConfigRender.getConfig())
 			});
-		} else {
+		} else if (this.info.mode === 'adapt') {
 			console.log(
 				'This process will guide you through importing your project into serein.'
 			);

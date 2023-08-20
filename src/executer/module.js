@@ -3,16 +3,14 @@ import ModuleResolver from '../handlers/module.js';
 import InfoHandler from '../handlers/information.js';
 import ManifestHandler from '../handlers/manifest.js';
 
-async function switchVersion(isDefault) {
-	InfoHandler.bind('switch');
-
-	if (isDefault) await InfoHandler.init();
+async function moduleManage() {
+	InfoHandler.bind('module');
 
 	const modules = await ModuleResolver.getDependencies();
 
-	await ManifestHandler.addDependencies(modules);
+	await NpmHandler.resolveDependencies(modules);
 
-	await NpmHandler.addDependencies(modules);
+	await ManifestHandler.resolveDependencies(modules);
 
 	await NpmHandler.write();
 
@@ -23,4 +21,4 @@ async function switchVersion(isDefault) {
 	await NpmHandler.install();
 }
 
-export default switchVersion;
+export default moduleManage;
