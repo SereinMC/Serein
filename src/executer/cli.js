@@ -2,13 +2,14 @@ import IO from '../base/io.js';
 import initProject from './init.js';
 import { program } from 'commander';
 import adaptProject from './adapt.js';
+import moduleManage from './module.js';
 import switchVersion from './switch.js';
 import { CLI_VERSION } from '../base/constants.js';
 
 program
 	.name('serein')
 	.description('A Minecraft: Bedrock Edition creation manage tool.')
-	.version(CLI_VERSION,'-v --version');
+	.version(CLI_VERSION, '-v --version');
 
 program
 	.command('init')
@@ -20,9 +21,16 @@ program
 program
 	.command('switch')
 	.alias('s')
-	.description('switch requirements version')
+	.description('switch dependencies version')
 	.option('-y --yes', 'switch to latest version directly')
 	.action((option) => switchVersion(option.yes));
+
+program
+	.command('module')
+	.alias('m')
+	.description('managing current dependencies')
+	.option('-y --yes', 'switch to latest version directly')
+	.action((option) => moduleManage());
 
 program
 	.command('adapt')

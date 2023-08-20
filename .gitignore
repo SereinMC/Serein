@@ -106,8 +106,7 @@ package-lock.json
 
 # Serein
 build
-behavior_packs
-resource_packs
-.directory
 test.js
+.vscode
+.directory
 pnpm-lock.yaml
