@@ -17,7 +17,7 @@ class ManifestClass extends DelayHanlderWithInfo {
 		if (existsSync(behManifestPath)) {
 			this.behContext = IO.readJSON(behManifestPath);
 			if (mode === 'adapt') {
-				await InfoHandler.Merge('name', this.behContext.header.name);
+				await InfoHandler.merge('name', this.behContext.header.name);
 			}
 			this.done();
 		}

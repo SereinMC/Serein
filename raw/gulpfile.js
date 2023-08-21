@@ -45,6 +45,7 @@ const get_mojang_dir = () => {
 			);
 	}
 };
+
 const mc_dir = get_mojang_dir();
 
 const del_gen = (files) => (fn) => {
@@ -71,8 +72,6 @@ function copy_resource_packs() {
 		.src([join(resPath, '**/*')])
 		.pipe(gulp.dest(join(output, resPath)));
 }
-
-const copy_content = gulp.parallel(copy_behavior_packs, copy_resource_packs);
 
 function compile_scripts() {
 	return gulp
@@ -136,22 +135,6 @@ function pack_zip() {
 }
 
 const del_build_scripts = del_gen([join(output, scriptsPath)]);
-const clean_and_copy = gulp.series(clean_build, copy_content);
-const build =
-	config.language === 'ts'
-		? gulp.series(
-				clean_and_copy,
-				compile_scripts,
-				esbuild_system,
-				del_build_scripts
-		  )
-		: gulp.series(
-				clean_and_copy,
-				copy_scripts,
-				esbuild_system,
-				del_build_scripts
-		  );
-const bundle = gulp.series(build, del_build_scripts, pack_zip);
 
 function clean_local(fn) {
 	if (!pack_name || !pack_name.length || pack_name.length < 2) {
@@ -181,14 +164,6 @@ function deploy_local_mc_resource_packs() {
 		);
 }
 
-const deploy = gulp.series(
-	clean_local,
-	gulp.parallel(
-		deploy_local_mc_behavior_packs,
-		deploy_local_mc_resource_packs
-	)
-);
-
 function watch() {
 	return gulp.watch(
 		[
@@ -199,6 +174,35 @@ function watch() {
 		gulp.series(build, deploy)
 	);
 }
+
+const clean_and_copy = gulp.series(clean_build, copy_content);
+
+const build =
+	config.language === 'ts'
+		? gulp.series(
+				clean_and_copy,
+				compile_scripts,
+				esbuild_system,
+				del_build_scripts
+		  )
+		: gulp.series(
+				clean_and_copy,
+				copy_scripts,
+				esbuild_system,
+				del_build_scripts
+		  );
+
+const copy_content = gulp.parallel(copy_behavior_packs, copy_resource_packs);
+
+const bundle = gulp.series(build, del_build_scripts, pack_zip);
+
+const deploy = gulp.series(
+	clean_local,
+	gulp.parallel(
+		deploy_local_mc_behavior_packs,
+		deploy_local_mc_resource_packs
+	)
+);
 
 const default_action = gulp.series(build, deploy);
 

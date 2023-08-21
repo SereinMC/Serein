@@ -152,7 +152,7 @@ class InfoClass extends DelayHanlder {
 		this.done();
 	}
 
-	async Merge(key, value) {
+	async merge(key, value) {
 		await this.check();
 
 		this.info[key] = value;
