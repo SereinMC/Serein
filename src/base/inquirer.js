@@ -1,9 +1,7 @@
 import inquirer from 'inquirer';
 import { basename } from 'path';
 import { existsSync } from 'fs';
-import NetWork from './network.js';
-import { DATA } from './constants.js';
-import { error, magenta } from './console.js';
+import { error } from './console.js';
 
 async function askText(msg, defaultOption) {
 	const { answer } = await inquirer.prompt([
@@ -56,15 +54,15 @@ async function askProjectInfo() {
 	]);
 }
 
-async function askFile(msg,defaultOption) {
-	let directory = await askText(msg,defaultOption);
+async function askFile(msg, defaultOption) {
+	let directory = await askText(msg, defaultOption);
 
 	while (!existsSync(directory)) {
 		console.log(error('The directory does not exist, please re-enter it!'));
-		directory = await askText(msg,defaultOption);
+		directory = await askText(msg, defaultOption);
 	}
 
 	return directory;
 }
 
-export { askYes, askText, askList, askFile, askProjectInfo};
+export { askYes, askText, askList, askFile, askProjectInfo };
