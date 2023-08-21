@@ -64,6 +64,17 @@ const MCATTRIBUTES =
 	'diagnostic.disable.minecraft.manifest.module.missing=true';
 // === END DEFAULT MCATTRIBUTES
 
+// === DEFAULT NPM DEPENDENCIES
+const DEFAULT_NPM_DEPENDENCIES = {
+	del: { npm: '7.0.0' },
+	gulp: { npm: '^4.0.2' },
+	'gulp-esbuild': { npm: '^0.11.0' },
+	'gulp-typescript': { npm: '^6.0.0-alpha.1' },
+	'gulp-zip': { npm: '^5.1.0' },
+	'strip-json-comments': { npm: '^5.0.1' }
+};
+// === END DEFAULT NPM DEPENDENCIES
+
 export {
 	CLI_VERSION,
 	SERVER,
@@ -79,5 +90,6 @@ export {
 	DefaultCode,
 	GULPFILE,
 	TSCONFIG,
-	MCATTRIBUTES
+	MCATTRIBUTES,
+	DEFAULT_NPM_DEPENDENCIES
 };

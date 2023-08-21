@@ -35,9 +35,9 @@ async function creatFiles() {
 
 	await LogoHandler.write();
 
-	await NpmHandler.write();
-
 	await CodeHandler.write();
+
+	await NpmHandler.write();
 
 	await GulpHandler.write();
 

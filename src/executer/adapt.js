@@ -3,6 +3,7 @@ import GulpHandler from '../handlers/gulp.js';
 import ConfigRender from '../handlers/config.js';
 import InfoHandler from '../handlers/information.js';
 import ManifestHandler from '../handlers/manifest.js';
+import { DEFAULT_NPM_DEPENDENCIES } from '../base/constants.js';
 
 async function adaptProject() {
 	InfoHandler.bind('adapt');
@@ -11,14 +12,7 @@ async function adaptProject() {
 
 	await NpmHandler.tidyDependencies();
 
-	await NpmHandler.addDependencies({
-		del: { npm: '7.0.0' },
-		gulp: { npm: '^4.0.2' },
-		'gulp-esbuild': { npm: '^0.11.0' },
-		'gulp-typescript': { npm: '^6.0.0-alpha.1' },
-		'gulp-zip': { npm: '^5.1.0' },
-		'strip-json-comments': { npm: '^5.0.1' }
-	});
+	await NpmHandler.addDependencies(DEFAULT_NPM_DEPENDENCIES);
 
 	await ManifestHandler.check();
 

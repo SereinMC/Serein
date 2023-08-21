@@ -13,7 +13,9 @@ const req = request(options, (res) => {
 	console.log('statusCode:', res.statusCode);
 
 	if (res.statusCode !== 200) {
-		throw new Error(`The RAW can not be deployed with status code: ${res.statusCode}`);
+		throw new Error(
+			`The RAW can not be deployed with status code: ${res.statusCode}`
+		);
 	}
 
 	res.on('data', (d) => {
