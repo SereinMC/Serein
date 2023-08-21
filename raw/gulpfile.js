@@ -1,3 +1,4 @@
+// === REFRESH TAG = ERROR 
 // === CONFIGURABLE VARIABLES
 import config from './.serein.json' assert { type: 'json' };
 const output = config.output;
