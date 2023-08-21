@@ -175,8 +175,6 @@ function watch() {
 	);
 }
 
-const clean_and_copy = gulp.series(clean_build, copy_content);
-
 const build =
 	config.language === 'ts'
 		? gulp.series(
@@ -193,6 +191,8 @@ const build =
 		  );
 
 const copy_content = gulp.parallel(copy_behavior_packs, copy_resource_packs);
+
+const clean_and_copy = gulp.series(clean_build, copy_content);
 
 const bundle = gulp.series(build, del_build_scripts, pack_zip);
 
