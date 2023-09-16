@@ -8,7 +8,6 @@
   <a href="https://www.npmjs.com/package/@pureeval/serein"><img src="https://img.shields.io/npm/dw/%40pureeval%2Fserein" alt="download"></a>
   <a href="https://www.npmjs.com/package/@pureeval/serein"><img src="https://img.shields.io/badge/minecraft_support-latest-8A2BE2" alt="minecraft"></a>
 </p>
-
 Serein 是一个为 [Minecraft: Bedrock Edition Script API](https://learn.microsoft.com/zh-CN/minecraft/creator/scriptapi/) 开发的脚手架项目，帮助开发者高效、优雅地创建和管理项目。
 
 查看此文档的 [English](README.md) | 简体中文 版本
@@ -28,70 +27,7 @@ Serein 是一个为 [Minecraft: Bedrock Edition Script API](https://learn.micros
 
 ### 快速开始
 
-请确保您有 Nodejs Stable 及以上的版本。
-
-```bash
-npm i @pureeval/serein gulp-cli -g
-
-serein # get help
-```
-
-#### 小提示
-由于 `npm` 包管理工具可能在安装某些依赖时表现不佳（比如用时过长等），如果您的环境中有 `pnpm` 包管理工具，则 Serein 将会优先采用它。
-
-你也可以使用以下方法安装 `pnpm` 工具，它是一个比 `npm` 更优秀的包管理器！
-
-```bash
-npm i pnpm -g
-
-pnpm --version
-```
-
-#### 创建项目
-
-Serein 提供了语义相同的长参数 `init` 与短参数 `i` 以创建项目，在您的项目文件夹中执行该命令即可开启引导。接下来通过回答引导的问题，工具就可以帮你构建一个量身定做的模板项目。
-
-添加 `-y/--yes` 参数可以跳过引导直接采用默认配置初始化项目。
-
-> 请注意：如果您是 android 平台的用户，当最后一步安装模块时出现 `symlink` 相关的错误，请忽略它，其不会对 Serein 的使用造成影响。
-
-#### 构建项目
-
-Serein 提供了语义相同的长参数 `build` 与短参数 `b` 构建项目。
-
-在项目根目录执行该命令可以自动创建模板资源包（不打包）并放在 `build` 目录下。
-
-#### 打包项目
-
-Serein 提供了语义相同的长参数 `pack` 与短参数 `p` 以构建和打包项目。
-
-在项目根目录执行该命令可以自动创建模板资源包并且打包为 `.mcpack` 并输出在 `build` 目录下。
-
-#### 部署项目
-
-Serein 提供了语义相同的长参数 `deploy` 与短参数 `d` 以构建和部署项目。
-
-- 对于 Windows 平台，在项目根目录执行该命令可以自动创建资源包并且直接部署至游戏目录。
-
-- 对于 Linux 平台，我们支持对使用 `mcpelauncher` 启动的游戏的自动部署，如果您使用其他启动器或者有其他游戏目录，请看其他平台的配置方案。
-
-- 对于其他平台，您可以在项目初始化后修改 `.serein.json` 中的 `mc_dir` 为您的游戏目录。
-
-#### 热重载
-
-Serein 提供了语义相同的长参数 `watch` 与短参数 `w` 以实时热重载项目到游戏中。
-
-在项目根目录执行该命令后，Serein 将会监视 `behavior_packs` 与 `resource_packs` 两个目录，一旦其中的文件发生改变，就会重新构建项目并部署到游戏。
-
-#### 更改依赖版本
-
-目前的 Script API 迭代速度非常快，而且文档紧跟版本更新，过时版本的开发者资源和游戏可能会因此出现破坏性问题。
-
-Serein 提供了长参数 `switch` 与 `s` 以更改您项目中的 manifest 依赖与 npm 依赖版本。
-
-在根目录执行该命令可以开启版本切换引导，您可以通过引导重新指定依赖版本并安装依赖项。
-
-添加 `-y/--yes` 参数可以直接更新到最新的依赖（我们不推荐在有 `@minecraft/server` 之外的依赖时使用）。
+请前往[Serein 文档](https://sereinmc.github.io/Docs/)查看详情
 
 ### 贡献
 
