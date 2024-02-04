@@ -10,6 +10,7 @@ const SERVER_GAMETEST = '@minecraft/server-gametest';
 const SERVER_NET = '@minecraft/server-net';
 const SERVER_EDITOR = '@minecraft/server-editor';
 const VANILLA_DATA = '@minecraft/vanilla-data';
+const MATH = '@minecraft/math';
 const DATA = [VANILLA_DATA];
 const ALL = [
 	SERVER,
@@ -18,7 +19,8 @@ const ALL = [
 	SERVER_GAMETEST,
 	SERVER_NET,
 	SERVER_EDITOR,
-	VANILLA_DATA
+	VANILLA_DATA,
+	MATH
 ];
 // === END NPM PACKAGES
 
@@ -84,6 +86,7 @@ export {
 	SERVER_NET,
 	SERVER_EDITOR,
 	VANILLA_DATA,
+	MATH,
 	DATA,
 	ALL,
 	Mirrors,
