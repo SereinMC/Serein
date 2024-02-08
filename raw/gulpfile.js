@@ -207,11 +207,6 @@ const deploy = gulp.series(
 
 const default_action = gulp.series(build, deploy);
 
-async function extension() {
-	const [name, task] = [process.argv[3], process.argv[4]];
-	await (await import(name))[task](config);
-}
-
 export {
 	build,
 	bundle,

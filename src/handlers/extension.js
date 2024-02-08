@@ -1,7 +1,8 @@
-import { done, error, start } from '../base/console.js';
 import IO from '../base/io.js';
+import { resolve } from 'path';
 import NpmHandler from './npm.js';
 import InfoHandler from './information.js';
+import { done, error, start } from '../base/console.js';
 
 class ExtensionClass {
 	constructor() {
@@ -12,27 +13,27 @@ class ExtensionClass {
 	init() {
 		if (IO.exists('.serein.json')) {
 			this.context = IO.readJSON('.serein.json');
-			if (!this.context['extensions']) this.context['extension'] = [];
+			if (!this.context['extension']) this.context['extension'] = [];
 			else this.extList = this.context['extension'];
 		}
 	}
 
-	async install(packageNames) {
+	async install(packageName) {
 		start('Install extensions...');
 
-		await NpmHandler.add(packageNames.join(' '));
-		this.context.extension.push(...packageNames);
+		await NpmHandler.add(packageName);
+		this.context.extension.push(packageName);
 		IO.writeJSON('.serein.json', this.context);
 
 		done('Intstall extension.');
 	}
 
-	async uninstall(packageNames) {
+	async uninstall(packageName) {
 		start('Uninstall extensions...');
 
-		await NpmHandler.del(packageNames.join(' '));
+		await NpmHandler.del(packageName);
 		this.context.extension = this.context.extension.filter(
-			(v) => !packageNames.includes(v)
+			(v) => v !== packageName
 		);
 		IO.writeJSON('.serein.json', this.context);
 
@@ -43,8 +44,18 @@ class ExtensionClass {
 		if (this.extList.length) {
 			start('Load extensions...');
 			try {
-				for (const packageName in this.extList)
-					(await import(packageName)).cli((program, InfoHandler));
+				for (const packageName of this.extList) {
+					(
+						await import(
+							resolve(
+								process.cwd(),
+								'node_modules',
+								packageName,
+								'index.js'
+							)
+						)
+					).cli(program, InfoHandler, IO);
+				}
 			} catch (e) {
 				console.log(error('Failed to load extension!'), e);
 			}
