@@ -93,7 +93,12 @@ class InfoClass extends DelayHanlder {
 				behManifestPath: 'behavior_packs/manifest.json',
 				resManifestPath: 'resource_packs/manifest.json'
 			});
-		} else if (this.info.mode === 'switch' || this.info.mode === 'module') {
+		} else if (
+			this.info.mode === 'switch' ||
+			this.info.mode === 'module' ||
+			this.info.mode === 'ext' ||
+			this.info.mode === 'rescue'
+		) {
 			Object.assign(this.info, {
 				mode: this.info.mode,
 				...(await ConfigRender.getConfig())

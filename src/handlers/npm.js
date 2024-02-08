@@ -3,8 +3,8 @@ import { existsSync } from 'fs';
 import { deleteSync } from 'del';
 import MirrorHandler from './mirror.js';
 import { ALL } from '../base/constants.js';
-import { accept } from '../base/console.js';
 import DelayHanlderWithInfo from './delayInfo.js';
+import { accept, start, done } from '../base/console.js';
 
 function checkPnpm() {
 	try {
@@ -139,6 +139,24 @@ class NpmClass extends DelayHanlderWithInfo {
 			IO.exec(`pnpm install --registry=${this.mirror}`);
 		} else
 			IO.exec(`npm install --registry=${this.mirror} ${android_suffix}`);
+	}
+
+	async add(packageName) {
+		await this.check();
+		start(`Install extension "${packageName}"...`);
+		if (this.pnpm) {
+			IO.exec(`pnpm install ${packageName}`);
+		} else IO.exec(`npm install ${packageName}`);
+		done(`Install extension "${packageName}".`);
+	}
+
+	async del(packageName) {
+		await this.check();
+		start(`Uninstall extension "${packageName}"...`);
+		if (this.pnpm) {
+			IO.exec(`pnpm remove ${packageName}`);
+		} else IO.exec(`npm uninstall ${packageName}`);
+		done(`Uninstall extension "${packageName}".`);
 	}
 }
 

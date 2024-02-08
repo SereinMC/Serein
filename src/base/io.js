@@ -13,6 +13,8 @@ const IO = {
 		}
 	},
 
+	exists: (filename) => existsSync(filename),
+
 	writeText: (filename, text) => {
 		writeFileSync(filename, text);
 		done('Create ' + filename);
