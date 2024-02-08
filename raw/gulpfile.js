@@ -1,4 +1,4 @@
-// === REFRESH TAG = ERROR 
+// === REFRESH TAG = ERROR
 // === CONFIGURABLE VARIABLES
 import config from './.serein.json' assert { type: 'json' };
 const output = config.output;
@@ -207,6 +207,11 @@ const deploy = gulp.series(
 
 const default_action = gulp.series(build, deploy);
 
+async function extension() {
+	const [name, task] = [process.argv[3], process.argv[4]];
+	await (await import(name))[task](config);
+}
+
 export {
 	build,
 	bundle,
@@ -214,6 +219,6 @@ export {
 	deploy,
 	default_action as default,
 	watch,
-	compile_scripts as cs
+	compile_scripts as cs,
+	extension
 };
-

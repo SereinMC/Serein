@@ -5,6 +5,7 @@ import adaptProject from './adapt.js';
 import moduleManage from './module.js';
 import switchVersion from './switch.js';
 import { CLI_VERSION } from '../base/constants.js';
+import { install, uninstall } from './ext.js';
 
 program
 	.name('serein')
@@ -30,7 +31,7 @@ program
 	.alias('m')
 	.description('managing current dependencies')
 	.option('-y --yes', 'switch to latest version directly')
-	.action((option) => moduleManage());
+	.action(() => moduleManage());
 
 program
 	.command('adapt')
@@ -61,5 +62,22 @@ program
 	.alias('w')
 	.description('listen for file changes and deploy project automatically')
 	.action(() => IO.exec('gulp watch'));
+
+program
+	.command('install <packageName>')
+	.alias('ins')
+	.description('install an extension for serein')
+	.action((...packageName) => install(packageName));
+
+program
+	.command('uninstall <packageName>')
+	.alias('unins')
+	.description('uninstall an extension')
+	.action((...packageName) => uninstall(packageName));
+
+program
+	.command('rescue')
+	.alias('r')
+	.description('recovering a project with an exception dependency');
 
 export default program;
