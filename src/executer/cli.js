@@ -67,13 +67,13 @@ program
 	.command('install <packageName>')
 	.alias('ins')
 	.description('install an extension for serein')
-	.action((...packageName) => install(packageName));
+	.action((packageName) => install(packageName));
 
 program
 	.command('uninstall <packageName>')
 	.alias('unins')
 	.description('uninstall an extension')
-	.action((...packageName) => uninstall(packageName));
+	.action((packageName) => uninstall(packageName));
 
 program
 	.command('rescue')
