@@ -145,8 +145,18 @@ class NpmClass extends DelayHanlderWithInfo {
 		await this.check();
 		start(`Install extension "${packageName}"...`);
 		if (this.pnpm) {
-			IO.exec(`pnpm install ${packageName}`);
-		} else IO.exec(`npm install ${packageName}`);
+			if (this.platform === 'android')
+				IO.writeText('.npmrc', 'node-linker=hoisted');
+			console.log(
+				accept(
+					'Detects that you have pnpm and will automatically enable the pnpm installation dependency.'
+				)
+			);
+			IO.exec(`pnpm install ${packageName} --registry=${this.mirror}`);
+		} else
+			IO.exec(
+				`npm install ${packageName} --registry=${this.mirror} ${android_suffix}`
+			);
 		done(`Install extension "${packageName}".`);
 	}
 
