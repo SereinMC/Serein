@@ -27,6 +27,8 @@ class NpmClass extends DelayHanlderWithInfo {
 	async update() {
 		this.pnpm = checkPnpm();
 		this.platform = process.platform;
+		this.android_suffix =
+			this.platform === 'android' ? '--no-bin-links' : '';
 		this.mirror = await MirrorHandler.getFastestMirror();
 		if (existsSync('package.json')) {
 			this.package = IO.readJSON('package.json');
@@ -126,8 +128,6 @@ class NpmClass extends DelayHanlderWithInfo {
 
 	async install() {
 		await this.check();
-		const android_suffix =
-			this.platform === 'android' ? '--no-bin-links' : '';
 		if (this.pnpm) {
 			if (this.platform === 'android')
 				IO.writeText('.npmrc', 'node-linker=hoisted');
@@ -138,14 +138,15 @@ class NpmClass extends DelayHanlderWithInfo {
 			);
 			IO.exec(`pnpm install --registry=${this.mirror}`);
 		} else
-			IO.exec(`npm install --registry=${this.mirror} ${android_suffix}`);
+			IO.exec(
+				`npm install --registry=${this.mirror} ${this.android_suffix}`
+			);
 	}
 
 	async add(packageName) {
 		await this.check();
-		const android_suffix =
-			this.platform === 'android' ? '--no-bin-links' : '';
 		start(`Install extension "${packageName}"...`);
+
 		if (this.pnpm) {
 			if (this.platform === 'android')
 				IO.writeText('.npmrc', 'node-linker=hoisted');
@@ -154,11 +155,12 @@ class NpmClass extends DelayHanlderWithInfo {
 					'Detects that you have pnpm and will automatically enable the pnpm installation dependency.'
 				)
 			);
-			IO.exec(`pnpm install ${packageName} --registry=${this.mirror}`);
+			IO.exec(`pnpm install ${packageName} --registry=${this.mirror} --save-dev`);
 		} else
 			IO.exec(
-				`npm install ${packageName} --registry=${this.mirror} ${android_suffix}`
+				`npm install ${packageName} --registry=${this.mirror} ${this.android_suffix} --save-dev`
 			);
+
 		done(`Install extension "${packageName}".`);
 	}
 

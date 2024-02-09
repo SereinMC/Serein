@@ -1,7 +1,18 @@
 import IO from '../base/io.js';
 import { resolve } from 'path';
+import Others from './others.js';
 import NpmHandler from './npm.js';
+import LogoHandler from './logo.js';
+import GulpHandler from './gulp.js';
+import DelayHanlder from './delay.js';
+import ConfigRender from './config.js';
+import MirrorHandler from './mirror.js';
+import NetWork from '../base/network.js';
+import ModuleResolver from './module.js';
 import InfoHandler from './information.js';
+import VerionsHandler from './versions.js';
+import ManifestHandler from './manifest.js';
+import DelayHanlderWithInfo from './delayInfo.js';
 import { done, error, start } from '../base/console.js';
 
 class ExtensionClass {
@@ -43,6 +54,7 @@ class ExtensionClass {
 	async load(program) {
 		if (this.extList.length) {
 			start('Load extensions...');
+
 			try {
 				for (const packageName of this.extList) {
 					(
@@ -54,11 +66,26 @@ class ExtensionClass {
 								'index.js'
 							)
 						)
-					).cli(program, InfoHandler, IO);
+					)(program, {
+						Others,
+						NpmHandler,
+						LogoHandler,
+						GulpHandler,
+						DelayHanlder,
+						ConfigRender,
+						MirrorHandler,
+						NetWork,
+						ModuleResolver,
+						InfoHandler,
+						VerionsHandler,
+						ManifestHandler,
+						DelayHanlderWithInfo
+					});
 				}
 			} catch (e) {
 				console.log(error('Failed to load extension!'), e);
 			}
+
 			done('Load extensions.');
 		}
 	}
