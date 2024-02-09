@@ -143,6 +143,8 @@ class NpmClass extends DelayHanlderWithInfo {
 
 	async add(packageName) {
 		await this.check();
+		const android_suffix =
+			this.platform === 'android' ? '--no-bin-links' : '';
 		start(`Install extension "${packageName}"...`);
 		if (this.pnpm) {
 			if (this.platform === 'android')
