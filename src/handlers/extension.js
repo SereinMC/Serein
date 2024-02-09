@@ -66,7 +66,7 @@ class ExtensionClass {
 								'index.js'
 							)
 						)
-					)(program, {
+					).default(program, {
 						Others,
 						NpmHandler,
 						LogoHandler,
