@@ -67,6 +67,7 @@ class ExtensionClass {
 							)
 						)
 					).default(program, {
+						IO,
 						Others,
 						NpmHandler,
 						LogoHandler,
