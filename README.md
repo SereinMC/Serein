@@ -1,6 +1,6 @@
-Welcome to this project! Today is Valentine's Day on February 14th, and the two main maintainers of this project are partnerships. Therefore, on this holiday, we sincerely wish all lovers in the world a happy ending!
+Welcome to our project! On this day, Valentine's Day, the 14th of February, a day when affections are celebrated and love stories find their echo, we stand before you not just as the principal stewards of this endeavor but as partners intertwined by the very essence of love that today commemorates. In the spirit of this holiday, which venerates the bond between hearts, we extend our deepest and most heartfelt wishes to lovers across the globe. May your journey together be blessed with enduring joy, unwavering commitment, and a love story that inspires, a narrative as timeless as the stars above. Happy Valentine's Day to all, and may every soul find its counterpart, completing a circle of love that knows no bounds.
 
-欢迎您来到这个项目！今天是2.14情人节，这个项目的两位主要维护者为伴侣关系，因此在这个节日，我们衷心祝愿天下有情人终成眷属！
+欢迎来到我们的项目！在这个日子里，情人节，2月14日，一个庆祝情感和爱情故事找到共鸣的日子，我们不仅作为这项事业的主要守护者站在你们面前，也作为被今天所纪念的爱的本质紧密连接的伴侣。在这个颂扬心与心之间联系的节日精神中，我们向全球的恋人们延伸我们最深、最诚挚的祝福。愿你们的共同旅程被永恒的喜悦、坚定的承诺和一个鼓舞人心的爱情故事所祝福，这个故事像星空一样永恒。情人节快乐，愿每个灵魂都找到其另一半，完成一个没有界限的爱之圆满。
 
 <p align="center">
   <h1 align="center">Serein</h1>
