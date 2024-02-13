@@ -12,7 +12,7 @@ Serein 是一个为 [Minecraft: Bedrock Edition Script API](https://learn.micros
 
 查看此文档的 [English](README.md) | 简体中文 版本
 
-> 但请注意，该产品不是 Minecraft 官方产品、不是来自 Minecraft 或者未经 Minecraft 认可。  
+> 但请注意，该产品不是 Minecraft 官方产品、不是来自 Minecraft 或经 Minecraft 认可。  
 > “Minecraft”是 Mojang Synergies AB 的商标。
 
 - 🚀 高效地创建和管理项目
@@ -31,7 +31,7 @@ Serein 是一个为 [Minecraft: Bedrock Edition Script API](https://learn.micros
 
 ### 贡献
 
-Serein 刚刚诞生，仍有诸多的问题和功能还未实现，两位主要作者[@Lampese](https://github.com/Lampese)、[@CAIMEOX](https://github.com/CAIMEOX)目前都还是高中学生，时间非常有限。
+Serein 刚刚诞生，仍有诸多的问题和功能还未实现，项目的主要维护者 [@Lampese](https://github.com/Lampese) 目前还是高中学生，时间非常有限。
 
 如果您对项目有疑问、改进的建议，欢迎提出 issue 或发邮件到 me@lampese.com。
 
@@ -39,6 +39,5 @@ Serein 刚刚诞生，仍有诸多的问题和功能还未实现，两位主要�
 
 ### 特别鸣谢
 
-- 感谢 [@Silvigarabis](https://github.com/Silvigarabis), [@MeowShe](https://github.com/MeowShe), [@xboyminemc](https://github.com/xboyminemc), [@HappyTigerV](https://github.com/HappyTigerV) 对该工具测试作出的贡献。
 - 感谢 [@MeowShe](https://github.com/MeowShe) 提供的 CDN 服务。
 - 感谢 cowsay 工具贡献的一头牛。
