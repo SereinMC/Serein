@@ -33,7 +33,7 @@ Go to [Serein Document](https://sereinmc.github.io/Docs/) for details.
 
 ### Contributing to Serein
 
-Serein still has many issues and features yet to be implemented, and the two main maintainers ([@Lampese](https://github.com/Lampese), [@CAIMEOX](https://github.com/CAIMEOX)) are still both high school students with very limited time.
+Serein still has many issues and features yet to be implemented, and the main maintainer ([@Lampese](https://github.com/Lampese)) is still high school student with very limited time.
 
 If you have questions or suggestions for improvements, feel free to create an issue or send an email to me@lampese.com.
 
@@ -41,6 +41,5 @@ If you wish to contribute to the project, we welcome Pull Requests, even if it m
 
 ### Special Thanks
 
-- Thanks to [@Silvigarabis](https://github.com/Silvigarabis), [@MeowShe](https://github.com/MeowShe), [@xboyminemc](https://github.com/xboyminemc), [@HappyTigerV](https://github.com/HappyTigerV) for his contribution to the testing of this project.  S
 - Thanks to [@MeowShe](https://github.com/MeowShe) for providing the CDN service.  
 - Thanks to cowsay for contributing a cow to this project.
