@@ -1,3 +1,7 @@
+Welcome to this project! Today is Valentine's Day on February 14th, and the two main maintainers of this project are partnerships. Therefore, on this holiday, we sincerely wish all lovers in the world a happy ending!
+
+欢迎您来到这个项目！今天是2.14情人节，这个项目的两位主要维护者为伴侣关系，因此在这个节日，我们衷心祝愿天下有情人终成眷属！
+
 <p align="center">
   <h1 align="center">Serein</h1>
 </p>
