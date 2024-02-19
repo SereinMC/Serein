@@ -1,9 +1,9 @@
 import { existsSync } from 'fs';
 import IO from '../base/io.js';
-import DelayHanlderWithInfo from './delayInfo.js';
+import DelayHandlerWithInfo from './delayInfo.js';
 import { DefaultCode, TSCONFIG } from '../base/constants.js';
 
-class CodeClass extends DelayHanlderWithInfo {
+class CodeClass extends DelayHandlerWithInfo {
 	constructor() {
 		super();
 		this.tsconfig = {};

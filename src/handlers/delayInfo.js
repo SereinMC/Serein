@@ -1,6 +1,6 @@
 import InfoHandler from './information.js';
 
-class DelayHanlderWithInfo {
+class DelayHandlerWithInfo {
 	constructor() {
 		this.updated = false;
 		this.info = {};
@@ -27,4 +27,4 @@ class DelayHanlderWithInfo {
 	}
 }
 
-export default DelayHanlderWithInfo;
+export default DelayHandlerWithInfo;
