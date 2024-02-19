@@ -4,15 +4,15 @@ import Others from './others.js';
 import NpmHandler from './npm.js';
 import LogoHandler from './logo.js';
 import GulpHandler from './gulp.js';
-import DelayHanlder from './delay.js';
+import DelayHandler from './delay.js';
 import ConfigRender from './config.js';
 import MirrorHandler from './mirror.js';
 import NetWork from '../base/network.js';
 import ModuleResolver from './module.js';
 import InfoHandler from './information.js';
-import VerionsHandler from './versions.js';
+import VersionsHandler from './versions.js';
 import ManifestHandler from './manifest.js';
-import DelayHanlderWithInfo from './delayInfo.js';
+import DelayHandlerWithInfo from './delayInfo.js';
 import { done, error, start } from '../base/console.js';
 
 class ExtensionClass {
@@ -36,7 +36,7 @@ class ExtensionClass {
 		this.context.extension.push(packageName);
 		IO.writeJSON('.serein.json', this.context);
 
-		done('Intstall extension.');
+		done('Install extension.');
 	}
 
 	async uninstall(packageName) {
@@ -72,15 +72,15 @@ class ExtensionClass {
 						NpmHandler,
 						LogoHandler,
 						GulpHandler,
-						DelayHanlder,
+						DelayHandler,
 						ConfigRender,
 						MirrorHandler,
 						NetWork,
 						ModuleResolver,
 						InfoHandler,
-						VerionsHandler,
+						VersionsHandler,
 						ManifestHandler,
-						DelayHanlderWithInfo
+						DelayHandlerWithInfo
 					});
 				}
 			} catch (e) {

@@ -1,4 +1,4 @@
-class DelayHanlder {
+class DelayHandler {
 	constructor() {
 		this.updated = false;
 	}
@@ -17,4 +17,4 @@ class DelayHanlder {
 	}
 }
 
-export default DelayHanlder;
+export default DelayHandler;

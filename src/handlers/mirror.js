@@ -1,9 +1,9 @@
 import axios from 'axios';
-import DelayHanlder from './delay.js';
+import DelayHandler from './delay.js';
 import { Mirrors } from '../base/constants.js';
 import { magenta, done, start } from '../base/console.js';
 
-class MirrorClass extends DelayHanlder {
+class MirrorClass extends DelayHandler {
 	constructor(mirror) {
 		super();
 		this.mirrors = mirror;

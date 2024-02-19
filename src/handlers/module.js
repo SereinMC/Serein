@@ -1,11 +1,11 @@
 import NpmHandler from './npm.js';
 import NetWork from '../base/network.js';
-import VerionsHandler from './versions.js';
+import VersionsHandler from './versions.js';
 import { warning } from '../base/console.js';
-import DelayHanlderWithInfo from './delayInfo.js';
+import DelayHandlerWithInfo from './delayInfo.js';
 import { SERVER, ALL } from '../base/constants.js';
 
-class ModuleClass extends DelayHanlderWithInfo {
+class ModuleClass extends DelayHandlerWithInfo {
 	constructor() {
 		super();
 		this.packages = {};
@@ -28,7 +28,7 @@ class ModuleClass extends DelayHanlderWithInfo {
 						'You should make sure the dependencies are well organized if you want to use dependencies (latest version) besides @mc/server.'
 					)
 				);
-				this.packages = await VerionsHandler.getPackageVersions(ALL);
+				this.packages = await VersionsHandler.getPackageVersions(ALL);
 			}
 		} else if (mode === 'switch') {
 			if (auto) {
@@ -36,14 +36,14 @@ class ModuleClass extends DelayHanlderWithInfo {
 					[SERVER]: await NetWork.getLatestVersion(SERVER)
 				};
 			} else {
-				this.packages = await VerionsHandler.getPackageVersions(
+				this.packages = await VersionsHandler.getPackageVersions(
 					Object.keys(await NpmHandler.getDependencies()).filter(
 						(v) => ALL.includes(v)
 					)
 				);
 			}
 		} else if (mode === 'module') {
-			this.packages = await VerionsHandler.getPackageVersions(
+			this.packages = await VersionsHandler.getPackageVersions(
 				ALL,
 				Object.keys(await NpmHandler.getDependencies()).filter((v) =>
 					ALL.includes(v)

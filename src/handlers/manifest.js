@@ -2,9 +2,9 @@ import IO from '../base/io.js';
 import { existsSync } from 'fs';
 import { v4 as uuid } from 'uuid';
 import InfoHandler from './information.js';
-import DelayHanlderWithInfo from './delayInfo.js';
+import DelayHandlerWithInfo from './delayInfo.js';
 
-class ManifestClass extends DelayHanlderWithInfo {
+class ManifestClass extends DelayHandlerWithInfo {
 	constructor() {
 		super();
 		this.behContext = {};
@@ -94,7 +94,7 @@ class ManifestClass extends DelayHanlderWithInfo {
 			.map((v) => v.module_name);
 	}
 
-	findDependeceIdx(packageName) {
+	findDependenceIdx(packageName) {
 		for (const idx in this.behContext.dependencies) {
 			if (!this.behContext.dependencies[idx].module_name) continue;
 			if (this.behContext.dependencies[idx].module_name === packageName) {
@@ -104,12 +104,12 @@ class ManifestClass extends DelayHanlderWithInfo {
 	}
 
 	switchVersion(packageName, version) {
-		const idx = this.findDependeceIdx(packageName);
+		const idx = this.findDependenceIdx(packageName);
 		this.behContext.dependencies[idx].version = version;
 	}
 
 	deleteDependence(packageName) {
-		const idx = this.findDependeceIdx(packageName);
+		const idx = this.findDependenceIdx(packageName);
 		this.behContext.dependencies.splice(idx, 1);
 	}
 
