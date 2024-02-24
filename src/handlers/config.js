@@ -1,9 +1,9 @@
 import IO from '../base/io.js';
-import DelayHandler from './delay.js';
+import DelayClass from './delay.js';
 import InfoHandler from './information.js';
 import { existsSync, readFileSync } from 'fs';
 
-class ConfigClass extends DelayHandler {
+class ConfigClass extends DelayClass {
 	constructor() {
 		super();
 		this.context = {};

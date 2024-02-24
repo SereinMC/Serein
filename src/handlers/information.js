@@ -1,6 +1,6 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable indent */
-import DelayHandler from './delay.js';
+import DelayClass from './delay.js';
 import { basename, join } from 'path';
 import ConfigRender from './config.js';
 import { magenta } from '../base/console.js';
@@ -12,7 +12,7 @@ import {
 	askProjectInfo
 } from '../base/inquirer.js';
 
-class InfoClass extends DelayHandler {
+class InfoClass extends DelayClass {
 	constructor() {
 		super();
 		this.info = {};

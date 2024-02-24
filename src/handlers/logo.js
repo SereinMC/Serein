@@ -1,9 +1,9 @@
 import IO from '../base/io.js';
 import Fractal from '../base/fractal.js';
 import { start, done } from '../base/console.js';
-import DelayHandlerWithInfo from './delayInfo.js';
+import DelayClassWithInfo from './delayInfo.js';
 
-class LogoClass extends DelayHandlerWithInfo {
+class LogoClass extends DelayClassWithInfo {
 	constructor() {
 		super();
 		this.png = '';

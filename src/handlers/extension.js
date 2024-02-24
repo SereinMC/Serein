@@ -4,7 +4,7 @@ import Others from './others.js';
 import NpmHandler from './npm.js';
 import LogoHandler from './logo.js';
 import GulpHandler from './gulp.js';
-import DelayHandler from './delay.js';
+import DelayClass from './delay.js';
 import ConfigRender from './config.js';
 import MirrorHandler from './mirror.js';
 import NetWork from '../base/network.js';
@@ -12,7 +12,7 @@ import ModuleResolver from './module.js';
 import InfoHandler from './information.js';
 import VersionsHandler from './versions.js';
 import ManifestHandler from './manifest.js';
-import DelayHandlerWithInfo from './delayInfo.js';
+import DelayClassWithInfo from './delayInfo.js';
 import { done, error, start } from '../base/console.js';
 
 class ExtensionClass {
@@ -72,7 +72,7 @@ class ExtensionClass {
 						NpmHandler,
 						LogoHandler,
 						GulpHandler,
-						DelayHandler,
+						DelayHandler: DelayClass,
 						ConfigRender,
 						MirrorHandler,
 						NetWork,
@@ -80,7 +80,7 @@ class ExtensionClass {
 						InfoHandler,
 						VersionsHandler,
 						ManifestHandler,
-						DelayHandlerWithInfo
+						DelayHandlerWithInfo: DelayClassWithInfo
 					});
 				}
 			} catch (e) {

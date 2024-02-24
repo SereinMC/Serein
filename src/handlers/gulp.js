@@ -1,9 +1,9 @@
 import IO from '../base/io.js';
 import NetWork from '../base/network.js';
-import DelayHandler from './delayInfo.js';
+import DelayClass from './delayInfo.js';
 import { start, done } from '../base/console.js';
 
-class GulpClass extends DelayHandler {
+class GulpClass extends DelayClass {
 	constructor() {
 		super();
 		this.context = '';
