@@ -2,9 +2,9 @@ import IO from '../base/io.js';
 import { existsSync } from 'fs';
 import { v4 as uuid } from 'uuid';
 import InfoHandler from './information.js';
-import DelayHandlerWithInfo from './delayInfo.js';
+import DelayClassWithInfo from './delayInfo.js';
 
-class ManifestClass extends DelayHandlerWithInfo {
+class ManifestClass extends DelayClassWithInfo {
 	constructor() {
 		super();
 		this.behContext = {};

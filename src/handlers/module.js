@@ -2,10 +2,10 @@ import NpmHandler from './npm.js';
 import NetWork from '../base/network.js';
 import VersionsHandler from './versions.js';
 import { warning } from '../base/console.js';
-import DelayHandlerWithInfo from './delayInfo.js';
+import DelayClassWithInfo from './delayInfo.js';
 import { SERVER, ALL } from '../base/constants.js';
 
-class ModuleClass extends DelayHandlerWithInfo {
+class ModuleClass extends DelayClassWithInfo {
 	constructor() {
 		super();
 		this.packages = {};

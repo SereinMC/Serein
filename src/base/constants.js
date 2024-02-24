@@ -54,6 +54,7 @@ const TSCONFIG = {
 		noImplicitAny: true,
 		rootDir: '.',
 		listFiles: false,
+		moduleResolution: 'node',
 		noEmitHelpers: true
 	},
 	include: [],

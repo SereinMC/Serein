@@ -3,7 +3,7 @@ import { existsSync } from 'fs';
 import { deleteSync } from 'del';
 import MirrorHandler from './mirror.js';
 import { ALL } from '../base/constants.js';
-import DelayHandlerWithInfo from './delayInfo.js';
+import DelayClassWithInfo from './delayInfo.js';
 import { accept, start, done } from '../base/console.js';
 
 function checkPnpm() {
@@ -15,7 +15,7 @@ function checkPnpm() {
 	return true;
 }
 
-class NpmClass extends DelayHandlerWithInfo {
+class NpmClass extends DelayClassWithInfo {
 	constructor() {
 		super();
 		this.package = {};

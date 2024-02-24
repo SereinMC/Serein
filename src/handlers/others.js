@@ -1,8 +1,8 @@
 import IO from '../base/io.js';
-import DelayHandlerWithInfo from './delayInfo.js';
+import DelayClassWithInfo from './delayInfo.js';
 import { MCATTRIBUTES } from '../base/constants.js';
 
-class OthersClass extends DelayHandlerWithInfo {
+class OthersClass extends DelayClassWithInfo {
 	constructor() {
 		super();
 	}

@@ -2,7 +2,7 @@
 /* eslint-disable indent */
 import inquirer from 'inquirer';
 import NetWork from '../base/network.js';
-import DelayHandlerWithInfo from './delayInfo.js';
+import DelayClassWithInfo from './delayInfo.js';
 import { DATA, SERVER } from '../base/constants.js';
 import { start, done, magenta } from '../base/console.js';
 
@@ -18,7 +18,7 @@ async function promptUser(message, choices) {
 	return selected;
 }
 
-class Versions extends DelayHandlerWithInfo {
+class Versions extends DelayClassWithInfo {
 	constructor() {
 		super();
 	}
