@@ -1,6 +1,5 @@
-// === REFRESH TAG = ERROR
 // === CONFIGURABLE VARIABLES
-import config from './.serein.json' assert { type: 'json' };
+const config = getJSON('./.serein.json');
 const output = config.output;
 const pack_name = config.name;
 const behPath = config.behPath;
@@ -8,17 +7,14 @@ const resPath = config.resPath;
 const behManifestPath = config.behManifestPath;
 const scriptsPath = config.scriptsPath;
 const useMinecraftPreview = config.mc_preview;
-const manifest = JSON.parse(
-	stripJsonComments(readFileSync(behManifestPath, 'utf-8'))
-);
+const manifest = getJSON(behManifestPath);
+const tsconfig = config.language === 'ts' ? getJSON('./tsconfig.json') : {};
 const scriptEntry = (function () {
-	for (const current of manifest.modules) {
+	for (const current of manifest.modules)
 		if (current.type === 'script') return current.entry;
-	}
 	return 'script module not found.';
 })();
 const esbuildConfig = config.esbuild;
-const tsconfig = config.tsconfig;
 // === END CONFIGURABLE VARIABLES
 
 import os from 'os';
@@ -31,7 +27,11 @@ import { readFileSync } from 'fs';
 import gulpEsbuild from 'gulp-esbuild';
 import stripJsonComments from 'strip-json-comments';
 
-const get_mojang_dir = () => {
+function getJSON(fileName) {
+	return stripJsonComments(readFileSync(fileName, 'utf-8'));
+}
+
+function get_mojang_dir() {
 	if (config.mc_dir !== null) return config.mc_dir;
 	const homeDir = os.homedir();
 	switch (process.platform) {
@@ -45,7 +45,7 @@ const get_mojang_dir = () => {
 				'/.var/app/io.mrarm.mcpelauncher/data/mcpelauncher/games/com.mojang/'
 			);
 	}
-};
+}
 
 const mc_dir = get_mojang_dir();
 
@@ -77,20 +77,7 @@ function copy_resource_packs() {
 function compile_scripts() {
 	return gulp
 		.src(resolve(scriptsPath, '**/*.ts'))
-		.pipe(
-			ts(
-				Object.assign(
-					{
-						module: 'es2020',
-						moduleResolution: 'node',
-						lib: ['es2020', 'dom'],
-						strict: true,
-						target: 'es2020'
-					},
-					tsconfig
-				)
-			)
-		)
+		.pipe(ts(tsconfig))
 		.pipe(gulp.dest(resolve(output, 'scripts')));
 }
 
@@ -214,5 +201,5 @@ export {
 	deploy,
 	default_action as default,
 	watch,
-	compile_scripts as cs,
+	compile_scripts as cs
 };
