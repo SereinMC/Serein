@@ -28,7 +28,7 @@ import gulpEsbuild from 'gulp-esbuild';
 import stripJsonComments from 'strip-json-comments';
 
 function getJSON(fileName) {
-	return stripJsonComments(readFileSync(fileName, 'utf-8'));
+	return JSON.parse(stripJsonComments(readFileSync(fileName, 'utf-8')));
 }
 
 function get_mojang_dir() {
