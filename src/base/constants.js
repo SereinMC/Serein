@@ -1,5 +1,5 @@
 // === CLI INFORMATIONS
-const CLI_VERSION = '1.4.4.patch.3';
+const CLI_VERSION = '1.4.5';
 // === END CLI INFORMATIONS
 
 // === NPM PACKAGES
@@ -43,6 +43,8 @@ const GULPFILE = 'https://serein.meowshe.com/gulpfile.js';
 // === DEFUALT TSCONFIG
 const TSCONFIG = {
 	compilerOptions: {
+		moduleResolution: 'node',
+		lib: ['es2020', 'dom'],
 		target: 'es2020',
 		module: 'es2020',
 		noLib: false,
@@ -54,7 +56,6 @@ const TSCONFIG = {
 		noImplicitAny: true,
 		rootDir: '.',
 		listFiles: false,
-		moduleResolution: 'node',
 		noEmitHelpers: true
 	},
 	include: [],
