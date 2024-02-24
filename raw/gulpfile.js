@@ -24,7 +24,7 @@ const tsconfig = config.tsconfig;
 import os from 'os';
 import gulp from 'gulp';
 import zip from 'gulp-zip';
-import { join } from 'path';
+import { resolve } from 'path';
 import ts from 'gulp-typescript';
 import { deleteAsync } from 'del';
 import { readFileSync } from 'fs';
@@ -64,19 +64,19 @@ const clean_build = del_gen([output]);
 
 function copy_behavior_packs() {
 	return gulp
-		.src([join(behPath, '**/*')])
-		.pipe(gulp.dest(join(output, behPath)));
+		.src([resolve(behPath, '**/*')])
+		.pipe(gulp.dest(resolve(output, behPath)));
 }
 
 function copy_resource_packs() {
 	return gulp
-		.src([join(resPath, '**/*')])
-		.pipe(gulp.dest(join(output, resPath)));
+		.src([resolve(resPath, '**/*')])
+		.pipe(gulp.dest(resolve(output, resPath)));
 }
 
 function compile_scripts() {
 	return gulp
-		.src(join(scriptsPath, '**/*.ts'))
+		.src(resolve(scriptsPath, '**/*.ts'))
 		.pipe(
 			ts(
 				Object.assign(
@@ -91,12 +91,12 @@ function compile_scripts() {
 				)
 			)
 		)
-		.pipe(gulp.dest(join(output, 'scripts')));
+		.pipe(gulp.dest(resolve(output, 'scripts')));
 }
 
 function esbuild_system() {
 	return gulp
-		.src(join(output, scriptEntry))
+		.src(resolve(output, scriptEntry))
 		.pipe(
 			gulpEsbuild(
 				Object.assign(
@@ -119,23 +119,23 @@ function esbuild_system() {
 				)
 			)
 		)
-		.pipe(gulp.dest(join(output, behPath)));
+		.pipe(gulp.dest(resolve(output, behPath)));
 }
 
 function copy_scripts() {
 	return gulp
-		.src(join(scriptsPath, '**/*'))
-		.pipe(gulp.dest(join(output, 'scripts')));
+		.src(resolve(scriptsPath, '**/*'))
+		.pipe(gulp.dest(resolve(output, 'scripts')));
 }
 
 function pack_zip() {
 	return gulp
-		.src(join(output, '**/*'))
+		.src(resolve(output, '**/*'))
 		.pipe(zip(`${pack_name}.mcpack`))
 		.pipe(gulp.dest(config.output || '.'));
 }
 
-const del_build_scripts = del_gen([join(output, scriptsPath)]);
+const del_build_scripts = del_gen([resolve(output, scriptsPath)]);
 
 function clean_local(fn) {
 	if (!pack_name || !pack_name.length || pack_name.length < 2) {
@@ -144,33 +144,33 @@ function clean_local(fn) {
 		return;
 	}
 	del_gen([
-		join(mc_dir, 'development_behavior_packs/', pack_name),
-		join(mc_dir, 'development_resource_packs/', pack_name)
+		resolve(mc_dir, 'development_behavior_packs/', pack_name),
+		resolve(mc_dir, 'development_resource_packs/', pack_name)
 	])(fn);
 }
 
 function deploy_local_mc_behavior_packs() {
 	return gulp
-		.src([join(output, behPath, '**/*')])
+		.src([resolve(output, behPath, '**/*')])
 		.pipe(
-			gulp.dest(join(mc_dir, 'development_behavior_packs/', pack_name))
+			gulp.dest(resolve(mc_dir, 'development_behavior_packs/', pack_name))
 		);
 }
 
 function deploy_local_mc_resource_packs() {
 	return gulp
-		.src([join(output, resPath, '**/*')])
+		.src([resolve(output, resPath, '**/*')])
 		.pipe(
-			gulp.dest(join(mc_dir, 'development_resource_packs/', pack_name))
+			gulp.dest(resolve(mc_dir, 'development_resource_packs/', pack_name))
 		);
 }
 
 function watch() {
 	return gulp.watch(
 		[
-			join(behPath, '**/*'),
-			join(resPath, '**/*'),
-			join(scriptsPath, '**/*')
+			resolve(behPath, '**/*'),
+			resolve(resPath, '**/*'),
+			resolve(scriptsPath, '**/*')
 		],
 		gulp.series(build, deploy)
 	);
