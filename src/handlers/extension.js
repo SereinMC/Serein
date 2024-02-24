@@ -69,10 +69,11 @@ class ExtensionClass {
 					).default(program, {
 						IO,
 						Others,
+						DelayClass,
+						DelayClassWithInfo,
 						NpmHandler,
 						LogoHandler,
 						GulpHandler,
-						DelayHandler: DelayClass,
 						ConfigRender,
 						MirrorHandler,
 						NetWork,
@@ -80,7 +81,6 @@ class ExtensionClass {
 						InfoHandler,
 						VersionsHandler,
 						ManifestHandler,
-						DelayHandlerWithInfo: DelayClassWithInfo
 					});
 				}
 			} catch (e) {
